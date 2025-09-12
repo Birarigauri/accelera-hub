@@ -182,7 +182,7 @@ const ServiceDetails = () => {
               {/* Service Header */}
               <Card className="bg-gradient-card border-0">
                 <CardContent className="p-6">
-                  <div className="flex items-start gap-4 mb-6">
+                  <div className="flex flex-col sm:flex-row items-start gap-4 mb-6">
                     <div className="w-16 h-16 bg-gradient-primary rounded-lg flex items-center justify-center">
                       <service.icon className="h-8 w-8 text-white" />
                     </div>
@@ -207,7 +207,7 @@ const ServiceDetails = () => {
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-3 gap-4 p-4 bg-muted/50 rounded-lg">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 p-3 sm:p-4 bg-muted/50 rounded-lg">
                     <div className="text-center">
                       <div className="text-2xl font-bold text-primary mb-1">{service.price}</div>
                       <div className="text-sm text-muted-foreground line-through">{service.originalPrice}</div>
@@ -228,7 +228,7 @@ const ServiceDetails = () => {
 
               {/* Service Details Tabs */}
               <Tabs defaultValue="overview" className="space-y-6">
-                <TabsList className="grid w-full grid-cols-4 bg-white">
+                <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 bg-white">
                   <TabsTrigger value="overview">Overview</TabsTrigger>
                   <TabsTrigger value="process">Process</TabsTrigger>
                   <TabsTrigger value="documents">Documents</TabsTrigger>
@@ -241,7 +241,7 @@ const ServiceDetails = () => {
                       <CardTitle>What's Included</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="grid md:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                         {service.features.map((feature, index) => (
                           <div key={index} className="flex items-center gap-3">
                             <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
@@ -285,7 +285,7 @@ const ServiceDetails = () => {
                       <CardTitle>Required Documents</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="grid md:grid-cols-2 gap-3">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         {service.documents.map((doc, index) => (
                           <div key={index} className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
                             <FileText className="h-4 w-4 text-primary flex-shrink-0" />
