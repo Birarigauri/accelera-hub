@@ -61,7 +61,11 @@ const Profile = () => {
     businessType: "Private Limited Company",
     industry: "Information Technology",
     employeeCount: "25-50",
-    annualTurnover: "₹2-5 Crores"
+    annualTurnover: "₹2-5 Crores",
+    eKycStatus: "completed",
+    verificationLevel: "premium",
+    kycCompletedDate: "2023-02-10",
+    trustScore: 98
   };
 
   const businesses = [
@@ -235,20 +239,51 @@ const Profile = () => {
               <div className="flex-1 min-w-0">
                 <div className="flex flex-col sm:flex-row items-start justify-between mb-4 gap-3 sm:gap-0">
                   <div>
-                    <h1 className="text-2xl font-bold mb-1">{userProfile.name}</h1>
-                    <p className="text-muted-foreground mb-2">{userProfile.businessType}</p>
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <Mail className="h-4 w-4" />
-                        {userProfile.email}
+                    <div className="flex items-center gap-2 mb-2">
+                      <h1 className="text-2xl font-bold">{userProfile.name}</h1>
+                      {userProfile.eKycStatus === 'completed' && (
+                        <div className="flex items-center gap-1">
+                          <Badge className="bg-green-100 text-green-700 border-green-200 text-xs px-2 py-1">
+                            <CheckCircle className="h-3 w-3 mr-1" />
+                            eKYC Verified
+                          </Badge>
+                          {userProfile.verificationLevel === 'premium' && (
+                            <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-xs px-2 py-1">
+                              <Award className="h-3 w-3 mr-1" />
+                              Premium
+                            </Badge>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    <p className="text-muted-foreground mb-2">{userProfile.businessType} • Trust Score: {userProfile.trustScore}%</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mt-4">
+                      <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                          <Mail className="h-4 w-4 text-blue-600" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-xs text-blue-600 font-medium mb-1">Email</p>
+                          <p className="text-sm font-semibold text-gray-900 truncate">{userProfile.email}</p>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <Phone className="h-4 w-4" />
-                        {userProfile.phone}
+                      <div className="flex items-center gap-2 p-3 bg-green-50 rounded-lg border border-green-200">
+                        <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                          <Phone className="h-4 w-4 text-green-600" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-xs text-green-600 font-medium mb-1">Mobile</p>
+                          <p className="text-sm font-semibold text-gray-900">{userProfile.phone}</p>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <MapPin className="h-4 w-4" />
-                        {userProfile.location}
+                      <div className="flex items-center gap-2 p-3 bg-purple-50 rounded-lg border border-purple-200">
+                        <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                          <MapPin className="h-4 w-4 text-purple-600" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-xs text-purple-600 font-medium mb-1">Location</p>
+                          <p className="text-sm font-semibold text-gray-900">{userProfile.location}</p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -267,21 +302,24 @@ const Profile = () => {
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-                  <div className="text-center p-3 bg-muted/50 rounded-lg">
-                    <div className="text-2xl font-bold text-primary mb-1">94%</div>
+                  <div className="text-center p-3 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border border-blue-200">
+                    <div className="text-2xl font-bold text-blue-600 mb-1">94%</div>
                     <p className="text-xs text-muted-foreground">Compliance Score</p>
                   </div>
-                  <div className="text-center p-3 bg-muted/50 rounded-lg">
-                    <div className="text-2xl font-bold text-secondary mb-1">8</div>
-                    <p className="text-xs text-muted-foreground">Services Used</p>
+                  <div className="text-center p-3 bg-gradient-to-br from-green-50 to-green-100 rounded-lg border border-green-200">
+                    <div className="text-2xl font-bold text-green-600 mb-1">{userProfile.trustScore}%</div>
+                    <p className="text-xs text-muted-foreground">Trust Score</p>
                   </div>
-                  <div className="text-center p-3 bg-muted/50 rounded-lg">
+                  <div className="text-center p-3 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg border border-purple-200">
                     <div className="text-2xl font-bold text-purple-600 mb-1">2</div>
                     <p className="text-xs text-muted-foreground">Businesses</p>
                   </div>
-                  <div className="text-center p-3 bg-muted/50 rounded-lg">
-                    <div className="text-2xl font-bold text-orange-600 mb-1">15m</div>
-                    <p className="text-xs text-muted-foreground">Member Since</p>
+                  <div className="text-center p-3 bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg border border-orange-200">
+                    <div className="flex items-center justify-center gap-1 mb-1">
+                      <CheckCircle className="h-4 w-4 text-green-500" />
+                      <span className="text-sm font-bold text-green-600">Verified</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">eKYC Status</p>
                   </div>
                 </div>
               </div>
@@ -342,22 +380,47 @@ const Profile = () => {
               </div>
 
               <div className="space-y-6">
-                <Card className="bg-gradient-primary text-white border-0">
-                  <CardContent className="p-6">
-                    <div className="text-center">
-                      <Award className="h-8 w-8 mx-auto mb-3 opacity-90" />
-                      <h3 className="font-semibold mb-2">Premium Member</h3>
-                      <p className="text-sm text-white/90 mb-4">
-                        Enjoy enhanced benefits and priority support
-                      </p>
-                      <Link to="/schemes">
+                {userProfile.eKycStatus === 'completed' ? (
+                  <Card className="bg-gradient-to-br from-green-500 to-emerald-600 text-white border-0 shadow-lg">
+                    <CardContent className="p-6">
+                      <div className="text-center">
+                        <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                          <CheckCircle className="h-8 w-8 text-white" />
+                        </div>
+                        <h3 className="font-semibold mb-2">eKYC Verified</h3>
+                        <p className="text-sm text-white/90 mb-2">
+                          Verified on {new Date(userProfile.kycCompletedDate).toLocaleDateString()}
+                        </p>
+                        <div className="flex items-center justify-center gap-2 mb-4">
+                          <Shield className="h-4 w-4" />
+                          <span className="text-sm font-medium">Trust Score: {userProfile.trustScore}%</span>
+                        </div>
+                        <Link to="/schemes">
+                          <Button variant="glass" size="sm" className="w-full">
+                            View Benefits
+                          </Button>
+                        </Link>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <Card className="bg-gradient-to-br from-yellow-500 to-orange-600 text-white border-0 shadow-lg">
+                    <CardContent className="p-6">
+                      <div className="text-center">
+                        <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+                          <AlertTriangle className="h-8 w-8 text-white" />
+                        </div>
+                        <h3 className="font-semibold mb-2">Complete eKYC</h3>
+                        <p className="text-sm text-white/90 mb-4">
+                          Verify your identity to unlock premium features
+                        </p>
                         <Button variant="glass" size="sm" className="w-full">
-                          View Benefits
+                          Start Verification
                         </Button>
-                      </Link>
-                    </div>
-                  </CardContent>
-                </Card>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
 
                 <Card className="bg-gradient-card border-0">
                   <CardHeader>
