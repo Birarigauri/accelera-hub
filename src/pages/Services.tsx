@@ -17,7 +17,11 @@ import {
   Globe,
   Award,
   Phone,
-  Upload
+  Upload,
+  Calendar,
+  TrendingUp,
+  Eye,
+  Download
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -212,9 +216,15 @@ const Services = () => {
 
         {/* Services Tabs */}
         <Tabs defaultValue="catalog" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 bg-white">
-            <TabsTrigger value="catalog">Service Catalog</TabsTrigger>
-            <TabsTrigger value="my-services">My Services</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100 p-1">
+            <TabsTrigger value="catalog" className="data-[state=active]:bg-white data-[state=active]:shadow-md transition-all duration-200">
+              <Building className="h-4 w-4 mr-2" />
+              Service Catalog
+            </TabsTrigger>
+            <TabsTrigger value="my-services" className="data-[state=active]:bg-white data-[state=active]:shadow-md transition-all duration-200">
+              <Users className="h-4 w-4 mr-2" />
+              My Services
+            </TabsTrigger>
           </TabsList>
 
           {/* Service Catalog */}
@@ -330,38 +340,84 @@ const Services = () => {
 
           {/* My Services */}
           <TabsContent value="my-services" className="space-y-6">
-            <div className="grid gap-6">
+            {/* My Services Header */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 rounded-xl border border-blue-100">
+              <div>
+                <h2 className="text-xl font-semibold mb-2">My Service Applications</h2>
+                <p className="text-muted-foreground">Track and manage your service requests</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <Badge variant="outline" className="bg-white/80">
+                  {myServices.length} Total Applications
+                </Badge>
+                <Button variant="outline" className="bg-white/80 hover:bg-white">
+                  <Plus className="h-4 w-4 mr-2" />
+                  New Application
+                </Button>
+              </div>
+            </div>
+
+            <div className="grid gap-4">
               {myServices.map((service) => {
                 const StatusIcon = getStatusIcon(service.status);
                 return (
-                  <Card key={service.id} className="bg-gradient-card border-0">
+                  <Card key={service.id} className="bg-gradient-card border-0 hover:shadow-lg transition-all duration-300 group">
                     <CardContent className="p-6">
                       <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center">
+                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center transition-transform group-hover:scale-110 ${
+                          service.status === 'completed' ? 'bg-gradient-to-r from-green-500 to-emerald-500' :
+                          service.status === 'in-progress' ? 'bg-gradient-to-r from-blue-500 to-cyan-500' :
+                          'bg-gradient-to-r from-yellow-500 to-orange-500'
+                        }`}>
                           <StatusIcon className="h-6 w-6 text-white" />
                         </div>
                         
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between mb-4">
-                            <div>
-                              <h3 className="text-lg font-semibold mb-1">{service.title}</h3>
-                              <p className="text-sm text-muted-foreground">
-                                Submitted on {new Date(service.submittedDate).toLocaleDateString()}
-                              </p>
+                          <div className="flex flex-col sm:flex-row items-start justify-between mb-4 gap-3 sm:gap-0">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                <h3 className="text-lg font-semibold">{service.title}</h3>
+                                {service.status === 'completed' && <CheckCircle className="h-5 w-5 text-green-500" />}
+                              </div>
+                              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                                <div className="flex items-center gap-1">
+                                  <Calendar className="h-4 w-4" />
+                                  Submitted {new Date(service.submittedDate).toLocaleDateString()}
+                                </div>
+                                {service.completedDate && (
+                                  <div className="flex items-center gap-1">
+                                    <CheckCircle className="h-4 w-4" />
+                                    Completed {new Date(service.completedDate).toLocaleDateString()}
+                                  </div>
+                                )}
+                              </div>
                             </div>
                             
-                            <Badge className={getStatusColor(service.status)}>
-                              {service.status.replace('-', ' ')}
-                            </Badge>
+                            <div className="flex items-center gap-3">
+                              <Badge className={`${getStatusColor(service.status)} font-medium px-3 py-1`}>
+                                {service.status.replace('-', ' ').toUpperCase()}
+                              </Badge>
+                              <div className="text-right">
+                                <div className="text-lg font-bold text-primary">{service.amount}</div>
+                              </div>
+                            </div>
                           </div>
 
                           <div className="space-y-4">
-                            <div>
-                              <div className="flex items-center justify-between mb-2">
-                                <span className="text-sm font-medium">Progress</span>
-                                <span className="text-sm text-muted-foreground">{service.progress}%</span>
+                            <div className="bg-muted/30 p-4 rounded-lg">
+                              <div className="flex items-center justify-between mb-3">
+                                <div className="flex items-center gap-2">
+                                  <TrendingUp className="h-4 w-4 text-primary" />
+                                  <span className="text-sm font-medium">Application Progress</span>
+                                </div>
+                                <span className="text-sm font-semibold text-primary">{service.progress}%</span>
                               </div>
-                              <Progress value={service.progress} className="h-2" />
+                              <Progress value={service.progress} className="h-3" />
+                              <div className="flex justify-between text-xs text-muted-foreground mt-2">
+                                <span>Started</span>
+                                <span>In Progress</span>
+                                <span>Completed</span>
+                              </div>
                             </div>
 
                             <div className="grid md:grid-cols-2 gap-4 text-sm">
@@ -401,18 +457,25 @@ const Services = () => {
                               </div>
                             )}
 
-                            <div className="flex gap-3 pt-4">
-                              <Button variant="outline" size="sm">
+                            <div className="flex flex-wrap gap-3 pt-4">
+                              <Button variant="default" size="sm" className="flex-1 sm:flex-none">
+                                <Eye className="h-4 w-4 mr-2" />
                                 View Details
                               </Button>
-                              <Button variant="outline" size="sm">
+                              <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
                                 <Phone className="h-4 w-4 mr-2" />
                                 Contact Expert
                               </Button>
                               {service.status === "in-progress" && (
-                                <Button variant="outline" size="sm">
+                                <Button variant="secondary" size="sm" className="flex-1 sm:flex-none">
                                   <Upload className="h-4 w-4 mr-2" />
                                   Upload Documents
+                                </Button>
+                              )}
+                              {service.status === "completed" && service.documents && (
+                                <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
+                                  <Download className="h-4 w-4 mr-2" />
+                                  Download
                                 </Button>
                               )}
                             </div>

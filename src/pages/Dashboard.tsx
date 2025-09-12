@@ -124,30 +124,49 @@ const Dashboard = () => {
       <div className="min-h-screen bg-muted/30">
         <Header />
         
-        <div className="container mx-auto px-4 lg:px-6 py-8">
+        <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-8">
         {/* Welcome Section */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Welcome back, Rajesh! 👋</h1>
-          <p className="text-muted-foreground">
-            Here's what's happening with your business today
-          </p>
-        </div>
+        <Card className="mb-6 sm:mb-8 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 border border-blue-100 shadow-lg">
+          <CardContent className="p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <Users className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-xl sm:text-3xl font-bold mb-1 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    Welcome back, Rajesh! 👋
+                  </h1>
+                  <p className="text-sm sm:text-base text-muted-foreground">
+                    Here's what's happening with your business today
+                  </p>
+                </div>
+              </div>
+              <div className="w-full sm:w-auto">
+                <Button variant="hero" className="w-full sm:w-auto shadow-lg hover:shadow-xl transition-all duration-300">
+                  <Plus className="h-4 w-4 mr-2" />
+                  New Application
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {stats.map((stat) => (
-            <Card key={stat.title} className="hover:shadow-lg transition-all duration-300 bg-gradient-card border-0">
-              <CardContent className="p-6">
+            <Card key={stat.title} className="hover:shadow-lg hover:-translate-y-1 transition-all duration-300 bg-gradient-to-br from-white to-gray-50 border border-gray-100 group">
+              <CardContent className="p-4 sm:p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-muted-foreground mb-1">
+                    <p className="text-xs sm:text-sm font-medium text-muted-foreground mb-1">
                       {stat.title}
                     </p>
-                    <p className="text-2xl font-bold mb-1">{stat.value}</p>
+                    <p className="text-xl sm:text-2xl font-bold mb-1 bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">{stat.value}</p>
                     <p className="text-xs text-muted-foreground">{stat.change}</p>
                   </div>
-                  <div className={`w-12 h-12 rounded-lg ${stat.bgColor} flex items-center justify-center`}>
-                    <stat.icon className={`h-6 w-6 ${stat.color}`} />
+                  <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl ${stat.bgColor} flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300`}>
+                    <stat.icon className={`h-5 w-5 sm:h-6 sm:w-6 ${stat.color}`} />
                   </div>
                 </div>
               </CardContent>
@@ -155,9 +174,9 @@ const Dashboard = () => {
           ))}
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="lg:col-span-2 space-y-6 lg:space-y-8 order-2 lg:order-1">
             {/* Quick Actions */}
             <Card className="bg-gradient-card border-0">
               <CardHeader>
@@ -202,7 +221,7 @@ const Dashboard = () => {
               <CardContent>
                 <div className="space-y-4">
                   {recentActivities.map((activity, index) => (
-                    <div key={index} className="flex items-start gap-4 p-4 rounded-lg bg-white/50 hover:bg-white/80 transition-colors">
+                    <div key={index} className="flex items-start gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg bg-gradient-to-r from-white/60 to-white/40 hover:from-white/90 hover:to-white/70 transition-all duration-300 border border-white/20">
                       <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                         activity.status === 'completed' ? 'bg-green-100 text-green-600' :
                         activity.status === 'pending' ? 'bg-yellow-100 text-yellow-600' :
@@ -229,7 +248,7 @@ const Dashboard = () => {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-4 lg:space-y-6 order-1 lg:order-2">
             {/* Upcoming Deadlines */}
             <Card className="bg-gradient-card border-0">
               <CardHeader>

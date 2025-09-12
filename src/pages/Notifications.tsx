@@ -139,9 +139,9 @@ const Notifications = () => {
       <div className="min-h-screen bg-muted/30">
         <Header />
         
-        <div className="container mx-auto px-4 lg:px-6 py-8">
+        <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4 sm:gap-0">
           <div>
             <h1 className="text-3xl font-bold mb-2">Notifications</h1>
             <p className="text-muted-foreground">
