@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { 
   Grid3X3, 
   Search, 
@@ -311,10 +312,12 @@ const Offerings = () => {
                       </div>
 
                       <div className="flex gap-2 pt-4">
-                        <Button className="flex-1" variant="default">
-                          Apply Now
-                          <ArrowRight className="h-4 w-4 ml-2" />
-                        </Button>
+                        <Link to={`/offerings/funding/${offer.id}`} className="flex-1">
+                          <Button className="w-full" variant="default">
+                            Apply Now
+                            <ArrowRight className="h-4 w-4 ml-2" />
+                          </Button>
+                        </Link>
                         <Button variant="outline" size="icon">
                           <MessageCircle className="h-4 w-4" />
                         </Button>
@@ -403,9 +406,11 @@ const Offerings = () => {
                       </div>
 
                       <div className="flex gap-2 pt-4">
-                        <Button className="flex-1" variant="default" disabled={mentor.availability !== "Available"}>
-                          Book Session
-                        </Button>
+                        <Link to={`/offerings/mentorship/${mentor.id}`} className="flex-1">
+                          <Button className="w-full" variant="default" disabled={mentor.availability !== "Available"}>
+                            Book Session
+                          </Button>
+                        </Link>
                         <Button variant="outline" size="icon">
                           <MessageCircle className="h-4 w-4" />
                         </Button>
@@ -492,10 +497,12 @@ const Offerings = () => {
                       </div>
 
                       <div className="flex gap-2 pt-4">
-                        <Button className="flex-1" variant="default">
-                          Consult Now
-                          <ArrowRight className="h-4 w-4 ml-2" />
-                        </Button>
+                        <Link to={`/offerings/legal/${service.id}`} className="flex-1">
+                          <Button className="w-full" variant="default">
+                            Consult Now
+                            <ArrowRight className="h-4 w-4 ml-2" />
+                          </Button>
+                        </Link>
                         <Button variant="outline" size="icon">
                           <MessageCircle className="h-4 w-4" />
                         </Button>

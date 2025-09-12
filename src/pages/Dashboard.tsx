@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { 
   BarChart3, 
   Users, 
@@ -112,10 +113,10 @@ const Dashboard = () => {
   ];
 
   const quickActions = [
-    { title: "File GST Return", icon: FileText, color: "bg-blue-500" },
-    { title: "Find Expert", icon: Users, color: "bg-green-500" },
-    { title: "Check Schemes", icon: Target, color: "bg-purple-500" },
-    { title: "Renew License", icon: CheckCircle, color: "bg-orange-500" },
+    { title: "File GST Return", icon: FileText, color: "bg-blue-500", link: "/services/2" },
+    { title: "Find Expert", icon: Users, color: "bg-green-500", link: "/offerings" },
+    { title: "Check Schemes", icon: Target, color: "bg-purple-500", link: "/schemes" },
+    { title: "Renew License", icon: CheckCircle, color: "bg-orange-500", link: "/services" },
   ];
 
   return (
@@ -171,16 +172,17 @@ const Dashboard = () => {
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {quickActions.map((action) => (
-                    <Button
-                      key={action.title}
-                      variant="outline"
-                      className="h-20 flex flex-col items-center gap-2 hover:shadow-md transition-all duration-300 hover:scale-105"
-                    >
-                      <div className={`w-8 h-8 rounded-lg ${action.color} flex items-center justify-center`}>
-                        <action.icon className="h-4 w-4 text-white" />
-                      </div>
-                      <span className="text-xs font-medium">{action.title}</span>
-                    </Button>
+                    <Link key={action.title} to={action.link}>
+                      <Button
+                        variant="outline"
+                        className="h-20 w-full flex flex-col items-center gap-2 hover:shadow-md transition-all duration-300 hover:scale-105"
+                      >
+                        <div className={`w-8 h-8 rounded-lg ${action.color} flex items-center justify-center`}>
+                          <action.icon className="h-4 w-4 text-white" />
+                        </div>
+                        <span className="text-xs font-medium">{action.title}</span>
+                      </Button>
+                    </Link>
                   ))}
                 </div>
               </CardContent>
@@ -257,9 +259,11 @@ const Dashboard = () => {
                     </div>
                   ))}
                 </div>
-                <Button className="w-full mt-4" variant="outline">
-                  View All Deadlines
-                </Button>
+                <Link to="/notifications">
+                  <Button className="w-full mt-4" variant="outline">
+                    View All Deadlines
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
 
@@ -278,10 +282,12 @@ const Dashboard = () => {
                 <p className="text-white/80 text-sm mb-4">
                   Great job! You're ahead of 85% of businesses in compliance.
                 </p>
-                <Button variant="glass" size="sm" className="w-full">
-                  View Detailed Report
-                  <ArrowUpRight className="h-4 w-4 ml-2" />
-                </Button>
+                <Link to="/profile">
+                  <Button variant="glass" size="sm" className="w-full">
+                    View Detailed Report
+                    <ArrowUpRight className="h-4 w-4 ml-2" />
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
 
@@ -295,9 +301,11 @@ const Dashboard = () => {
                 <p className="text-sm text-muted-foreground mb-4">
                   Manage multiple businesses from one dashboard
                 </p>
-                <Button variant="outline" size="sm">
-                  Get Started
-                </Button>
+                <Link to="/services/1">
+                  <Button variant="outline" size="sm">
+                    Get Started
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           </div>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { 
   User, 
   Settings, 
@@ -39,6 +40,16 @@ import AppLayout from "@/components/layout/AppLayout";
 
 const Profile = () => {
   const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [showAddBusinessForm, setShowAddBusinessForm] = useState(false);
+  const [editingBusiness, setEditingBusiness] = useState<number | null>(null);
+  const [businessFormData, setBusinessFormData] = useState({
+    name: '',
+    type: '',
+    cin: '',
+    pan: '',
+    gstin: '',
+    address: ''
+  });
 
   const userProfile = {
     name: "Rajesh Kumar",
@@ -178,27 +189,55 @@ const Profile = () => {
     }
   };
 
+  const handleAddBusiness = () => {
+    setBusinessFormData({ name: '', type: '', cin: '', pan: '', gstin: '', address: '' });
+    setShowAddBusinessForm(true);
+  };
+
+  const handleEditBusiness = (business: any) => {
+    setBusinessFormData({
+      name: business.name,
+      type: business.type,
+      cin: business.cin || '',
+      pan: business.pan || '',
+      gstin: business.gstin,
+      address: business.address
+    });
+    setEditingBusiness(business.id);
+  };
+
+  const handleSaveBusiness = () => {
+    console.log('Saving business:', businessFormData);
+    setShowAddBusinessForm(false);
+    setEditingBusiness(null);
+  };
+
+  const handleCancelBusiness = () => {
+    setShowAddBusinessForm(false);
+    setEditingBusiness(null);
+  };
+
   return (
     <AppLayout>
       <div className="min-h-screen bg-muted/30">
         <Header />
       
-      <div className="container mx-auto px-4 lg:px-6 py-8">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-8">
         {/* Profile Header */}
         <Card className="mb-8 bg-gradient-card border-0">
           <CardContent className="p-6">
-            <div className="flex items-start gap-6">
-              <Avatar className="w-24 h-24">
+            <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
+              <Avatar className="w-20 h-20 sm:w-24 sm:h-24 mx-auto sm:mx-0">
                 <AvatarImage src={userProfile.avatar} alt={userProfile.name} />
                 <AvatarFallback className="text-2xl">{userProfile.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
               </Avatar>
               
               <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between mb-4">
+                <div className="flex flex-col sm:flex-row items-start justify-between mb-4 gap-3 sm:gap-0">
                   <div>
                     <h1 className="text-2xl font-bold mb-1">{userProfile.name}</h1>
                     <p className="text-muted-foreground mb-2">{userProfile.businessType}</p>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 text-sm text-muted-foreground">
                       <div className="flex items-center gap-1">
                         <Mail className="h-4 w-4" />
                         {userProfile.email}
@@ -214,19 +253,20 @@ const Profile = () => {
                     </div>
                   </div>
                   
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm">
+                  <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                    <Button variant="outline" size="sm" className="w-full sm:w-auto" onClick={() => document.getElementById('photo-upload')?.click()}>
                       <Upload className="h-4 w-4 mr-2" />
                       Upload Photo
                     </Button>
-                    <Button variant="default" size="sm">
+                    <input id="photo-upload" type="file" accept="image/*" className="hidden" />
+                    <Button variant="default" size="sm" className="w-full sm:w-auto" onClick={() => setIsEditingProfile(!isEditingProfile)}>
                       <Edit className="h-4 w-4 mr-2" />
-                      Edit Profile
+                      {isEditingProfile ? 'Save Profile' : 'Edit Profile'}
                     </Button>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                   <div className="text-center p-3 bg-muted/50 rounded-lg">
                     <div className="text-2xl font-bold text-primary mb-1">94%</div>
                     <p className="text-xs text-muted-foreground">Compliance Score</p>
@@ -251,7 +291,7 @@ const Profile = () => {
 
         {/* Profile Tabs */}
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full md:w-auto md:grid-cols-5 bg-white">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5 bg-white overflow-x-auto">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="businesses">Businesses</TabsTrigger>
             <TabsTrigger value="applications">Applications</TabsTrigger>
@@ -261,8 +301,8 @@ const Profile = () => {
 
           {/* Overview */}
           <TabsContent value="overview" className="space-y-6">
-            <div className="grid lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
+              <div className="lg:col-span-2 order-2 lg:order-1">
                 <Card className="bg-gradient-card border-0">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
@@ -274,27 +314,27 @@ const Profile = () => {
                     <div className="grid md:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <Label>Full Name</Label>
-                        <Input value={userProfile.name} readOnly />
+                        <Input value={userProfile.name} readOnly={!isEditingProfile} />
                       </div>
                       <div className="space-y-2">
                         <Label>Email Address</Label>
-                        <Input value={userProfile.email} readOnly />
+                        <Input value={userProfile.email} readOnly={!isEditingProfile} />
                       </div>
                       <div className="space-y-2">
                         <Label>Phone Number</Label>
-                        <Input value={userProfile.phone} readOnly />
+                        <Input value={userProfile.phone} readOnly={!isEditingProfile} />
                       </div>
                       <div className="space-y-2">
                         <Label>Location</Label>
-                        <Input value={userProfile.location} readOnly />
+                        <Input value={userProfile.location} readOnly={!isEditingProfile} />
                       </div>
                       <div className="space-y-2">
                         <Label>Industry</Label>
-                        <Input value={userProfile.industry} readOnly />
+                        <Input value={userProfile.industry} readOnly={!isEditingProfile} />
                       </div>
                       <div className="space-y-2">
                         <Label>Annual Turnover</Label>
-                        <Input value={userProfile.annualTurnover} readOnly />
+                        <Input value={userProfile.annualTurnover} readOnly={!isEditingProfile} />
                       </div>
                     </div>
                   </CardContent>
@@ -310,9 +350,11 @@ const Profile = () => {
                       <p className="text-sm text-white/90 mb-4">
                         Enjoy enhanced benefits and priority support
                       </p>
-                      <Button variant="glass" size="sm" className="w-full">
-                        View Benefits
-                      </Button>
+                      <Link to="/schemes">
+                        <Button variant="glass" size="sm" className="w-full">
+                          View Benefits
+                        </Button>
+                      </Link>
                     </div>
                   </CardContent>
                 </Card>
@@ -322,15 +364,17 @@ const Profile = () => {
                     <CardTitle className="text-lg">Quick Actions</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    <Button variant="outline" className="w-full justify-start">
+                    <Button variant="outline" className="w-full justify-start" onClick={handleAddBusiness}>
                       <Plus className="h-4 w-4 mr-2" />
                       Add New Business
                     </Button>
-                    <Button variant="outline" className="w-full justify-start">
-                      <FileText className="h-4 w-4 mr-2" />
-                      Request New Service
-                    </Button>
-                    <Button variant="outline" className="w-full justify-start">
+                    <Link to="/services">
+                      <Button variant="outline" className="w-full justify-start">
+                        <FileText className="h-4 w-4 mr-2" />
+                        Request New Service
+                      </Button>
+                    </Link>
+                    <Button variant="outline" className="w-full justify-start" onClick={() => window.print()}>
                       <Download className="h-4 w-4 mr-2" />
                       Download Reports
                     </Button>
@@ -344,73 +388,229 @@ const Profile = () => {
           <TabsContent value="businesses" className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold">My Businesses</h2>
-              <Button variant="default">
+              <Button variant="default" onClick={handleAddBusiness}>
                 <Plus className="h-4 w-4 mr-2" />
                 Add Business
               </Button>
             </div>
 
+            {/* Add Business Form */}
+            {showAddBusinessForm && (
+              <Card className="mb-6 bg-gradient-card border-0">
+                <CardHeader>
+                  <CardTitle>Add New Business</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                    <div className="space-y-2">
+                      <Label>Business Name *</Label>
+                      <Input 
+                        value={businessFormData.name}
+                        onChange={(e) => setBusinessFormData({...businessFormData, name: e.target.value})}
+                        placeholder="Enter business name"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Business Type *</Label>
+                      <select 
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                        value={businessFormData.type}
+                        onChange={(e) => setBusinessFormData({...businessFormData, type: e.target.value})}
+                      >
+                        <option value="">Select business type</option>
+                        <option value="Private Limited Company">Private Limited Company</option>
+                        <option value="Partnership Firm">Partnership Firm</option>
+                        <option value="LLP">Limited Liability Partnership</option>
+                        <option value="Sole Proprietorship">Sole Proprietorship</option>
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>CIN (if applicable)</Label>
+                      <Input 
+                        value={businessFormData.cin}
+                        onChange={(e) => setBusinessFormData({...businessFormData, cin: e.target.value})}
+                        placeholder="Enter CIN number"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>PAN Number</Label>
+                      <Input 
+                        value={businessFormData.pan}
+                        onChange={(e) => setBusinessFormData({...businessFormData, pan: e.target.value})}
+                        placeholder="Enter PAN number"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>GSTIN</Label>
+                      <Input 
+                        value={businessFormData.gstin}
+                        onChange={(e) => setBusinessFormData({...businessFormData, gstin: e.target.value})}
+                        placeholder="Enter GSTIN"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Address *</Label>
+                      <Input 
+                        value={businessFormData.address}
+                        onChange={(e) => setBusinessFormData({...businessFormData, address: e.target.value})}
+                        placeholder="Enter business address"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex gap-3 mt-6">
+                    <Button onClick={handleSaveBusiness} disabled={!businessFormData.name || !businessFormData.type || !businessFormData.address}>
+                      <CheckCircle className="h-4 w-4 mr-2" />
+                      Save Business
+                    </Button>
+                    <Button variant="outline" onClick={handleCancelBusiness}>
+                      <XCircle className="h-4 w-4 mr-2" />
+                      Cancel
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             <div className="grid md:grid-cols-2 gap-6">
               {businesses.map((business) => (
                 <Card key={business.id} className={`bg-gradient-card border-0 ${business.primary ? 'ring-2 ring-primary/20' : ''}`}>
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <CardTitle className="text-lg">{business.name}</CardTitle>
-                        <CardDescription>{business.type}</CardDescription>
-                      </div>
-                      <div className="flex gap-2">
-                        {business.primary && (
-                          <Badge className="bg-primary-light text-primary">Primary</Badge>
-                        )}
-                        <Badge className={business.status === "Active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}>
-                          {business.status}
-                        </Badge>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        {business.cin && (
-                          <div>
-                            <p className="font-medium">CIN</p>
-                            <p className="text-muted-foreground">{business.cin}</p>
+                  {editingBusiness === business.id ? (
+                    // Edit Form
+                    <>
+                      <CardHeader>
+                        <CardTitle>Edit Business</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid gap-4">
+                          <div className="space-y-2">
+                            <Label>Business Name *</Label>
+                            <Input 
+                              value={businessFormData.name}
+                              onChange={(e) => setBusinessFormData({...businessFormData, name: e.target.value})}
+                            />
                           </div>
-                        )}
-                        {business.pan && (
-                          <div>
-                            <p className="font-medium">PAN</p>
-                            <p className="text-muted-foreground">{business.pan}</p>
+                          <div className="space-y-2">
+                            <Label>Business Type *</Label>
+                            <select 
+                              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                              value={businessFormData.type}
+                              onChange={(e) => setBusinessFormData({...businessFormData, type: e.target.value})}
+                            >
+                              <option value="Private Limited Company">Private Limited Company</option>
+                              <option value="Partnership Firm">Partnership Firm</option>
+                              <option value="LLP">Limited Liability Partnership</option>
+                              <option value="Sole Proprietorship">Sole Proprietorship</option>
+                            </select>
                           </div>
-                        )}
-                        <div>
-                          <p className="font-medium">GSTIN</p>
-                          <p className="text-muted-foreground">{business.gstin}</p>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label>CIN</Label>
+                              <Input 
+                                value={businessFormData.cin}
+                                onChange={(e) => setBusinessFormData({...businessFormData, cin: e.target.value})}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label>PAN</Label>
+                              <Input 
+                                value={businessFormData.pan}
+                                onChange={(e) => setBusinessFormData({...businessFormData, pan: e.target.value})}
+                              />
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <Label>GSTIN</Label>
+                            <Input 
+                              value={businessFormData.gstin}
+                              onChange={(e) => setBusinessFormData({...businessFormData, gstin: e.target.value})}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label>Address *</Label>
+                            <Input 
+                              value={businessFormData.address}
+                              onChange={(e) => setBusinessFormData({...businessFormData, address: e.target.value})}
+                            />
+                          </div>
                         </div>
-                        <div>
-                          <p className="font-medium">Registered</p>
-                          <p className="text-muted-foreground">{new Date(business.registrationDate).toLocaleDateString()}</p>
+                        <div className="flex flex-col sm:flex-row gap-3 mt-6">
+                          <Button onClick={handleSaveBusiness} className="w-full sm:w-auto">
+                            <CheckCircle className="h-4 w-4 mr-2" />
+                            Save Changes
+                          </Button>
+                          <Button variant="outline" onClick={handleCancelBusiness} className="w-full sm:w-auto">
+                            <XCircle className="h-4 w-4 mr-2" />
+                            Cancel
+                          </Button>
                         </div>
-                      </div>
-                      
-                      <div>
-                        <p className="font-medium text-sm mb-1">Address</p>
-                        <p className="text-sm text-muted-foreground">{business.address}</p>
-                      </div>
+                      </CardContent>
+                    </>
+                  ) : (
+                    // View Mode
+                    <>
+                      <CardHeader>
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <CardTitle className="text-lg">{business.name}</CardTitle>
+                            <CardDescription>{business.type}</CardDescription>
+                          </div>
+                          <div className="flex gap-2">
+                            {business.primary && (
+                              <Badge className="bg-primary-light text-primary">Primary</Badge>
+                            )}
+                            <Badge className={business.status === "Active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}>
+                              {business.status}
+                            </Badge>
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          <div className="grid grid-cols-2 gap-4 text-sm">
+                            {business.cin && (
+                              <div>
+                                <p className="font-medium">CIN</p>
+                                <p className="text-muted-foreground">{business.cin}</p>
+                              </div>
+                            )}
+                            {business.pan && (
+                              <div>
+                                <p className="font-medium">PAN</p>
+                                <p className="text-muted-foreground">{business.pan}</p>
+                              </div>
+                            )}
+                            <div>
+                              <p className="font-medium">GSTIN</p>
+                              <p className="text-muted-foreground">{business.gstin}</p>
+                            </div>
+                            <div>
+                              <p className="font-medium">Registered</p>
+                              <p className="text-muted-foreground">{new Date(business.registrationDate).toLocaleDateString()}</p>
+                            </div>
+                          </div>
+                          
+                          <div>
+                            <p className="font-medium text-sm mb-1">Address</p>
+                            <p className="text-sm text-muted-foreground">{business.address}</p>
+                          </div>
 
-                      <div className="flex gap-2 pt-4">
-                        <Button variant="outline" size="sm" className="flex-1">
-                          <Eye className="h-4 w-4 mr-2" />
-                          View Details
-                        </Button>
-                        <Button variant="outline" size="sm" className="flex-1">
-                          <Edit className="h-4 w-4 mr-2" />
-                          Edit
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
+                          <div className="flex gap-2 pt-4">
+                            <Button variant="outline" size="sm" className="flex-1" onClick={() => alert(`Viewing details for ${business.name}`)}>
+                              <Eye className="h-4 w-4 mr-2" />
+                              View Details
+                            </Button>
+                            <Button variant="outline" size="sm" className="flex-1" onClick={() => handleEditBusiness(business)}>
+                              <Edit className="h-4 w-4 mr-2" />
+                              Edit
+                            </Button>
+                            <Button variant="outline" size="sm" onClick={() => alert(`Delete ${business.name}?`)}>
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </>
+                  )}
                 </Card>
               ))}
             </div>
@@ -420,7 +620,7 @@ const Profile = () => {
           <TabsContent value="applications" className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold">Application History</h2>
-              <Button variant="outline">
+              <Button variant="outline" onClick={() => window.print()}>
                 <Download className="h-4 w-4 mr-2" />
                 Export History
               </Button>
@@ -504,11 +704,13 @@ const Profile = () => {
                         )}
 
                         <div className="flex gap-3">
-                          <Button variant="outline" size="sm">
-                            View Details
-                          </Button>
-                          {application.documents && (
+                          <Link to={`/services/${application.type === 'GST Registration' ? '2' : application.type === 'Company Registration' ? '1' : ''}`}>
                             <Button variant="outline" size="sm">
+                              View Details
+                            </Button>
+                          </Link>
+                          {application.documents && (
+                            <Button variant="outline" size="sm" onClick={() => alert(`Downloading documents for ${application.type}`)}>
                               <Download className="h-4 w-4 mr-2" />
                               Download
                             </Button>
@@ -564,7 +766,7 @@ const Profile = () => {
 
           {/* Settings */}
           <TabsContent value="settings" className="space-y-6">
-            <div className="grid lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
               <Card className="bg-gradient-card border-0">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -615,19 +817,19 @@ const Profile = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button variant="outline" className="w-full justify-start" onClick={() => alert('Password change functionality would be implemented here')}>
                     <Key className="h-4 w-4 mr-2" />
                     Change Password
                   </Button>
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button variant="outline" className="w-full justify-start" onClick={() => alert('Two-factor authentication setup would be implemented here')}>
                     <Shield className="h-4 w-4 mr-2" />
                     Enable Two-Factor Authentication
                   </Button>
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button variant="outline" className="w-full justify-start" onClick={() => alert('Login activity log would be displayed here')}>
                     <Eye className="h-4 w-4 mr-2" />
                     Login Activity
                   </Button>
-                  <Button variant="outline" className="w-full justify-start">
+                  <Button variant="outline" className="w-full justify-start" onClick={() => alert('Data export functionality would be implemented here')}>
                     <Download className="h-4 w-4 mr-2" />
                     Download My Data
                   </Button>

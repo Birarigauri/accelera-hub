@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { 
   Target, 
   Search, 
@@ -348,10 +349,12 @@ const Schemes = () => {
                       </div>
 
                       <div className="flex gap-2 pt-4">
-                        <Button className="flex-1" variant="default">
-                          Apply Now
-                          <ArrowRight className="h-4 w-4 ml-2" />
-                        </Button>
+                        <Link to={`/schemes/${scheme.id}`} className="flex-1">
+                          <Button className="w-full" variant="default">
+                            Apply Now
+                            <ArrowRight className="h-4 w-4 ml-2" />
+                          </Button>
+                        </Link>
                         <Button variant="outline" size="icon">
                           <FileText className="h-4 w-4" />
                         </Button>

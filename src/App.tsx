@@ -9,9 +9,12 @@ import Register from "./pages/Auth/Register";
 import Dashboard from "./pages/Dashboard";
 import Notifications from "./pages/Notifications";
 import Services from "./pages/Services";
+import ServiceDetails from "./pages/ServiceDetails";
 import Schemes from "./pages/Schemes";
+import SchemeDetails from "./pages/SchemeDetails";
 import News from "./pages/News";
 import Offerings from "./pages/Offerings";
+import OfferingDetails from "./pages/OfferingDetails";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
@@ -30,9 +33,12 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/services" element={<Services />} />
+          <Route path="/services/:id" element={<ServiceDetails />} />
           <Route path="/schemes" element={<Schemes />} />
+          <Route path="/schemes/:id" element={<SchemeDetails />} />
           <Route path="/news" element={<News />} />
           <Route path="/offerings" element={<Offerings />} />
+          <Route path="/offerings/:type/:id" element={<OfferingDetails />} />
           <Route path="/profile" element={<Profile />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

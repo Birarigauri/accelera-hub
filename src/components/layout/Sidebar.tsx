@@ -28,7 +28,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="w-64 bg-white border-r border-gray-200 h-screen sticky top-0 overflow-y-auto">
+    <div className="w-64 bg-white border-r border-gray-200 h-screen sticky top-0 overflow-y-auto hidden md:block">
       <div className="p-6">
         <div className="flex items-center gap-2 mb-8">
           <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">

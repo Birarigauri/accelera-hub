@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { 
   Search, 
   Filter, 
@@ -193,9 +194,9 @@ const Services = () => {
       <div className="min-h-screen bg-muted/30">
         <Header />
         
-        <div className="container mx-auto px-4 lg:px-6 py-8">
+        <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4 sm:gap-0">
           <div>
             <h1 className="text-3xl font-bold mb-2">Services & Licenses</h1>
             <p className="text-muted-foreground">
@@ -203,7 +204,7 @@ const Services = () => {
             </p>
           </div>
           
-          <Button variant="hero" className="hidden md:flex">
+          <Button variant="hero" className="w-full sm:w-auto">
             <Plus className="h-4 w-4 mr-2" />
             Request Custom Service
           </Button>
@@ -211,7 +212,7 @@ const Services = () => {
 
         {/* Services Tabs */}
         <Tabs defaultValue="catalog" className="space-y-6">
-          <TabsList className="grid w-full md:w-auto md:grid-cols-2 bg-white">
+          <TabsList className="grid w-full grid-cols-2 bg-white">
             <TabsTrigger value="catalog">Service Catalog</TabsTrigger>
             <TabsTrigger value="my-services">My Services</TabsTrigger>
           </TabsList>
@@ -250,7 +251,7 @@ const Services = () => {
             </Card>
 
             {/* Services Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {filteredServices.map((service) => (
                 <Card key={service.id} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-gradient-card border-0 relative">
                   {service.popular && (
@@ -310,10 +311,12 @@ const Services = () => {
                       </div>
 
                       <div className="flex gap-2 pt-4">
-                        <Button className="flex-1" variant="default">
-                          Get Started
-                          <ArrowRight className="h-4 w-4 ml-2" />
-                        </Button>
+                        <Link to={`/services/${service.id}`} className="flex-1">
+                          <Button className="w-full" variant="default">
+                            Get Started
+                            <ArrowRight className="h-4 w-4 ml-2" />
+                          </Button>
+                        </Link>
                         <Button variant="outline" size="icon">
                           <Users className="h-4 w-4" />
                         </Button>
