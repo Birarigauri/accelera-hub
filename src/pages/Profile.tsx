@@ -35,6 +35,7 @@ import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import Header from "@/components/layout/Header";
+import AppLayout from "@/components/layout/AppLayout";
 
 const Profile = () => {
   const [isEditingProfile, setIsEditingProfile] = useState(false);
@@ -178,8 +179,9 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen bg-muted/30">
-      <Header />
+    <AppLayout>
+      <div className="min-h-screen bg-muted/30">
+        <Header />
       
       <div className="container mx-auto px-4 lg:px-6 py-8">
         {/* Profile Header */}
@@ -635,7 +637,8 @@ const Profile = () => {
           </TabsContent>
         </Tabs>
       </div>
-    </div>
+      </div>
+    </AppLayout>
   );
 };
 

@@ -21,6 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Header from "@/components/layout/Header";
+import AppLayout from "@/components/layout/AppLayout";
 
 const News = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -164,10 +165,11 @@ const News = () => {
   };
 
   return (
-    <div className="min-h-screen bg-muted/30">
-      <Header />
-      
-      <div className="container mx-auto px-4 lg:px-6 py-8">
+    <AppLayout>
+      <div className="min-h-screen bg-muted/30">
+        <Header />
+        
+        <div className="container mx-auto px-4 lg:px-6 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -422,8 +424,9 @@ const News = () => {
             </Card>
           </div>
         </div>
+        </div>
       </div>
-    </div>
+    </AppLayout>
   );
 };
 

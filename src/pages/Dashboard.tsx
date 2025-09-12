@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import Header from "@/components/layout/Header";
+import AppLayout from "@/components/layout/AppLayout";
 
 const Dashboard = () => {
   const [userType] = useState<"new" | "existing">("existing"); // This would come from auth context
@@ -118,10 +119,11 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-muted/30">
-      <Header />
-      
-      <div className="container mx-auto px-4 lg:px-6 py-8">
+    <AppLayout>
+      <div className="min-h-screen bg-muted/30">
+        <Header />
+        
+        <div className="container mx-auto px-4 lg:px-6 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Welcome back, Rajesh! 👋</h1>
@@ -300,8 +302,9 @@ const Dashboard = () => {
             </Card>
           </div>
         </div>
+        </div>
       </div>
-    </div>
+    </AppLayout>
   );
 };
 

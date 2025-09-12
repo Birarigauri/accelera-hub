@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { ArrowRight, Shield, Users, TrendingUp, CheckCircle, Star, Building, Lightbulb } from "lucide-react";
+import { ArrowRight, Shield, Users, TrendingUp, CheckCircle, Star, Building, Lightbulb, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 import heroImage from "@/assets/hero-business.jpg";
 
 const Landing = () => {
@@ -126,6 +127,117 @@ const Landing = () => {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Demo Navigation Section */}
+      <section className="py-16 bg-gradient-to-r from-blue-50 to-indigo-50 border-y border-blue-100">
+        <div className="container mx-auto px-4 lg:px-6">
+          <div className="text-center mb-12">
+            <Badge className="mb-4 bg-blue-100 text-blue-700 border-blue-200">Demo Navigation</Badge>
+            <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-gray-800">Explore All Pages</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Quick access to all available pages for demonstration and testing purposes
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
+            <Link to="/dashboard" className="group">
+              <Card className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white border-blue-200 hover:border-blue-300">
+                <CardContent className="p-4 text-center">
+                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-blue-200 transition-colors">
+                    <TrendingUp className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <h3 className="font-semibold text-gray-800 mb-1">Dashboard</h3>
+                  <ExternalLink className="h-3 w-3 text-gray-400 mx-auto" />
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link to="/services" className="group">
+              <Card className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white border-blue-200 hover:border-blue-300">
+                <CardContent className="p-4 text-center">
+                  <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-green-200 transition-colors">
+                    <Building className="h-5 w-5 text-green-600" />
+                  </div>
+                  <h3 className="font-semibold text-gray-800 mb-1">Services</h3>
+                  <ExternalLink className="h-3 w-3 text-gray-400 mx-auto" />
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link to="/schemes" className="group">
+              <Card className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white border-blue-200 hover:border-blue-300">
+                <CardContent className="p-4 text-center">
+                  <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-purple-200 transition-colors">
+                    <Shield className="h-5 w-5 text-purple-600" />
+                  </div>
+                  <h3 className="font-semibold text-gray-800 mb-1">Schemes</h3>
+                  <ExternalLink className="h-3 w-3 text-gray-400 mx-auto" />
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link to="/offerings" className="group">
+              <Card className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white border-blue-200 hover:border-blue-300">
+                <CardContent className="p-4 text-center">
+                  <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-orange-200 transition-colors">
+                    <Star className="h-5 w-5 text-orange-600" />
+                  </div>
+                  <h3 className="font-semibold text-gray-800 mb-1">Offerings</h3>
+                  <ExternalLink className="h-3 w-3 text-gray-400 mx-auto" />
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link to="/news" className="group">
+              <Card className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white border-blue-200 hover:border-blue-300">
+                <CardContent className="p-4 text-center">
+                  <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-red-200 transition-colors">
+                    <Lightbulb className="h-5 w-5 text-red-600" />
+                  </div>
+                  <h3 className="font-semibold text-gray-800 mb-1">News</h3>
+                  <ExternalLink className="h-3 w-3 text-gray-400 mx-auto" />
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link to="/notifications" className="group">
+              <Card className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white border-blue-200 hover:border-blue-300">
+                <CardContent className="p-4 text-center">
+                  <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-yellow-200 transition-colors">
+                    <CheckCircle className="h-5 w-5 text-yellow-600" />
+                  </div>
+                  <h3 className="font-semibold text-gray-800 mb-1">Notifications</h3>
+                  <ExternalLink className="h-3 w-3 text-gray-400 mx-auto" />
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link to="/profile" className="group">
+              <Card className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white border-blue-200 hover:border-blue-300">
+                <CardContent className="p-4 text-center">
+                  <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-indigo-200 transition-colors">
+                    <Users className="h-5 w-5 text-indigo-600" />
+                  </div>
+                  <h3 className="font-semibold text-gray-800 mb-1">Profile</h3>
+                  <ExternalLink className="h-3 w-3 text-gray-400 mx-auto" />
+                </CardContent>
+              </Card>
+            </Link>
+
+            <Link to="/login" className="group">
+              <Card className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white border-blue-200 hover:border-blue-300">
+                <CardContent className="p-4 text-center">
+                  <div className="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-teal-200 transition-colors">
+                    <ArrowRight className="h-5 w-5 text-teal-600" />
+                  </div>
+                  <h3 className="font-semibold text-gray-800 mb-1">Login</h3>
+                  <ExternalLink className="h-3 w-3 text-gray-400 mx-auto" />
+                </CardContent>
+              </Card>
+            </Link>
           </div>
         </div>
       </section>
