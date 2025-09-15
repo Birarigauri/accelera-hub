@@ -12,7 +12,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground",
+      "inline-flex h-16 items-center justify-center rounded-3xl bg-white/85 backdrop-blur-xl border border-gray-200/60 p-2 text-gray-700 shadow-xl shadow-blue-500/15 relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-blue-500/8 before:via-purple-500/8 before:to-pink-500/8 before:rounded-3xl gap-1",
       className,
     )}
     {...props}
@@ -27,7 +27,7 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+      "relative inline-flex items-center justify-center whitespace-nowrap rounded-2xl px-8 py-4 text-sm font-semibold transition-all duration-500 ease-out hover:bg-white/95 hover:text-blue-700 hover:shadow-lg hover:shadow-blue-500/25 hover:-translate-y-1 hover:backdrop-blur-lg data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500 data-[state=active]:via-blue-600 data-[state=active]:to-blue-700 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-blue-500/30 data-[state=active]:-translate-y-0.5 data-[state=active]:border data-[state=active]:border-blue-400/40 before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-br before:from-white/30 before:to-transparent before:opacity-0 hover:before:opacity-100 data-[state=active]:before:opacity-100 after:absolute after:inset-0 after:rounded-2xl after:ring-2 after:ring-blue-500/20 after:opacity-0 hover:after:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 disabled:pointer-events-none disabled:opacity-50 z-10",
       className,
     )}
     {...props}

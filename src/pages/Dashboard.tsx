@@ -13,7 +13,8 @@ import {
   ArrowUpRight,
   Activity,
   Briefcase,
-  Target
+  Target,
+  Calculator
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -114,9 +115,9 @@ const Dashboard = () => {
 
   const quickActions = [
     { title: "File GST Return", icon: FileText, color: "bg-blue-500", link: "/services/2" },
+    { title: "Eligibility Calculator", icon: Calculator, color: "bg-purple-500", link: "/eligibility-calculator" },
     { title: "Find Expert", icon: Users, color: "bg-green-500", link: "/offerings" },
-    { title: "Check Schemes", icon: Target, color: "bg-purple-500", link: "/schemes" },
-    { title: "Renew License", icon: CheckCircle, color: "bg-orange-500", link: "/services" },
+    { title: "Check Schemes", icon: Target, color: "bg-orange-500", link: "/schemes" },
   ];
 
   return (

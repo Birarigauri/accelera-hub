@@ -16,6 +16,11 @@ import News from "./pages/News";
 import Offerings from "./pages/Offerings";
 import OfferingDetails from "./pages/OfferingDetails";
 import Profile from "./pages/Profile";
+import ProfileV2 from "./pages/ProfileV2";
+import EligibilityCalculator from "./pages/EligibilityCalculator";
+import SchemeApplication from "./pages/SchemeApplication";
+import SchemeApplications from "./pages/SchemeApplications";
+import ViewApplication from "./pages/ViewApplication";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +45,11 @@ const App = () => (
           <Route path="/offerings" element={<Offerings />} />
           <Route path="/offerings/:type/:id" element={<OfferingDetails />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/profile-v2" element={<ProfileV2 />} />
+          <Route path="/eligibility-calculator" element={<EligibilityCalculator />} />
+          <Route path="/scheme-application" element={<SchemeApplication />} />
+          <Route path="/scheme-applications" element={<SchemeApplications />} />
+          <Route path="/view-application/:id" element={<ViewApplication />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

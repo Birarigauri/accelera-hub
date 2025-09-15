@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { ArrowRight, Shield, Users, TrendingUp, CheckCircle, Star, Building, Lightbulb, ExternalLink, ChevronLeft, ChevronRight, Zap, Rocket, Target } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { ArrowRight, Shield, Users, TrendingUp, CheckCircle, Star, Building, Lightbulb, ExternalLink, ChevronLeft, ChevronRight, Zap, Rocket, Target, ArrowUp, Mail, Phone, MapPin, Send } from "lucide-react";
 import { motion } from "framer-motion";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -12,6 +12,9 @@ import heroImage from "@/assets/hero-business.jpg";
 const Landing = () => {
   const [activeTab, setActiveTab] = useState("new");
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [scrollY, setScrollY] = useState(0);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const heroRef = useRef<HTMLElement>(null);
 
 
   const sliderImages = [
@@ -20,7 +23,7 @@ const Landing = () => {
       title: "Digital India Initiative",
       subtitle: "Empowering Entrepreneurs Nationwide",
       description: "Join millions of Indian entrepreneurs in the digital revolution",
-      image: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1200&h=600&fit=crop",
+      image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=1200&h=600&fit=crop&q=80",
       type: "government"
     },
     {
@@ -28,7 +31,7 @@ const Landing = () => {
       title: "Startup India Success",
       subtitle: "From Idea to IPO",
       description: "Discover how Indian startups are changing the world",
-      image: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1200&h=600&fit=crop",
+      image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1200&h=600&fit=crop&q=80",
       type: "startup"
     },
     {
@@ -36,7 +39,7 @@ const Landing = () => {
       title: "MSME Growth Schemes",
       subtitle: "₹50,000 Crore Fund Allocation",
       description: "Access government funding for your business expansion",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&h=600&fit=crop",
+      image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&h=600&fit=crop&q=80",
       type: "scheme"
     },
     {
@@ -44,7 +47,7 @@ const Landing = () => {
       title: "Women Entrepreneurs",
       subtitle: "Leading India's Economic Growth",
       description: "Special schemes and support for women-led businesses",
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1200&h=600&fit=crop",
+      image: "https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=1200&h=600&fit=crop&q=80",
       type: "women"
     },
     {
@@ -52,7 +55,7 @@ const Landing = () => {
       title: "Make in India",
       subtitle: "Manufacturing Excellence",
       description: "Transform your manufacturing business with government support",
-      image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&h=600&fit=crop",
+      image: "https://images.unsplash.com/photo-1565008447742-97f6f38c985c?w=1200&h=600&fit=crop&q=80",
       type: "manufacturing"
     }
   ];
@@ -151,7 +154,19 @@ const Landing = () => {
       once: true,
       offset: 100
     });
+
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+      setShowScrollTop(window.scrollY > 300);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const stats = [
     { number: "50,000+", label: "Registered Entrepreneurs" },
@@ -186,7 +201,7 @@ const Landing = () => {
       </header>
 
       {/* Hero Slider Section */}
-      <section className="relative h-screen overflow-hidden">
+      <section ref={heroRef} className="relative h-screen overflow-hidden">
         <div className="relative w-full h-full">
           {sliderImages.map((slide, index) => (
             <div
@@ -277,16 +292,16 @@ const Landing = () => {
         {/* Slider Navigation */}
         <button
           onClick={prevSlide}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white transition-all duration-300 backdrop-blur-sm"
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-8 h-8 bg-black/20 hover:bg-black/40 rounded-full flex items-center justify-center text-white/70 hover:text-white transition-all duration-300 opacity-60 hover:opacity-100"
         >
-          <ChevronLeft className="h-6 w-6" />
+          <ChevronLeft className="h-4 w-4" />
         </button>
         
         <button
           onClick={nextSlide}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center text-white transition-all duration-300 backdrop-blur-sm"
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-8 h-8 bg-black/20 hover:bg-black/40 rounded-full flex items-center justify-center text-white/70 hover:text-white transition-all duration-300 opacity-60 hover:opacity-100"
         >
-          <ChevronRight className="h-6 w-6" />
+          <ChevronRight className="h-4 w-4" />
         </button>
 
         {/* Slider Dots */}
@@ -331,7 +346,7 @@ const Landing = () => {
       </section>
 
       {/* Demo Navigation Section */}
-      <section className="py-16 bg-gradient-to-r from-blue-50 to-indigo-50 border-y border-blue-100">
+      <section className="min-h-screen flex items-center py-16 bg-gradient-to-r from-blue-50 to-indigo-50 border-y border-blue-100">
         <div className="container mx-auto px-4 lg:px-6">
           <div className="text-center mb-12">
             <Badge className="mb-4 bg-blue-100 text-blue-700 border-blue-200">Demo Navigation</Badge>
@@ -442,56 +457,141 @@ const Landing = () => {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 lg:py-32 bg-muted/30">
-        <div className="container mx-auto px-4 lg:px-6">
-          <div className="text-center mb-16">
-            <Badge className="mb-4 bg-primary-light text-primary">Key Features</Badge>
-            <h2 className="text-3xl lg:text-5xl font-bold mb-6">Everything You Need to Succeed</h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+      <section id="features" className="relative min-h-screen flex items-center py-20 lg:py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-blue-50/50 to-purple-50/30"></div>
+        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+        
+        <div className="relative z-10 container mx-auto px-4 lg:px-6">
+          <motion.div 
+            className="text-center mb-20"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <Badge className="mb-6 bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 border-blue-200 px-6 py-3 text-sm font-bold">
+              🚀 Key Features
+            </Badge>
+            <h2 className="text-4xl lg:text-7xl font-bold mb-8 bg-gradient-to-r from-gray-900 via-blue-700 to-purple-700 bg-clip-text text-transparent leading-tight">
+              Everything You Need
+              <br className="hidden sm:block" />
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">to Succeed</span>
+            </h2>
+            <p className="text-xl lg:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
               Comprehensive tools and services designed specifically for Indian entrepreneurs
             </p>
-          </div>
+            <div className="flex items-center justify-center gap-6 mt-10 text-sm text-gray-500">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-4 w-4 text-green-500" />
+                <span>All-in-One Platform</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-4 w-4 text-green-500" />
+                <span>Expert Support</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-4 w-4 text-green-500" />
+                <span>Government Approved</span>
+              </div>
+            </div>
+          </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
             {features.map((feature, index) => (
               <motion.div
                 key={feature.title}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ scale: 1.05, y: -10 }}
-                data-aos="fade-up"
-                data-aos-delay={index * 100}
+                initial={{ opacity: 0, y: 60, rotateX: 45 }}
+                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                transition={{ 
+                  duration: 0.8, 
+                  delay: index * 0.15,
+                  type: "spring",
+                  stiffness: 100
+                }}
+                whileHover={{ 
+                  y: -15, 
+                  scale: 1.03,
+                  rotateY: 5,
+                  transition: { duration: 0.4 }
+                }}
+                className="group perspective-1000"
               >
-                <Card className="group hover:shadow-lg transition-all duration-300 bg-gradient-card border-0 h-full">
-                  <CardContent className="p-6">
+                <Card className="relative overflow-hidden bg-white/90 backdrop-blur-md border-0 shadow-xl hover:shadow-2xl transition-all duration-500 h-full transform-gpu">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/5 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
+                  
+                  <CardContent className="relative p-8">
                     <motion.div 
-                      className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center mb-4"
-                      whileHover={{ rotate: 360, scale: 1.2 }}
+                      className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg"
+                      whileHover={{ 
+                        rotate: [0, -10, 10, -10, 0],
+                        scale: 1.1
+                      }}
                       transition={{ duration: 0.6 }}
                     >
-                      <feature.icon className="h-6 w-6 text-white" />
+                      <feature.icon className="h-8 w-8 text-white" />
                     </motion.div>
-                    <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
+                    
+                    <h3 className="text-xl font-bold mb-4 text-gray-900 group-hover:text-blue-700 transition-colors">
+                      {feature.title}
+                    </h3>
+                    
+                    <p className="text-gray-600 leading-relaxed mb-6">
+                      {feature.description}
+                    </p>
+                    
+                    <div className="flex items-center text-blue-600 font-semibold text-sm group-hover:text-blue-700 transition-colors">
+                      <span>Learn More</span>
+                      <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </div>
                   </CardContent>
                 </Card>
               </motion.div>
             ))}
           </div>
+          
+          <motion.div 
+            className="text-center mt-20"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+          >
+            <Button size="xl" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-xl hover:shadow-2xl">
+              Explore All Features
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </motion.div>
         </div>
       </section>
 
       {/* Testimonials */}
-      <section className="py-20 lg:py-32 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+      <section className="min-h-screen flex items-center py-20 lg:py-32 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
         <div className="container mx-auto px-4 lg:px-6">
-          <div className="text-center mb-16">
-            <Badge className="mb-4 bg-secondary-light text-secondary">Success Stories</Badge>
-            <h2 className="text-3xl lg:text-5xl font-bold mb-6">Trusted by Entrepreneurs</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Hear from successful entrepreneurs who transformed their businesses with ANE Portal
+          <motion.div 
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <Badge className="mb-6 bg-blue-100 text-blue-700 border-blue-200 px-4 py-2 text-sm font-semibold">
+              ⭐ Success Stories
+            </Badge>
+            <h2 className="text-4xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent">
+              Trusted by Entrepreneurs
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Join thousands of successful entrepreneurs who transformed their businesses with ANE Portal
             </p>
-          </div>
+            <div className="flex items-center justify-center gap-8 mt-8 text-sm text-gray-500">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span>50,000+ Active Users</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                <span>98% Success Rate</span>
+              </div>
+            </div>
+          </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {testimonials.slice(0, 3).map((testimonial, index) => (
@@ -503,31 +603,41 @@ const Landing = () => {
                 data-aos="fade-up"
                 data-aos-delay={index * 100}
               >
-                <Card className="hover:shadow-lg transition-all duration-300 bg-white/90 backdrop-blur-sm border-0 h-full">
-                  <CardContent className="p-6">
-                    <div className="text-center mb-6">
-                      <img
-                        src={testimonial.image}
-                        alt={testimonial.name}
-                        className="w-16 h-16 rounded-full mx-auto mb-4 object-cover border-4 border-white shadow-lg"
-                      />
-                      <div className="flex justify-center gap-1 mb-4">
+                <Card className="relative overflow-hidden bg-white/80 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 h-full group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  <CardContent className="relative p-8">
+                    <div className="text-center mb-8">
+                      <div className="relative inline-block">
+                        <img
+                          src={testimonial.image}
+                          alt={testimonial.name}
+                          className="w-20 h-20 rounded-full mx-auto mb-4 object-cover border-4 border-white shadow-xl group-hover:scale-110 transition-transform duration-300"
+                        />
+                        <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center border-4 border-white">
+                          <CheckCircle className="h-4 w-4 text-white" />
+                        </div>
+                      </div>
+                      
+                      <div className="flex justify-center gap-1 mb-6">
                         {[...Array(testimonial.rating)].map((_, i) => (
-                          <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                          <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
                         ))}
                       </div>
                     </div>
                     
-                    <blockquote className="text-gray-700 mb-6 italic leading-relaxed text-center">
-                      "{testimonial.content}"
+                    <blockquote className="text-gray-700 mb-8 italic leading-relaxed text-center text-lg relative">
+                      <span className="text-4xl text-blue-200 absolute -top-2 -left-2">“</span>
+                      {testimonial.content}
+                      <span className="text-4xl text-blue-200 absolute -bottom-4 -right-2">”</span>
                     </blockquote>
                     
-                    <div className="text-center">
-                      <div className="font-bold text-lg text-gray-900 mb-1">{testimonial.name}</div>
-                      <div className="text-primary font-semibold mb-1">{testimonial.role}</div>
-                      <div className="text-sm text-gray-600 mb-2">{testimonial.company}</div>
-                      <div className="text-xs text-gray-500 flex items-center justify-center gap-1">
-                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <div className="text-center border-t border-gray-100 pt-6">
+                      <div className="font-bold text-xl text-gray-900 mb-2">{testimonial.name}</div>
+                      <div className="text-blue-600 font-semibold mb-2">{testimonial.role}</div>
+                      <div className="text-sm text-gray-600 mb-3 font-medium">{testimonial.company}</div>
+                      <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-100 rounded-full text-xs text-gray-600">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                         {testimonial.location}
                       </div>
                     </div>
@@ -540,7 +650,7 @@ const Landing = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 lg:py-32 bg-gradient-hero text-white">
+      <section className="min-h-screen flex items-center py-20 lg:py-32 bg-gradient-hero text-white">
         <div className="container mx-auto px-4 lg:px-6 text-center">
           <h2 className="text-3xl lg:text-5xl font-bold mb-6">Ready to Transform Your Business?</h2>
           <p className="text-xl mb-8 text-white/90 max-w-2xl mx-auto">
@@ -555,6 +665,91 @@ const Landing = () => {
             <Button size="xl" variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
               Schedule Demo
             </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Us Section */}
+      <section className="min-h-screen flex items-center py-20 lg:py-32 bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white">
+        <div className="container mx-auto px-4 lg:px-6">
+          <div className="text-center mb-16">
+            <Badge className="mb-6 bg-white/10 text-white border-white/20 px-4 py-2">
+              📞 Get in Touch
+            </Badge>
+            <h2 className="text-4xl lg:text-6xl font-bold mb-6">
+              Contact Us
+            </h2>
+            <p className="text-xl text-white/80 max-w-2xl mx-auto">
+              Ready to transform your business? Get in touch with our experts today.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+            {/* Contact Info */}
+            <div className="space-y-8">
+              <div className="flex items-center gap-4 p-6 bg-white/10 backdrop-blur-sm rounded-2xl">
+                <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
+                  <Mail className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">Email Us</h3>
+                  <p className="text-white/80">support@aneportal.com</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4 p-6 bg-white/10 backdrop-blur-sm rounded-2xl">
+                <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center">
+                  <Phone className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">Call Us</h3>
+                  <p className="text-white/80">+91 1800-123-4567</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4 p-6 bg-white/10 backdrop-blur-sm rounded-2xl">
+                <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center">
+                  <MapPin className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">Visit Us</h3>
+                  <p className="text-white/80">Mumbai, Maharashtra, India</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Contact Form */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
+              <h3 className="text-2xl font-bold mb-6">Send us a Message</h3>
+              <form className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <input
+                    type="text"
+                    placeholder="Your Name"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:border-blue-400 focus:outline-none"
+                  />
+                  <input
+                    type="email"
+                    placeholder="Your Email"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:border-blue-400 focus:outline-none"
+                  />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Subject"
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:border-blue-400 focus:outline-none"
+                />
+                <textarea
+                  rows={4}
+                  placeholder="Your Message"
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:border-blue-400 focus:outline-none resize-none"
+                ></textarea>
+                <Button size="lg" className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                  Send Message
+                  <Send className="ml-2 h-4 w-4" />
+                </Button>
+              </form>
+            </div>
           </div>
         </div>
       </section>
@@ -608,6 +803,21 @@ const Landing = () => {
           </div>
         </div>
       </footer>
+
+      {/* Scroll to Top Button */}
+      {showScrollTop && (
+        <motion.button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 z-50 w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center justify-center"
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <ArrowUp className="h-5 w-5" />
+        </motion.button>
+      )}
     </div>
   );
 };
