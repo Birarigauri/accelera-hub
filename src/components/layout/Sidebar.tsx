@@ -10,11 +10,11 @@ import {
   User, 
   LogIn,
   Home,
+  FileText,
   ChevronLeft,
   ChevronRight,
   Calculator,
-  UserCircle,
-  FileText
+  UserCircle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -33,6 +33,8 @@ const Sidebar = () => {
     { name: "News", href: "/news", icon: Newspaper },
     { name: "Notifications", href: "/notifications", icon: Bell },
     { name: "Profile", href: "/profile", icon: User },
+    { name: "Application", href: "/detail-application", icon: FileText },
+    { name: "Dynamic Form", href: "/detail-application-2", icon: Building },
     { name: "Login", href: "/login", icon: LogIn },
   ];
 

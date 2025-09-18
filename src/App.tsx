@@ -17,6 +17,8 @@ import Offerings from "./pages/Offerings";
 import OfferingDetails from "./pages/OfferingDetails";
 import Profile from "./pages/Profile";
 import ProfileV2 from "./pages/ProfileV2";
+import DetailApplication from "./pages/DetailApplication";
+import DetailApplication2 from "./pages/DetailApplication2";
 import EligibilityCalculator from "./pages/EligibilityCalculator";
 import SchemeApplication from "./pages/SchemeApplication";
 import SchemeApplications from "./pages/SchemeApplications";
@@ -50,6 +52,8 @@ const App = () => (
           <Route path="/scheme-application" element={<SchemeApplication />} />
           <Route path="/scheme-applications" element={<SchemeApplications />} />
           <Route path="/view-application/:id" element={<ViewApplication />} />
+          <Route path="/detail-application" element={<DetailApplication />} />
+          <Route path="/detail-application-2" element={<DetailApplication2 />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

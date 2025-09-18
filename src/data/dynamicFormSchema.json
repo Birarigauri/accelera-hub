@@ -1,0 +1,308 @@
+{
+  "title": "Dynamic Application Form",
+  "description": "Complete your application with personalized questions",
+  "steps": [
+    {
+      "id": "basic",
+      "title": "Basic Information",
+      "description": "Please provide your basic information",
+      "fields": [
+        {
+          "name": "fullName",
+          "label": "Full Name",
+          "type": "text",
+          "required": true,
+          "placeholder": "Enter your full name",
+          "validation": {
+            "minLength": 2,
+            "message": "Name must be at least 2 characters"
+          }
+        },
+        {
+          "name": "email",
+          "label": "Email Address",
+          "type": "email",
+          "required": true,
+          "placeholder": "Enter your email address",
+          "validation": {
+            "pattern": "email",
+            "message": "Please enter a valid email address"
+          }
+        },
+        {
+          "name": "phone",
+          "label": "Phone Number",
+          "type": "tel",
+          "required": true,
+          "placeholder": "Enter your phone number",
+          "validation": {
+            "minLength": 10,
+            "message": "Phone number must be at least 10 digits"
+          }
+        },
+        {
+          "name": "country",
+          "label": "Country",
+          "type": "select",
+          "required": true,
+          "options": [
+            { "value": "IN", "label": "India" },
+            { "value": "US", "label": "United States" },
+            { "value": "UK", "label": "United Kingdom" },
+            { "value": "CA", "label": "Canada" }
+          ]
+        },
+        {
+          "name": "state",
+          "label": "State/Province",
+          "type": "select",
+          "required": true,
+          "dependsOn": "country",
+          "options": {
+            "IN": [
+              { "value": "MH", "label": "Maharashtra" },
+              { "value": "KA", "label": "Karnataka" },
+              { "value": "DL", "label": "Delhi" }
+            ],
+            "US": [
+              { "value": "CA", "label": "California" },
+              { "value": "NY", "label": "New York" },
+              { "value": "TX", "label": "Texas" }
+            ],
+            "UK": [
+              { "value": "ENG", "label": "England" },
+              { "value": "SCT", "label": "Scotland" },
+              { "value": "WLS", "label": "Wales" }
+            ],
+            "CA": [
+              { "value": "ON", "label": "Ontario" },
+              { "value": "BC", "label": "British Columbia" },
+              { "value": "QC", "label": "Quebec" }
+            ]
+          }
+        },
+        {
+          "name": "city",
+          "label": "City",
+          "type": "select",
+          "required": true,
+          "dependsOn": "state",
+          "options": {
+            "MH": [
+              { "value": "MUM", "label": "Mumbai" },
+              { "value": "PUN", "label": "Pune" }
+            ],
+            "KA": [
+              { "value": "BLR", "label": "Bangalore" },
+              { "value": "MYS", "label": "Mysore" }
+            ],
+            "DL": [
+              { "value": "ND", "label": "New Delhi" },
+              { "value": "GUR", "label": "Gurgaon" }
+            ],
+            "CA": [
+              { "value": "SF", "label": "San Francisco" },
+              { "value": "LA", "label": "Los Angeles" }
+            ],
+            "NY": [
+              { "value": "NYC", "label": "New York City" },
+              { "value": "ALB", "label": "Albany" }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "experience",
+      "title": "Experience & Skills",
+      "description": "Tell us about your background",
+      "fields": [
+        {
+          "name": "hasExperience",
+          "label": "Do you have work experience?",
+          "type": "radio",
+          "required": true,
+          "options": [
+            { "value": "yes", "label": "Yes" },
+            { "value": "no", "label": "No" }
+          ]
+        },
+        {
+          "name": "experienceYears",
+          "label": "Years of Experience",
+          "type": "select",
+          "required": true,
+          "showIf": { "hasExperience": "yes" },
+          "options": [
+            { "value": "0-1", "label": "0-1 years" },
+            { "value": "2-5", "label": "2-5 years" },
+            { "value": "6-10", "label": "6-10 years" },
+            { "value": "10+", "label": "10+ years" }
+          ]
+        },
+        {
+          "name": "experienceDetails",
+          "label": "Experience Details",
+          "type": "textarea",
+          "showIf": { "hasExperience": "yes" },
+          "placeholder": "Briefly describe your work experience",
+          "validation": {
+            "maxLength": 500,
+            "message": "Description must be less than 500 characters"
+          }
+        },
+        {
+          "name": "skills",
+          "label": "Key Skills",
+          "type": "checkbox",
+          "options": [
+            { "value": "javascript", "label": "JavaScript" },
+            { "value": "python", "label": "Python" },
+            { "value": "react", "label": "React" },
+            { "value": "nodejs", "label": "Node.js" },
+            { "value": "marketing", "label": "Marketing" },
+            { "value": "sales", "label": "Sales" },
+            { "value": "finance", "label": "Finance" },
+            { "value": "design", "label": "Design" }
+          ]
+        },
+        {
+          "name": "hasFunding",
+          "label": "Do you have funding for your project?",
+          "type": "radio",
+          "required": true,
+          "options": [
+            { "value": "yes", "label": "Yes" },
+            { "value": "no", "label": "No" }
+          ]
+        },
+        {
+          "name": "fundingAmount",
+          "label": "Funding Amount",
+          "type": "text",
+          "showIf": { "hasFunding": "yes" },
+          "placeholder": "e.g., $100,000",
+          "validation": {
+            "pattern": "currency",
+            "message": "Please enter a valid amount"
+          }
+        },
+        {
+          "name": "fundingStage",
+          "label": "Funding Stage",
+          "type": "select",
+          "showIf": { "hasFunding": "yes" },
+          "options": [
+            { "value": "pre-seed", "label": "Pre-Seed" },
+            { "value": "seed", "label": "Seed" },
+            { "value": "series-a", "label": "Series A" },
+            { "value": "series-b", "label": "Series B" },
+            { "value": "growth", "label": "Growth Stage" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "business",
+      "title": "Business Information",
+      "description": "Business details (if applicable)",
+      "fields": [
+        {
+          "name": "hasBusiness",
+          "label": "Do you own a registered business?",
+          "type": "radio",
+          "required": true,
+          "options": [
+            { "value": "yes", "label": "Yes" },
+            { "value": "no", "label": "No" }
+          ]
+        },
+        {
+          "name": "businessName",
+          "label": "Business Name",
+          "type": "text",
+          "required": true,
+          "showIf": { "hasBusiness": "yes" },
+          "placeholder": "Enter your business name",
+          "validation": {
+            "minLength": 2,
+            "message": "Business name must be at least 2 characters"
+          }
+        },
+        {
+          "name": "businessType",
+          "label": "Business Type",
+          "type": "select",
+          "required": true,
+          "showIf": { "hasBusiness": "yes" },
+          "options": [
+            { "value": "sole", "label": "Sole Proprietorship" },
+            { "value": "partnership", "label": "Partnership" },
+            { "value": "llc", "label": "Limited Liability Company" },
+            { "value": "corporation", "label": "Corporation" },
+            { "value": "startup", "label": "Startup" }
+          ]
+        },
+        {
+          "name": "industry",
+          "label": "Industry",
+          "type": "select",
+          "showIf": { "hasBusiness": "yes" },
+          "options": [
+            { "value": "tech", "label": "Technology" },
+            { "value": "finance", "label": "Finance" },
+            { "value": "healthcare", "label": "Healthcare" },
+            { "value": "manufacturing", "label": "Manufacturing" },
+            { "value": "retail", "label": "Retail" },
+            { "value": "education", "label": "Education" },
+            { "value": "other", "label": "Other" }
+          ]
+        },
+        {
+          "name": "registrationNumber",
+          "label": "Registration Number",
+          "type": "text",
+          "showIf": { "hasBusiness": "yes" },
+          "placeholder": "Enter business registration number"
+        },
+        {
+          "name": "annualRevenue",
+          "label": "Annual Revenue",
+          "type": "select",
+          "showIf": { "hasBusiness": "yes" },
+          "options": [
+            { "value": "0-100k", "label": "$0 - $100K" },
+            { "value": "100k-500k", "label": "$100K - $500K" },
+            { "value": "500k-1m", "label": "$500K - $1M" },
+            { "value": "1m-5m", "label": "$1M - $5M" },
+            { "value": "5m+", "label": "$5M+" }
+          ]
+        },
+        {
+          "name": "employeeCount",
+          "label": "Number of Employees",
+          "type": "select",
+          "showIf": { "hasBusiness": "yes" },
+          "options": [
+            { "value": "1", "label": "Just me" },
+            { "value": "2-10", "label": "2-10 employees" },
+            { "value": "11-50", "label": "11-50 employees" },
+            { "value": "51-200", "label": "51-200 employees" },
+            { "value": "200+", "label": "200+ employees" }
+          ]
+        },
+        {
+          "name": "businessDescription",
+          "label": "Business Description",
+          "type": "textarea",
+          "showIf": { "hasBusiness": "yes" },
+          "placeholder": "Briefly describe your business and what it does",
+          "validation": {
+            "maxLength": 1000,
+            "message": "Description must be less than 1000 characters"
+          }
+        }
+      ]
+    }
+  ]
+}

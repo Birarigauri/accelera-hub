@@ -251,10 +251,25 @@ const Schemes = () => {
 
         {/* Schemes Tabs */}
         <Tabs defaultValue="discover" className="space-y-6">
-          <TabsList className="grid w-full md:w-auto md:grid-cols-3 bg-white">
-            <TabsTrigger value="discover">Discover Schemes</TabsTrigger>
-            <TabsTrigger value="my-applications">My Applications</TabsTrigger>
-            <TabsTrigger value="recommended">Recommended</TabsTrigger>
+          <TabsList className="w-full bg-gray-50 p-1 rounded-xl border grid grid-cols-3 gap-1 h-auto">
+            <TabsTrigger 
+              value="discover" 
+              className="flex-1 text-center py-3 px-2 text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-md text-gray-600"
+            >
+              Discover
+            </TabsTrigger>
+            <TabsTrigger 
+              value="my-applications" 
+              className="flex-1 text-center py-3 px-2 text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-md text-gray-600"
+            >
+              My Apps
+            </TabsTrigger>
+            <TabsTrigger 
+              value="recommended" 
+              className="flex-1 text-center py-3 px-2 text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-md text-gray-600"
+            >
+              Suggested
+            </TabsTrigger>
           </TabsList>
 
           {/* Discover Schemes */}
@@ -367,61 +382,61 @@ const Schemes = () => {
           </TabsContent>
 
           {/* My Applications */}
-          <TabsContent value="my-applications" className="space-y-6">
-            <div className="grid gap-6">
+          <TabsContent value="my-applications" className="space-y-4 sm:space-y-6">
+            <div className="grid gap-4 sm:gap-6">
               {myApplications.map((application) => (
                 <Card key={application.id} className="bg-gradient-card border-0">
-                  <CardContent className="p-6">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center">
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex flex-col sm:flex-row items-start gap-4">
+                      <div className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center flex-shrink-0">
                         <Target className="h-6 w-6 text-white" />
                       </div>
                       
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between mb-4">
-                          <div>
-                            <h3 className="text-lg font-semibold mb-1">{application.schemeName}</h3>
-                            <p className="text-sm text-muted-foreground">
+                      <div className="flex-1 min-w-0 w-full">
+                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-2">
+                          <div className="min-w-0">
+                            <h3 className="text-base sm:text-lg font-semibold mb-1 truncate">{application.schemeName}</h3>
+                            <p className="text-xs sm:text-sm text-muted-foreground">
                               Applied on {new Date(application.appliedDate).toLocaleDateString()}
                             </p>
                           </div>
                           
-                          <div className="text-right">
+                          <div className="flex items-center justify-between sm:flex-col sm:items-end gap-2">
                             <Badge className={getStatusColor(application.status)}>
                               {application.status.replace('-', ' ')}
                             </Badge>
-                            <p className="text-sm font-medium mt-1">{application.amount}</p>
+                            <p className="text-sm font-medium">{application.amount}</p>
                           </div>
                         </div>
 
-                        <div className="space-y-4">
+                        <div className="space-y-3 sm:space-y-4">
                           <div>
                             <div className="flex items-center justify-between mb-2">
-                              <span className="text-sm font-medium">Application Progress</span>
-                              <span className="text-sm text-muted-foreground">{application.progress}%</span>
+                              <span className="text-xs sm:text-sm font-medium">Progress</span>
+                              <span className="text-xs sm:text-sm text-muted-foreground">{application.progress}%</span>
                             </div>
                             <Progress value={application.progress} className="h-2" />
                           </div>
 
                           {application.nextStep && (
                             <div>
-                              <p className="font-medium mb-1 text-sm">Next Step</p>
-                              <p className="text-sm text-muted-foreground">{application.nextStep}</p>
+                              <p className="font-medium mb-1 text-xs sm:text-sm">Next Step</p>
+                              <p className="text-xs sm:text-sm text-muted-foreground">{application.nextStep}</p>
                             </div>
                           )}
 
                           {application.approvedDate && (
                             <div>
-                              <p className="font-medium mb-1 text-sm">Approved Date</p>
-                              <p className="text-sm text-muted-foreground">
+                              <p className="font-medium mb-1 text-xs sm:text-sm">Approved Date</p>
+                              <p className="text-xs sm:text-sm text-muted-foreground">
                                 {new Date(application.approvedDate).toLocaleDateString()}
                               </p>
                             </div>
                           )}
 
                           <div>
-                            <p className="font-medium mb-2 text-sm">Documents</p>
-                            <div className="flex flex-wrap gap-2">
+                            <p className="font-medium mb-2 text-xs sm:text-sm">Documents</p>
+                            <div className="flex flex-wrap gap-1 sm:gap-2">
                               {application.documents.map((doc, index) => (
                                 <Badge key={index} variant="outline" className="text-xs">
                                   <FileText className="h-3 w-3 mr-1" />
@@ -431,16 +446,19 @@ const Schemes = () => {
                             </div>
                           </div>
 
-                          <div className="flex gap-3 pt-4">
-                            <Button variant="outline" size="sm">
+                          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-3 sm:pt-4">
+                            <Button variant="outline" size="sm" className="w-full sm:w-auto hover:bg-blue-50 hover:border-blue-200">
+                              <FileText className="h-4 w-4 mr-2" />
                               View Details
                             </Button>
-                            <Button variant="outline" size="sm">
+                            <Button variant="outline" size="sm" className="w-full sm:w-auto hover:bg-green-50 hover:border-green-200">
+                              <Clock className="h-4 w-4 mr-2" />
                               Track Status
                             </Button>
                             {application.status === "approved" && (
-                              <Button variant="default" size="sm">
-                                Download Certificate
+                              <Button variant="default" size="sm" className="w-full sm:w-auto bg-green-600 hover:bg-green-700">
+                                <CheckCircle className="h-4 w-4 mr-2" />
+                                Download
                               </Button>
                             )}
                           </div>

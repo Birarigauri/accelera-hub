@@ -1,0 +1,79 @@
+{
+  "countries": [
+    {
+      "id": "IN",
+      "name": "India",
+      "states": [
+        {
+          "id": "MH",
+          "name": "Maharashtra",
+          "cities": [
+            { "id": "MUM", "name": "Mumbai" },
+            { "id": "PUN", "name": "Pune" },
+            { "id": "NAG", "name": "Nagpur" }
+          ]
+        },
+        {
+          "id": "KA",
+          "name": "Karnataka",
+          "cities": [
+            { "id": "BLR", "name": "Bangalore" },
+            { "id": "MYS", "name": "Mysore" }
+          ]
+        },
+        {
+          "id": "DL",
+          "name": "Delhi",
+          "cities": [
+            { "id": "ND", "name": "New Delhi" },
+            { "id": "GUR", "name": "Gurgaon" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "US",
+      "name": "United States",
+      "states": [
+        {
+          "id": "CA",
+          "name": "California",
+          "cities": [
+            { "id": "SF", "name": "San Francisco" },
+            { "id": "LA", "name": "Los Angeles" }
+          ]
+        },
+        {
+          "id": "NY",
+          "name": "New York",
+          "cities": [
+            { "id": "NYC", "name": "New York City" },
+            { "id": "ALB", "name": "Albany" }
+          ]
+        }
+      ]
+    }
+  ],
+  "businessTypes": [
+    { "id": "startup", "name": "Startup" },
+    { "id": "sme", "name": "Small & Medium Enterprise" },
+    { "id": "corporation", "name": "Corporation" },
+    { "id": "partnership", "name": "Partnership" },
+    { "id": "sole", "name": "Sole Proprietorship" }
+  ],
+  "industries": [
+    { "id": "tech", "name": "Technology" },
+    { "id": "finance", "name": "Finance" },
+    { "id": "healthcare", "name": "Healthcare" },
+    { "id": "manufacturing", "name": "Manufacturing" },
+    { "id": "retail", "name": "Retail" },
+    { "id": "education", "name": "Education" }
+  ],
+  "fundingStages": [
+    { "id": "pre-seed", "name": "Pre-Seed" },
+    { "id": "seed", "name": "Seed" },
+    { "id": "series-a", "name": "Series A" },
+    { "id": "series-b", "name": "Series B" },
+    { "id": "growth", "name": "Growth Stage" }
+  ]
+}

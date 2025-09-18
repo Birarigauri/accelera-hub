@@ -329,12 +329,12 @@ const Profile = () => {
 
         {/* Profile Tabs */}
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5 bg-white overflow-x-auto">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="businesses">Businesses</TabsTrigger>
-            <TabsTrigger value="applications">Applications</TabsTrigger>
-            <TabsTrigger value="journey">My Journey</TabsTrigger>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-5 bg-slate-100 h-auto p-2 gap-1 rounded-xl border border-slate-200">
+            <TabsTrigger value="overview" className="text-xs sm:text-sm px-3 py-3 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-700 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-blue-600/40 data-[state=active]:font-bold data-[state=active]:transform data-[state=active]:scale-105 transition-all duration-200">Overview</TabsTrigger>
+            <TabsTrigger value="businesses" className="text-xs sm:text-sm px-3 py-3 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-700 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-blue-600/40 data-[state=active]:font-bold data-[state=active]:transform data-[state=active]:scale-105 transition-all duration-200">Business</TabsTrigger>
+            <TabsTrigger value="applications" className="text-xs sm:text-sm px-3 py-3 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-700 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-blue-600/40 data-[state=active]:font-bold data-[state=active]:transform data-[state=active]:scale-105 transition-all duration-200">Apps</TabsTrigger>
+            <TabsTrigger value="journey" className="text-xs sm:text-sm px-3 py-3 rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-700 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-blue-600/40 data-[state=active]:font-bold data-[state=active]:transform data-[state=active]:scale-105 transition-all duration-200">Journey</TabsTrigger>
+            <TabsTrigger value="settings" className="text-xs sm:text-sm px-3 py-3 rounded-xl col-span-2 sm:col-span-1 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-700 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-blue-600/40 data-[state=active]:font-bold data-[state=active]:transform data-[state=active]:scale-105 transition-all duration-200">Settings</TabsTrigger>
           </TabsList>
 
           {/* Overview */}
