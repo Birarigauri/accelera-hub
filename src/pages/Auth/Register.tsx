@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Eye, EyeOff, ArrowLeft, UserPlus, Mail, Lock, User, RefreshCw } from "lucide-react";
+import { Eye, EyeOff, ArrowLeft, UserPlus, Mail, Lock, User, RefreshCw, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -105,7 +105,13 @@ const Register = () => {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-6 lg:p-8">
         <div className="w-full max-w-md sm:max-w-lg">
           <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-center">
+            <div className="px-6 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-center relative">
+              <button
+                onClick={() => navigate("/")}
+                className="absolute left-4 top-4 w-8 h-8 bg-white/20 hover:bg-white/30 rounded-lg flex items-center justify-center transition-colors"
+              >
+                <Home className="h-4 w-4" />
+              </button>
               <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center mx-auto mb-2">
                 <UserPlus className="h-5 w-5" />
               </div>

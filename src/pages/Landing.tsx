@@ -178,24 +178,48 @@ const Landing = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white/95 backdrop-blur-sm border-b border-border sticky top-0 z-50 shadow-sm">
-        <div className="container mx-auto px-4 lg:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-hero rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">ANE</span>
+      <header className="bg-white/95 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-50 shadow-lg">
+        <div className="container mx-auto px-4 lg:px-6 h-18 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+              <span className="text-white font-bold text-lg">ANE</span>
             </div>
-            <span className="text-lg font-semibold">Entrepreneur Portal</span>
+            <div>
+              <span className="text-xl font-bold text-gray-900">Entrepreneur Portal</span>
+              <div className="text-xs text-blue-600 font-medium">Empowering Business Growth</div>
+            </div>
           </div>
           
-          <nav className="hidden md:flex items-center gap-6">
-            <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors">Features</a>
-            <a href="#about" className="text-muted-foreground hover:text-foreground transition-colors">About</a>
-            <a href="#contact" className="text-muted-foreground hover:text-foreground transition-colors">Contact</a>
+          <nav className="hidden md:flex items-center gap-8">
+            <a href="#features" className="text-gray-600 hover:text-blue-600 transition-colors font-medium relative group">
+              Features
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
+            </a>
+            <a href="#about" className="text-gray-600 hover:text-blue-600 transition-colors font-medium relative group">
+              About
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
+            </a>
+            <Link to="/home-futuristic" className="text-gray-600 hover:text-blue-600 transition-colors font-medium relative group">
+              Futuristic View
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
+            </Link>
+            <a href="#contact" className="text-gray-600 hover:text-blue-600 transition-colors font-medium relative group">
+              Contact
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
+            </a>
           </nav>
 
           <div className="flex items-center gap-3">
-            <Button variant="ghost">Login</Button>
-            <Button variant="hero">Get Started</Button>
+            <Link to="/login">
+              <Button variant="ghost" className="hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                Login
+              </Button>
+            </Link>
+            <Link to="/register">
+              <Button variant="hero" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all">
+                Get Started
+              </Button>
+            </Link>
           </div>
         </div>
       </header>
@@ -799,7 +823,7 @@ const Landing = () => {
           </div>
           
           <div className="border-t border-white/20 mt-8 pt-8 text-center text-sm text-white/60">
-            <p>&copy; 2024 ANE Entrepreneur Portal. All rights reserved.</p>
+            <p>© 2025 ANE Portal. Powered by ANE. All rights reserved in this dimension. Develop by Famrut Team ESDS.</p>
           </div>
         </div>
       </footer>

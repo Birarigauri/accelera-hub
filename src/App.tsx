@@ -24,6 +24,7 @@ import SchemeApplication from "./pages/SchemeApplication";
 import SchemeApplications from "./pages/SchemeApplications";
 import ViewApplication from "./pages/ViewApplication";
 import ForgotPassword from "./pages/Auth/ForgotPassword";
+import HomeFuturistic from "./pages/HomeFuturistic";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -56,6 +57,7 @@ const App = () => (
           <Route path="/detail-application" element={<DetailApplication />} />
           <Route path="/detail-application-2" element={<DetailApplication2 />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/home-futuristic" element={<HomeFuturistic />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
