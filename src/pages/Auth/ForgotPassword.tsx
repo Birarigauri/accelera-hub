@@ -1,23 +1,25 @@
-import { useState } from "react";
-import { Eye, EyeOff, Shield, Mail, Lock, RefreshCw } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Mail, ArrowLeft, RefreshCw, KeyRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
-  const [showPassword, setShowPassword] = useState(false);
+const ForgotPassword = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
-    password: "",
     captcha: "",
-    rememberMe: false,
   });
   const [captchaCode, setCaptchaCode] = useState(generateCaptcha());
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   function generateCaptcha() {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
@@ -32,6 +34,7 @@ const Login = () => {
     setCaptchaCode(generateCaptcha());
     handleInputChange('captcha', '');
   };
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -41,11 +44,11 @@ const Login = () => {
     // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
-      navigate("/dashboard");
+      alert("Password reset link sent to your email!");
     }, 2000);
   };
 
-  const handleInputChange = (field: string, value: string | boolean) => {
+  const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
@@ -59,21 +62,25 @@ const Login = () => {
             <div className="w-12 h-12 lg:w-16 lg:h-16 bg-white/20 backdrop-blur-sm rounded-xl lg:rounded-2xl flex items-center justify-center mb-3 lg:mb-6">
               <span className="text-lg lg:text-2xl font-bold">ANE</span>
             </div>
-            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-2 lg:mb-4">Welcome Back</h1>
-            <p className="text-sm md:text-base lg:text-xl text-white/90 mb-4 lg:mb-8">Sign in to access your entrepreneur dashboard and continue your business journey.</p>
+            <h1 className={`text-2xl md:text-3xl lg:text-4xl font-bold mb-2 lg:mb-4 transition-all duration-1000 transform ${
+              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+            }`}>
+              Reset Your Password
+            </h1>
+            <p className="text-sm md:text-base lg:text-xl text-white/90 mb-4 lg:mb-8">Enter your email address and we'll send you a link to reset your password.</p>
           </div>
           <div className="hidden lg:block space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 bg-white rounded-full"></div>
-              <span>Secure Access</span>
+              <span>Secure Reset Process</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 bg-white rounded-full"></div>
-              <span>Real-time Dashboard</span>
+              <span>Email Verification</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="w-2 h-2 bg-white rounded-full"></div>
-              <span>Expert Support</span>
+              <span>Quick Recovery</span>
             </div>
           </div>
         </div>
@@ -87,10 +94,10 @@ const Login = () => {
           <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
             <div className="px-6 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-center">
               <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center mx-auto mb-2">
-                <Shield className="h-5 w-5" />
+                <KeyRound className="h-5 w-5" />
               </div>
-              <h2 className="text-xl font-bold mb-1">Welcome Back</h2>
-              <p className="text-blue-100 text-sm">Sign in to your account</p>
+              <h2 className="text-xl font-bold mb-1">Forgot Password</h2>
+              <p className="text-blue-100 text-sm">Reset your account password</p>
             </div>
 
             <div className="p-4 sm:p-6">
@@ -104,43 +111,12 @@ const Login = () => {
                     <Input
                       id="email"
                       type="email"
-                      placeholder="Email address"
+                      placeholder="Enter your email address"
                       value={formData.email}
                       onChange={(e) => handleInputChange("email", e.target.value)}
                       className="pl-10 h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 rounded-md transition-all"
                       required
                     />
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <Label htmlFor="password" className="text-xs font-semibold text-gray-700">
-                    Password *
-                  </Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                    <Input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Password"
-                      value={formData.password}
-                      onChange={(e) => handleInputChange("password", e.target.value)}
-                      className="pl-10 pr-10 h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 rounded-md transition-all"
-                      required
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-1 top-1 h-8 px-2 hover:bg-gray-100 rounded"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-3 w-3 text-gray-400" />
-                      ) : (
-                        <Eye className="h-3 w-3 text-gray-400" />
-                      )}
-                    </Button>
                   </div>
                 </div>
 
@@ -174,27 +150,6 @@ const Login = () => {
                   />
                 </div>
 
-                <div className="flex items-center justify-between text-xs">
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="remember"
-                      checked={formData.rememberMe}
-                      onCheckedChange={(checked) => handleInputChange("rememberMe", checked as boolean)}
-                    />
-                    <Label htmlFor="remember" className="text-gray-700">
-                      Remember me
-                    </Label>
-                  </div>
-                  
-                  <Button 
-                    variant="link" 
-                    className="p-0 h-auto text-xs text-blue-600"
-                    onClick={() => navigate("/forgot-password")}
-                  >
-                    Forgot password?
-                  </Button>
-                </div>
-
                 <Button
                   type="submit"
                   className="w-full h-10 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-md shadow-md transition-all"
@@ -203,21 +158,21 @@ const Login = () => {
                   {isLoading ? (
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      Signing in...
+                      Sending Reset Link...
                     </div>
                   ) : (
-                    "Sign In"
+                    "Send Reset Link"
                   )}
                 </Button>
 
                 <div className="text-center text-xs text-gray-600">
-                  Don't have an account?{" "}
+                  Remember your password?{" "}
                   <Button
                     variant="link"
                     className="p-0 h-auto text-xs text-blue-600 hover:text-blue-800"
-                    onClick={() => navigate("/register")}
+                    onClick={() => navigate("/login")}
                   >
-                    Create account
+                    Back to Login
                   </Button>
                 </div>
               </form>
@@ -229,4 +184,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgotPassword;
