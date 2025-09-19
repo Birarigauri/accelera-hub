@@ -8,6 +8,7 @@ import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import Dashboard from "./pages/Dashboard";
 import DashboardV2 from "./pages/DashboardV2";
+import DashboardV3 from "./pages/DashboardV3";
 import Notifications from "./pages/Notifications";
 import Services from "./pages/Services";
 import ServiceDetails from "./pages/ServiceDetails";
@@ -46,6 +47,7 @@ const App = () => (
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard-v2" element={<DashboardV2 />} />
+          <Route path="/dashboard-v3" element={<DashboardV3 />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/services" element={<Services />} />
           <Route path="/services/:id" element={<ServiceDetails />} />

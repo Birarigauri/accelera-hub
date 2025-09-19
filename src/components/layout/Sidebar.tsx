@@ -28,6 +28,7 @@ const Sidebar = () => {
     { name: "Home", href: "/", icon: Home },
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "Dashboard V2", href: "/dashboard-v2", icon: LayoutDashboard },
+    { name: "Dashboard V3", href: "/dashboard-v3", icon: LayoutDashboard },
     { name: "Services", href: "/services", icon: Building },
     { name: "Schemes", href: "/schemes", icon: Shield },
     { name: "My Applications", href: "/scheme-applications", icon: FileText },

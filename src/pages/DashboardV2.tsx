@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { 
-  Calendar, 
   AlertTriangle, 
   CheckCircle, 
   Clock, 
@@ -14,29 +13,24 @@ import {
   ArrowRight,
   ChevronLeft,
   ChevronRight,
-  Building2,
-  Users,
   DollarSign,
   BarChart3,
   Settings,
-  Download,
-  RefreshCw,
-  User,
-  MapPin,
-  Phone,
-  Activity,
   Target,
-  Zap,
   Star,
   ChevronDown,
-  Search,
-  Filter
+  Calendar,
+  RefreshCw
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import AppLayout from "@/components/layout/AppLayout";
 import Header from "@/components/layout/Header";
+import { DashboardCard } from "@/components/dashboard/DashboardCard";
+import { ComplianceTab } from "@/components/dashboard/ComplianceTab";
+import { ComplianceItem } from "@/components/dashboard/ComplianceItem";
+import { KPICard } from "@/components/dashboard/KPICard";
 
 const complianceData = [
   { id: 1, name: "GSTR-1", dueDate: "2024-01-11", status: "overdue", type: "GST Return" },
@@ -319,6 +313,32 @@ const NewsSlider = ({ newsData }: { newsData: any[] }) => {
 };
 
 const DashboardV2 = () => {
+  const [activeComplianceTab, setActiveComplianceTab] = useState('all');
+  const [complianceFilter, setComplianceFilter] = useState('');
+  const [showComplianceFilters, setShowComplianceFilters] = useState(false);
+  
+  const filteredComplianceData = complianceData.filter(item => {
+    const matchesTab = activeComplianceTab === 'all' || 
+      (activeComplianceTab === 'overdue' && item.status === 'overdue') ||
+      (activeComplianceTab === 'thisweek' && ['pending', 'upcoming'].includes(item.status)) ||
+      (activeComplianceTab === 'completed' && item.status === 'completed');
+    
+    const matchesFilter = !complianceFilter || 
+      item.name.toLowerCase().includes(complianceFilter.toLowerCase()) ||
+      item.type.toLowerCase().includes(complianceFilter.toLowerCase());
+    
+    return matchesTab && matchesFilter;
+  });
+  
+  const getTabCount = (tab: string) => {
+    switch (tab) {
+      case 'overdue': return complianceData.filter(item => item.status === 'overdue').length;
+      case 'thisweek': return complianceData.filter(item => ['pending', 'upcoming'].includes(item.status)).length;
+      case 'completed': return complianceData.filter(item => item.status === 'completed').length;
+      default: return complianceData.length;
+    }
+  };
+  
   return (
     <AppLayout>
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-blue-50 relative">
@@ -327,72 +347,69 @@ const DashboardV2 = () => {
         
         <div className="container mx-auto px-6 py-6 relative z-10">
           <div className="mb-8">
-            {/* Clean Executive Header */}
-            <div className="bg-white/90 backdrop-blur-sm border border-gray-200 shadow-md rounded-xl p-6 mb-6">
-              {/* Header Section */}
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
-                    <BarChart3 className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h1 className="text-2xl font-light text-gray-900">Executive Dashboard</h1>
-                    <p className="text-sm text-gray-600">Business intelligence and compliance monitoring</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="text-right">
-                    <div className="text-xs text-gray-500">Last Updated</div>
-                    <div className="text-sm font-medium text-gray-900">Today, 2:30 PM</div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button size="sm" variant="outline" className="p-2">
-                      <Download className="h-4 w-4" />
-                    </Button>
-                    <Button size="sm" variant="outline" className="p-2">
-                      <Settings className="h-4 w-4" />
-                    </Button>
-                    <Button size="sm" variant="outline" className="p-2 relative">
-                      <Bell className="h-4 w-4" />
-                      <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
-                    </Button>
-                  </div>
-                </div>
-              </div>
+            {/* Enhanced Executive Header */}
+            <div className="relative bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 rounded-2xl p-8 mb-8 overflow-hidden shadow-2xl">
+              {/* Background Pattern */}
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/90 via-indigo-600/90 to-purple-700/90"></div>
+              <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -translate-y-48 translate-x-48"></div>
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full translate-y-32 -translate-x-32"></div>
               
-              {/* User & Business Info */}
-              <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                <div className="flex items-center gap-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-                      <User className="h-5 w-5 text-gray-600" />
+              <div className="relative z-10">
+                {/* Header Section */}
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-6">
+                    <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center border border-white/30 shadow-lg">
+                      <BarChart3 className="h-8 w-8 text-white" />
                     </div>
                     <div>
-                      <div className="text-sm font-medium text-gray-900">Rajesh Kumar</div>
-                      <div className="text-xs text-gray-500">Managing Director</div>
+                      <h1 className="text-3xl font-bold text-white mb-1">Executive Dashboard</h1>
+                      <p className="text-blue-100 text-lg">Business intelligence and compliance monitoring</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-1 text-xs text-gray-500">
-                    <Building2 className="h-3 w-3" />
-                    <span>Kumar Industries Pvt Ltd</span>
-                  </div>
-                  <div className="flex items-center gap-1 text-xs text-gray-500">
-                    <MapPin className="h-3 w-3" />
-                    <span>Mumbai, Maharashtra</span>
+                  <div className="flex items-center gap-4">
+                    <div className="text-right text-white/90">
+                      <div className="text-sm text-blue-100">Last Updated</div>
+                      <div className="text-lg font-semibold">Today, 2:30 PM</div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Button size="sm" className="bg-white/20 hover:bg-white/30 border-white/30 text-white backdrop-blur-sm">
+                        <Settings className="h-4 w-4" />
+                      </Button>
+                      <Button size="sm" className="bg-white/20 hover:bg-white/30 border-white/30 text-white backdrop-blur-sm relative">
+                        <Bell className="h-4 w-4" />
+                        <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-400 rounded-full border-2 border-white animate-pulse"></div>
+                      </Button>
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-6">
-                  <div className="text-center">
-                    <div className="text-lg font-light text-gray-900">₹2.4Cr</div>
-                    <div className="text-xs text-gray-500">Revenue</div>
+                
+                {/* User Info Section */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-2xl border-3 border-white/50 overflow-hidden shadow-lg">
+                      <img 
+                        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" 
+                        alt="Rajesh Kumar"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div>
+                      <div className="text-xl font-bold text-white mb-1">Rajesh Kumar</div>
+                      <div className="text-blue-100 text-sm font-medium">Entrepreneur & Business Owner</div>
+                    </div>
                   </div>
-                  <div className="text-center">
-                    <div className="text-lg font-light text-gray-900">156</div>
-                    <div className="text-xs text-gray-500">Employees</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-lg font-light text-green-600">Active</div>
-                    <div className="text-xs text-gray-500">Status</div>
+                  <div className="flex items-center gap-8">
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-white mb-1">3</div>
+                      <div className="text-blue-100 text-sm font-medium">Active Businesses</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="flex items-center gap-2 mb-1">
+                        <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                        <div className="text-2xl font-bold text-green-300">Online</div>
+                      </div>
+                      <div className="text-blue-100 text-sm font-medium">Account Status</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -401,94 +418,386 @@ const DashboardV2 = () => {
 
           {/* Executive KPIs */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <Card className="bg-white/90 backdrop-blur-sm border border-white/50 shadow-md hover:shadow-lg transition-all duration-300 group">
-              <CardContent className="p-4 text-center relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-400 to-red-600"></div>
-                <AlertTriangle className="h-6 w-6 text-red-500 mx-auto mb-2" />
-                <div className="text-xl font-light text-gray-900 mb-1 group-hover:scale-105 transition-transform">3</div>
-                <div className="text-xs text-gray-600 font-medium mb-2">Critical Items</div>
-                <div className="flex items-center justify-center space-x-1">
-                  <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></div>
-                  <span className="text-xs text-red-600 font-medium">Urgent</span>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="bg-white/90 backdrop-blur-sm border border-white/50 shadow-md hover:shadow-lg transition-all duration-300 group">
-              <CardContent className="p-4 text-center relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-400 to-blue-600"></div>
-                <Clock className="h-6 w-6 text-blue-500 mx-auto mb-2" />
-                <div className="text-xl font-light text-gray-900 mb-1 group-hover:scale-105 transition-transform">5</div>
-                <div className="text-xs text-gray-600 font-medium mb-2">In Progress</div>
-                <div className="flex items-center justify-center space-x-1">
-                  <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-                  <span className="text-xs text-blue-600 font-medium">On Track</span>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="bg-white/90 backdrop-blur-sm border border-white/50 shadow-md hover:shadow-lg transition-all duration-300 group">
-              <CardContent className="p-4 text-center relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-400 to-green-600"></div>
-                <DollarSign className="h-6 w-6 text-green-500 mx-auto mb-2" />
-                <div className="text-xl font-light text-gray-900 mb-1 group-hover:scale-105 transition-transform">4</div>
-                <div className="text-xs text-gray-600 font-medium mb-2">Opportunities</div>
-                <div className="flex items-center justify-center space-x-1">
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                  <span className="text-xs text-green-600 font-medium">Available</span>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="bg-white/90 backdrop-blur-sm border border-white/50 shadow-md hover:shadow-lg transition-all duration-300 group">
-              <CardContent className="p-4 text-center relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-400 to-indigo-600"></div>
-                <BarChart3 className="h-6 w-6 text-indigo-500 mx-auto mb-2" />
-                <div className="text-xl font-light text-gray-900 mb-1 group-hover:scale-105 transition-transform">92%</div>
-                <div className="text-xs text-gray-600 font-medium mb-2">Health Score</div>
-                <div className="flex items-center justify-center space-x-1">
-                  <div className="w-1.5 h-1.5 rounded-full bg-indigo-500"></div>
-                  <span className="text-xs text-indigo-600 font-medium">Excellent</span>
-                </div>
-              </CardContent>
-            </Card>
+            <KPICard 
+              icon={<AlertTriangle className="h-6 w-6 text-red-500 mx-auto" />}
+              value={3}
+              label="Critical Items"
+              status="Urgent"
+              statusColor="bg-red-500"
+              gradientColor="bg-gradient-to-r from-red-400 to-red-600"
+            />
+            <KPICard 
+              icon={<Clock className="h-6 w-6 text-blue-500 mx-auto" />}
+              value={5}
+              label="In Progress"
+              status="On Track"
+              statusColor="bg-blue-500"
+              gradientColor="bg-gradient-to-r from-blue-400 to-blue-600"
+            />
+            <KPICard 
+              icon={<DollarSign className="h-6 w-6 text-green-500 mx-auto" />}
+              value={4}
+              label="Opportunities"
+              status="Available"
+              statusColor="bg-green-500"
+              gradientColor="bg-gradient-to-r from-green-400 to-green-600"
+            />
+            <KPICard 
+              icon={<BarChart3 className="h-6 w-6 text-indigo-500 mx-auto" />}
+              value="92%"
+              label="Health Score"
+              status="Excellent"
+              statusColor="bg-indigo-500"
+              gradientColor="bg-gradient-to-r from-indigo-400 to-indigo-600"
+            />
           </div>
 
+          {/* Entrepreneur's Journey Timeline */}
+          <Card className="bg-white/90 backdrop-blur-sm border border-white/50 shadow-md hover:shadow-lg transition-all duration-300 mb-6">
+            <CardHeader className="border-b border-gray-100/50 p-4 bg-gradient-to-r from-purple-50/50 to-pink-50/50">
+              <CardTitle className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-gradient-to-br from-purple-100 to-purple-200 rounded-lg flex items-center justify-center">
+                  <Target className="h-4 w-4 text-purple-700" />
+                </div>
+                <div className="flex-1">
+                  <div className="text-base font-medium text-gray-900">Entrepreneur's Journey</div>
+                  <div className="text-xs text-gray-600">Your business milestones and achievements</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-lg font-light text-purple-600">75%</div>
+                  <div className="text-xs text-gray-500">Complete</div>
+                </div>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="relative">
+                {/* Timeline Line */}
+                <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-green-400 via-blue-400 to-gray-300"></div>
+                
+                {/* Timeline Items */}
+                <div className="space-y-6">
+                  {/* Completed Milestone */}
+                  <div className="flex items-start gap-4">
+                    <div className="relative z-10 w-12 h-12 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+                      <CheckCircle className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="flex-1 pt-2">
+                      <div className="flex items-center justify-between mb-1">
+                        <h4 className="font-semibold text-gray-900">Business Registration</h4>
+                        <span className="text-xs text-gray-500">Jan 2023</span>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-2">Successfully registered first business entity</p>
+                      <Badge className="bg-green-100 text-green-800 border-green-200 text-xs">
+                        Completed
+                      </Badge>
+                    </div>
+                  </div>
+                  
+                  {/* Completed Milestone */}
+                  <div className="flex items-start gap-4">
+                    <div className="relative z-10 w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
+                      <Award className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="flex-1 pt-2">
+                      <div className="flex items-center justify-between mb-1">
+                        <h4 className="font-semibold text-gray-900">First Certification</h4>
+                        <span className="text-xs text-gray-500">Mar 2023</span>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-2">Obtained GST registration and trade license</p>
+                      <Badge className="bg-blue-100 text-blue-800 border-blue-200 text-xs">
+                        Achieved
+                      </Badge>
+                    </div>
+                  </div>
+                  
+                  {/* In Progress Milestone */}
+                  <div className="flex items-start gap-4">
+                    <div className="relative z-10 w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center shadow-lg animate-pulse">
+                      <Clock className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="flex-1 pt-2">
+                      <div className="flex items-center justify-between mb-1">
+                        <h4 className="font-semibold text-gray-900">Business Expansion</h4>
+                        <span className="text-xs text-gray-500">In Progress</span>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-2">Setting up second business venture</p>
+                      <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200 text-xs">
+                        60% Complete
+                      </Badge>
+                    </div>
+                  </div>
+                  
+                  {/* Upcoming Milestone */}
+                  <div className="flex items-start gap-4">
+                    <div className="relative z-10 w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center shadow-lg">
+                      <Star className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="flex-1 pt-2">
+                      <div className="flex items-center justify-between mb-1">
+                        <h4 className="font-semibold text-gray-900">Scale & Growth</h4>
+                        <span className="text-xs text-gray-500">Upcoming</span>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-2">Expand to multiple locations and markets</p>
+                      <Badge className="bg-gray-100 text-gray-800 border-gray-200 text-xs">
+                        Planned
+                      </Badge>
+                    </div>
+                  </div>
+                  
+                  {/* Future Milestone */}
+                  <div className="flex items-start gap-4">
+                    <div className="relative z-10 w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center shadow-lg">
+                      <TrendingUp className="h-6 w-6 text-gray-400" />
+                    </div>
+                    <div className="flex-1 pt-2">
+                      <div className="flex items-center justify-between mb-1">
+                        <h4 className="font-semibold text-gray-900">Market Leadership</h4>
+                        <span className="text-xs text-gray-500">Future Goal</span>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-2">Become industry leader in chosen sectors</p>
+                      <Badge className="bg-gray-100 text-gray-600 border-gray-200 text-xs">
+                        Vision
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Compliance Tracker Section */}
+            {/* Enhanced Compliance Dashboard */}
             <Card className="bg-white/90 backdrop-blur-sm border border-white/50 shadow-md hover:shadow-lg transition-all duration-300">
               <CardHeader className="border-b border-gray-100/50 p-4 bg-gradient-to-r from-red-50/50 to-orange-50/50">
-                <CardTitle className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-gradient-to-br from-red-100 to-red-200 rounded-lg flex items-center justify-center">
-                    <Shield className="h-4 w-4 text-red-700" />
+                <CardTitle className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-gradient-to-br from-red-100 to-red-200 rounded-lg flex items-center justify-center">
+                      <Shield className="h-4 w-4 text-red-700" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-base font-medium text-gray-900">Compliance Dashboard</div>
+                      <div className="text-xs text-gray-600">Regulatory obligations and deadlines</div>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <div className="text-base font-medium text-gray-900">Compliance Management</div>
-                    <div className="text-xs text-gray-600">Regulatory obligations and deadlines</div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-lg font-light text-red-600">3</div>
-                    <div className="text-xs text-gray-500">Critical</div>
+                  <div className="flex items-center gap-3">
+                    <div className="text-right">
+                      <div className="text-lg font-light text-red-600">3</div>
+                      <div className="text-xs text-gray-500">Critical</div>
+                    </div>
+                    <Button size="sm" variant="outline" className="p-2">
+                      <RefreshCw className="h-4 w-4" />
+                    </Button>
                   </div>
                 </CardTitle>
               </CardHeader>
+              
+              {/* Enhanced Compliance Navigation Tabs */}
+              <div className="px-4 pt-3 pb-0">
+                <div className="mb-3">
+                  <div className="flex flex-wrap items-center gap-1 bg-gray-100 rounded-lg p-1">
+                    <Button 
+                      size="sm" 
+                      onClick={() => setActiveComplianceTab('all')}
+                      className={`text-xs px-2 sm:px-3 py-1.5 transition-all duration-200 ${
+                        activeComplianceTab === 'all' 
+                          ? 'bg-white shadow-sm text-gray-900' 
+                          : 'bg-transparent text-gray-600 hover:text-gray-900'
+                      }`}
+                    >
+                      <span className="hidden sm:inline">All Items</span>
+                      <span className="sm:hidden">All</span>
+                      <span className="ml-1">({getTabCount('all')})</span>
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      onClick={() => setActiveComplianceTab('overdue')}
+                      className={`text-xs px-2 sm:px-3 py-1.5 transition-all duration-200 ${
+                        activeComplianceTab === 'overdue' 
+                          ? 'bg-white shadow-sm text-red-700' 
+                          : 'bg-transparent text-gray-600 hover:text-red-600'
+                      }`}
+                    >
+                      Overdue ({getTabCount('overdue')})
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      onClick={() => setActiveComplianceTab('thisweek')}
+                      className={`text-xs px-2 sm:px-3 py-1.5 transition-all duration-200 ${
+                        activeComplianceTab === 'thisweek' 
+                          ? 'bg-white shadow-sm text-yellow-700' 
+                          : 'bg-transparent text-gray-600 hover:text-yellow-600'
+                      }`}
+                    >
+                      <span className="hidden sm:inline">This Week</span>
+                      <span className="sm:hidden">Week</span>
+                      <span className="ml-1">({getTabCount('thisweek')})</span>
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      onClick={() => setActiveComplianceTab('completed')}
+                      className={`text-xs px-2 sm:px-3 py-1.5 transition-all duration-200 ${
+                        activeComplianceTab === 'completed' 
+                          ? 'bg-white shadow-sm text-green-700' 
+                          : 'bg-transparent text-gray-600 hover:text-green-600'
+                      }`}
+                    >
+                      <span className="hidden sm:inline">Completed</span>
+                      <span className="sm:hidden">Done</span>
+                      <span className="ml-1">({getTabCount('completed')})</span>
+                    </Button>
+                  </div>
+                </div>
+                
+                {/* Advanced Filters */}
+                {showComplianceFilters && (
+                  <div className="mb-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                    <div className="flex items-center gap-3">
+                      <div className="flex-1">
+                        <input
+                          type="text"
+                          placeholder="Search compliance items..."
+                          value={complianceFilter}
+                          onChange={(e) => setComplianceFilter(e.target.value)}
+                          className="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                      </div>
+                      <Button size="sm" variant="outline" className="px-3 py-2 text-xs">
+                        <ChevronDown className="h-3 w-3 mr-1" />
+                        Type
+                      </Button>
+                      <Button size="sm" variant="outline" className="px-3 py-2 text-xs">
+                        <ChevronDown className="h-3 w-3 mr-1" />
+                        Date
+                      </Button>
+                      {(complianceFilter || activeComplianceTab !== 'all') && (
+                        <Button 
+                          size="sm" 
+                          variant="ghost" 
+                          onClick={() => {
+                            setComplianceFilter('');
+                            setActiveComplianceTab('all');
+                          }}
+                          className="px-2 py-2 text-xs text-gray-500 hover:text-gray-700"
+                        >
+                          Clear
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+              
               <CardContent className="p-4">
+                {/* Compliance Summary */}
+                <div className="grid grid-cols-3 gap-3 mb-4">
+                  <div className="text-center p-3 bg-red-50 rounded-lg border border-red-100">
+                    <div className="text-lg font-bold text-red-600">1</div>
+                    <div className="text-xs text-red-700">Overdue</div>
+                  </div>
+                  <div className="text-center p-3 bg-yellow-50 rounded-lg border border-yellow-100">
+                    <div className="text-lg font-bold text-yellow-600">2</div>
+                    <div className="text-xs text-yellow-700">Due Soon</div>
+                  </div>
+                  <div className="text-center p-3 bg-green-50 rounded-lg border border-green-100">
+                    <div className="text-lg font-bold text-green-600">2</div>
+                    <div className="text-xs text-green-700">Completed</div>
+                  </div>
+                </div>
+                
+                {/* Compliance Items */}
                 <div className="space-y-3">
-                  {complianceData.slice(0, 3).map((item, index) => (
-                    <div key={item.id} className="flex items-center justify-between p-3 bg-gradient-to-r from-gray-50/50 to-white rounded-lg border border-gray-100/50 hover:shadow-sm transition-all duration-200">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-2 h-2 rounded-full ${index === 0 ? 'bg-red-500 animate-pulse' : index === 1 ? 'bg-yellow-500' : 'bg-green-500'}`}></div>
-                        <div>
-                          <div className="font-medium text-sm text-gray-900">{item.name}</div>
-                          <div className="text-xs text-gray-600">{item.type} • Due: {item.dueDate}</div>
+                  {filteredComplianceData.length === 0 ? (
+                    <div className="text-center py-8">
+                      <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <FileText className="h-8 w-8 text-gray-400" />
+                      </div>
+                      <div className="text-sm text-gray-500 mb-1">No compliance items found</div>
+                      <div className="text-xs text-gray-400">
+                        {activeComplianceTab !== 'all' ? `No items in "${activeComplianceTab}" category` : 'Try adjusting your filters'}
+                      </div>
+                    </div>
+                  ) : (
+                    filteredComplianceData.slice(0, 4).map((item, index) => (
+                      <div key={item.id} className="group p-3 bg-gradient-to-r from-gray-50/50 to-white rounded-lg border border-gray-100/50 hover:shadow-md transition-all duration-200 cursor-pointer">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-3 h-3 rounded-full ${
+                              item.status === 'overdue' ? 'bg-red-500 animate-pulse' : 
+                              item.status === 'pending' ? 'bg-yellow-500' : 
+                              'bg-green-500'
+                            }`}></div>
+                            <div>
+                              <div className="font-medium text-sm text-gray-900">{item.name}</div>
+                              <div className="text-xs text-gray-600">{item.type}</div>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Badge className={`${getStatusColor(item.status)} px-2 py-1 text-xs`}>
+                              {item.status.toUpperCase()}
+                            </Badge>
+                            <Button size="sm" variant="ghost" className="p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <ExternalLink className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between text-xs">
+                          <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-1 text-gray-500">
+                              <Calendar className="h-3 w-3" />
+                              <span>Due: {item.dueDate}</span>
+                            </div>
+                            {item.status === 'overdue' && (
+                              <div className="flex items-center gap-1 text-red-600">
+                                <AlertTriangle className="h-3 w-3" />
+                                <span>3 days overdue</span>
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Button size="sm" variant="outline" className="px-2 py-1 text-xs h-6">
+                              {item.status === 'completed' ? 'View' : 'Action'}
+                            </Button>
+                          </div>
                         </div>
                       </div>
-                      <Badge className={`${getStatusColor(item.status)} px-2 py-1 text-xs`}>
-                        {item.status.toUpperCase()}
-                      </Badge>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
-                <Button variant="outline" className="w-full mt-4 py-2 text-sm font-medium text-gray-700 border-gray-200 hover:bg-gray-50">
-                  View All ({complianceData.length - 3} more)
-                </Button>
+                
+                {/* Enhanced Navigation */}
+                {filteredComplianceData.length > 0 && (
+                  <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
+                    <div className="flex items-center gap-2">
+                      <div className="text-xs text-gray-500">
+                        Showing {Math.min(4, filteredComplianceData.length)} of {filteredComplianceData.length} items
+                      </div>
+                      {activeComplianceTab !== 'all' && (
+                        <Badge className="bg-blue-100 text-blue-800 border-blue-200 text-xs px-2 py-0.5">
+                          Filtered
+                        </Badge>
+                      )}
+                    </div>
+                    
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        onClick={() => setShowComplianceFilters(!showComplianceFilters)}
+                        className="text-xs px-2 sm:px-3 py-1.5 border-gray-200 hover:bg-gray-50"
+                      >
+                        {showComplianceFilters ? 'Hide' : 'Show'} Filters
+                      </Button>
+                      
+                      {filteredComplianceData.length > 4 && (
+                        <Button variant="outline" className="text-xs px-2 sm:px-3 py-1.5 border-gray-200 hover:bg-gray-50">
+                          <span className="hidden sm:inline">View All ({filteredComplianceData.length - 4} more)</span>
+                          <span className="sm:hidden">+{filteredComplianceData.length - 4}</span>
+                          <ArrowRight className="h-3 w-3 ml-1" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
