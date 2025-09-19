@@ -7,6 +7,7 @@ import Landing from "./pages/Landing";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import Dashboard from "./pages/Dashboard";
+import DashboardV2 from "./pages/DashboardV2";
 import Notifications from "./pages/Notifications";
 import Services from "./pages/Services";
 import ServiceDetails from "./pages/ServiceDetails";
@@ -19,6 +20,10 @@ import Profile from "./pages/Profile";
 import ProfileV2 from "./pages/ProfileV2";
 import DetailApplication from "./pages/DetailApplication";
 import DetailApplication2 from "./pages/DetailApplication2";
+import Applications from "./pages/Applications";
+import MyCertificatesLicenses from "./pages/MyCertificatesLicenses";
+import CertificateApplication from "./pages/CertificateApplication";
+import ApplyCertificates from "./pages/ApplyCertificates";
 import EligibilityCalculator from "./pages/EligibilityCalculator";
 import SchemeApplication from "./pages/SchemeApplication";
 import SchemeApplications from "./pages/SchemeApplications";
@@ -40,6 +45,7 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard-v2" element={<DashboardV2 />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/services" element={<Services />} />
           <Route path="/services/:id" element={<ServiceDetails />} />
@@ -56,6 +62,10 @@ const App = () => (
           <Route path="/view-application/:id" element={<ViewApplication />} />
           <Route path="/detail-application" element={<DetailApplication />} />
           <Route path="/detail-application-2" element={<DetailApplication2 />} />
+          <Route path="/applications" element={<Applications />} />
+          <Route path="/my-certificates-licenses" element={<MyCertificatesLicenses />} />
+          <Route path="/apply-certificates" element={<ApplyCertificates />} />
+          <Route path="/certificate-application/:certificateId" element={<CertificateApplication />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/home-futuristic" element={<HomeFuturistic />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

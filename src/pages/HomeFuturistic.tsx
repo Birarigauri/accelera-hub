@@ -348,11 +348,116 @@ const HomeFuturistic = () => {
                   </Button>
                 </motion.div>
               </Link>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button size="lg" variant="outline" className="border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/10 hover:border-cyan-400/50 px-8 py-4 text-lg">
-                  <Eye className="mr-2 h-5 w-5" />
-                  Experience Demo
-                </Button>
+              <motion.div 
+                whileTap={{ scale: 0.95 }}
+                className="relative group cursor-pointer"
+              >
+                {/* Static Glow Ring */}
+                <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-cyan-500/30 to-purple-500/30 blur-sm"></div>
+                
+                {/* Main Button Container */}
+                <div className="relative bg-gradient-to-r from-slate-800/90 to-slate-900/90 rounded-xl border border-cyan-400/30 backdrop-blur-xl overflow-hidden">
+                  {/* Animated Background Particles */}
+                  <div className="absolute inset-0">
+                    {[...Array(8)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        className="absolute w-1 h-1 bg-cyan-400 rounded-full"
+                        style={{
+                          left: `${Math.random() * 100}%`,
+                          top: `${Math.random() * 100}%`,
+                        }}
+                        animate={{
+                          opacity: [0, 1, 0],
+                          scale: [0, 1, 0],
+                          x: [0, Math.random() * 40 - 20],
+                          y: [0, Math.random() * 40 - 20]
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          delay: i * 0.2,
+                        }}
+                      />
+                    ))}
+                  </div>
+                  
+                  {/* Holographic Overlay */}
+                  <motion.div 
+                    className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 via-transparent to-purple-500/20"
+                    animate={{ 
+                      background: [
+                        "linear-gradient(45deg, rgba(6,182,212,0.2), transparent, rgba(139,92,246,0.2))",
+                        "linear-gradient(225deg, rgba(139,92,246,0.2), transparent, rgba(6,182,212,0.2))",
+                        "linear-gradient(45deg, rgba(6,182,212,0.2), transparent, rgba(139,92,246,0.2))"
+                      ]
+                    }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                  />
+                  
+                  <Button 
+                    size="lg" 
+                    variant="outline"
+                    className="relative bg-transparent text-white border-cyan-400/50 hover:border-cyan-400 px-8 py-4 text-lg font-bold transition-all duration-300"
+                  >
+                    {/* Scanning Line Effect */}
+                    <motion.div
+                      className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent"
+                      animate={{ x: ["-100%", "100%"] }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                    
+                    {/* Content */}
+                    <div className="flex items-center justify-center gap-4 relative z-10">
+                      <motion.div
+                        className="relative"
+                        animate={{ 
+                          rotateY: [0, 180, 360],
+                          scale: [1, 1.2, 1]
+                        }}
+                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                      >
+                        <Eye className="h-7 w-7 text-cyan-400" />
+                        <motion.div
+                          className="absolute inset-0 bg-cyan-400 rounded-full blur-md opacity-50"
+                          animate={{ scale: [0.8, 1.5, 0.8] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        />
+                      </motion.div>
+                      
+                      <motion.span 
+                        className="bg-gradient-to-r from-white via-cyan-200 to-purple-200 bg-clip-text text-transparent font-black tracking-wide"
+                        animate={{ 
+                          backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"]
+                        }}
+                        style={{ backgroundSize: "200% 100%" }}
+                        transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                      >
+                        EXPERIENCE DEMO
+                      </motion.span>
+                      
+                      <motion.div
+                        animate={{ 
+                          x: [0, 8, 0],
+                          rotateZ: [0, 15, 0]
+                        }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                      >
+                        <ArrowRight className="h-7 w-7 text-purple-400" />
+                      </motion.div>
+                    </div>
+                    
+                    {/* Bottom Glow */}
+                    <motion.div
+                      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent"
+                      animate={{ 
+                        opacity: [0.3, 1, 0.3],
+                        scaleX: [0.5, 1, 0.5]
+                      }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    />
+                  </Button>
+                </div>
               </motion.div>
             </motion.div>
           </motion.div>

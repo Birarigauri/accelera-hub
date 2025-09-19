@@ -292,7 +292,7 @@ const HeroSlider = ({ currentSlide, setCurrentSlide, nextSlide, prevSlide }: any
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.9 }}
                         >
-                            <Link to="/dashboard">
+                            <a href={`${window.location.protocol}//${window.location.hostname}:8080/dashboard`}>
                                 <motion.div 
                                     whileHover={{ scale: 1.05, rotateX: 5 }} 
                                     whileTap={{ scale: 0.95 }}
@@ -304,7 +304,7 @@ const HeroSlider = ({ currentSlide, setCurrentSlide, nextSlide, prevSlide }: any
                                         <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-2 transition-transform" />
                                     </Button>
                                 </motion.div>
-                            </Link>
+                            </a>
                             <motion.div 
                                 whileHover={{ scale: 1.05, rotateX: 5 }} 
                                 whileTap={{ scale: 0.95 }}
@@ -372,15 +372,17 @@ const HeroSlider = ({ currentSlide, setCurrentSlide, nextSlide, prevSlide }: any
 };
 
 const QuickLinksSection = () => {
+    const baseUrl = `${window.location.protocol}//${window.location.hostname}:8080`;
+    
     const quickLinks = [
-        { icon: Building, title: "Dashboard", description: "Access your business dashboard", link: "http://localhost:8080/dashboard", color: "from-blue-500 to-cyan-500" },
-        { icon: Shield, title: "Services", description: "Explore all business services", link: "http://localhost:8080/services", color: "from-green-500 to-emerald-500" },
-        { icon: Award, title: "Schemes", description: "Government schemes & benefits", link: "http://localhost:8080/schemes", color: "from-purple-500 to-violet-500" },
-        { icon: FileText, title: "Scheme Applications", description: "Apply for government schemes", link: "http://localhost:8080/scheme-applications", color: "from-orange-500 to-red-500" },
-        { icon: Calculator, title: "Eligibility Calculator", description: "Check scheme eligibility", link: "http://localhost:8080/eligibility-calculator", color: "from-indigo-500 to-blue-500" },
-        { icon: Briefcase, title: "Offerings", description: "Our service offerings", link: "http://localhost:8080/offerings", color: "from-pink-500 to-rose-500" },
-        { icon: BookOpen, title: "News", description: "Latest business news & updates", link: "http://localhost:8080/news", color: "from-teal-500 to-cyan-500" },
-        { icon: UserCheck, title: "Profile", description: "Manage your profile", link: "http://localhost:8080/profile", color: "from-yellow-500 to-orange-500" }
+        { icon: Building, title: "Dashboard", description: "Access your business dashboard", link: `${baseUrl}/dashboard`, color: "from-blue-500 to-cyan-500" },
+        { icon: Shield, title: "Services", description: "Explore all business services", link: `${baseUrl}/services`, color: "from-green-500 to-emerald-500" },
+        { icon: Award, title: "Schemes", description: "Government schemes & benefits", link: `${baseUrl}/schemes`, color: "from-purple-500 to-violet-500" },
+        { icon: FileText, title: "Scheme Applications", description: "Apply for government schemes", link: `${baseUrl}/scheme-applications`, color: "from-orange-500 to-red-500" },
+        { icon: Calculator, title: "Eligibility Calculator", description: "Check scheme eligibility", link: `${baseUrl}/eligibility-calculator`, color: "from-indigo-500 to-blue-500" },
+        { icon: Briefcase, title: "Offerings", description: "Our service offerings", link: `${baseUrl}/offerings`, color: "from-pink-500 to-rose-500" },
+        { icon: BookOpen, title: "News", description: "Latest business news & updates", link: `${baseUrl}/news`, color: "from-teal-500 to-cyan-500" },
+        { icon: UserCheck, title: "Profile", description: "Manage your profile", link: `${baseUrl}/profile`, color: "from-yellow-500 to-orange-500" }
     ];
 
     return (

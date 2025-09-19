@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useNavigate } from "react-router-dom";
 import { 
   User, 
   Building, 
@@ -10,7 +11,9 @@ import {
   ChevronLeft,
   Check,
   AlertCircle,
-  FileText
+  FileText,
+  CheckCircle,
+  X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,6 +27,36 @@ import { Textarea } from "@/components/ui/textarea";
 import AppLayout from "@/components/layout/AppLayout";
 import Header from "@/components/layout/Header";
 import dynamicFormSchema from "@/data/dynamicFormSchema.json";
+
+// Add CSS for toast animation
+const toastStyles = `
+  @keyframes slide-in-from-top {
+    from {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
+  .animate-in {
+    animation-duration: 0.3s;
+    animation-fill-mode: both;
+  }
+  
+  .slide-in-from-top-2 {
+    animation-name: slide-in-from-top;
+  }
+`;
+
+// Inject styles
+if (typeof document !== 'undefined') {
+  const styleSheet = document.createElement('style');
+  styleSheet.textContent = toastStyles;
+  document.head.appendChild(styleSheet);
+}
 
 type FormField = {
   name: string;
@@ -56,9 +89,12 @@ type FormSchema = {
 };
 
 const DetailApplication2 = () => {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [schema] = useState<FormSchema>(dynamicFormSchema as FormSchema);
+  const [showToast, setShowToast] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string | null>>({});
 
   const { 
     control, 
@@ -69,8 +105,8 @@ const DetailApplication2 = () => {
     trigger,
     reset
   } = useForm({
-    mode: "onChange",
-    defaultValues: formData
+    mode: "onSubmit",
+    defaultValues: {}
   });
 
   const watchedValues = watch();
@@ -113,7 +149,8 @@ const DetailApplication2 = () => {
   };
 
   const validateField = (field: FormField, value: any) => {
-    if (field.required && (!value || (Array.isArray(value) && value.length === 0))) {
+    // For radio buttons, check if value is explicitly undefined or empty string
+    if (field.required && (value === undefined || value === "" || (Array.isArray(value) && value.length === 0))) {
       return `${field.label} is required`;
     }
 
@@ -133,6 +170,21 @@ const DetailApplication2 = () => {
       }
     }
 
+    // Standard validations
+    if (field.type === 'email' && value) {
+      if (value.length > 254) return 'Email must be less than 254 characters';
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+        return 'Please enter a valid email address';
+      }
+    }
+    
+    if (field.type === 'tel' && value) {
+      if (value.length > 15) return 'Phone number must be less than 15 digits';
+      if (!/^[+]?[0-9\s\-\(\)]+$/.test(value)) {
+        return 'Please enter a valid phone number';
+      }
+    }
+
     return null;
   };
 
@@ -141,15 +193,21 @@ const DetailApplication2 = () => {
     const visibleFields = currentStepFields.filter(shouldShowField);
     
     let isStepValid = true;
+    const newErrors: Record<string, string | null> = {};
     
     for (const field of visibleFields) {
       const value = formData[field.name];
       const error = validateField(field, value);
       
       if (error) {
+        newErrors[field.name] = error;
         isStepValid = false;
-        break;
       }
+    }
+    
+    // Only set errors if validation fails
+    if (!isStepValid) {
+      setFieldErrors(newErrors);
     }
     
     return isStepValid;
@@ -166,16 +224,64 @@ const DetailApplication2 = () => {
     setCurrentStep(prev => Math.max(prev - 1, 0));
   };
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
+    // Validate all fields before submit
+    const allFields = schema.steps.flatMap(step => step.fields).filter(shouldShowField);
+    const submitErrors: Record<string, string | null> = {};
+    let hasErrors = false;
+    
+    for (const field of allFields) {
+      const value = formData[field.name];
+      const error = validateField(field, value);
+      
+      if (error) {
+        submitErrors[field.name] = error;
+        hasErrors = true;
+      }
+    }
+    
+    if (hasErrors) {
+      setFieldErrors(submitErrors);
+      return;
+    }
+    
     const finalData = { ...formData, ...data };
     console.log("Final Form Data:", finalData);
-    alert("Application submitted successfully!");
+    
+    // Show success toast
+    setShowToast(true);
+    
+    // Auto hide toast and redirect after 3 seconds
+    setTimeout(() => {
+      setShowToast(false);
+      navigate('/applications');
+    }, 3000);
   };
+
+  const handleFieldChange = (fieldName: string, value: any) => {
+    // Clear error after 3 seconds of typing
+    if (fieldErrors[fieldName]) {
+      setTimeout(() => {
+        setFieldErrors(prev => ({ ...prev, [fieldName]: null }));
+      }, 3000);
+    }
+  };
+
+  // Auto-hide all errors after 5 seconds
+  useEffect(() => {
+    if (Object.keys(fieldErrors).length > 0) {
+      const timer = setTimeout(() => {
+        setFieldErrors({});
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [fieldErrors]);
 
   const renderField = (field: FormField) => {
     if (!shouldShowField(field)) return null;
 
-    const fieldError = validateField(field, formData[field.name]);
+    // Only show error if it exists in fieldErrors state (set by validation)
+    const fieldError = fieldErrors[field.name];
 
     switch (field.type) {
       case 'text':
@@ -195,6 +301,11 @@ const DetailApplication2 = () => {
                   type={field.type}
                   placeholder={field.placeholder}
                   className={fieldError ? "border-red-500" : ""}
+                  maxLength={field.type === 'email' ? 254 : field.type === 'tel' ? 15 : undefined}
+                  onChange={(e) => {
+                    controllerField.onChange(e);
+                    handleFieldChange(field.name, e.target.value);
+                  }}
                 />
               )}
             />
@@ -279,8 +390,18 @@ const DetailApplication2 = () => {
             <Controller
               name={field.name}
               control={control}
+              defaultValue={undefined}
               render={({ field: controllerField }) => (
-                <RadioGroup value={controllerField.value} onValueChange={controllerField.onChange}>
+                <RadioGroup 
+                  value={controllerField.value || ""} 
+                  onValueChange={(value) => {
+                    controllerField.onChange(value);
+                    // Clear error when user selects an option
+                    if (fieldErrors[field.name]) {
+                      setFieldErrors(prev => ({ ...prev, [field.name]: null }));
+                    }
+                  }}
+                >
                   {field.options?.map((option: any) => (
                     <div key={option.value} className="flex items-center space-x-2">
                       <RadioGroupItem value={option.value} id={`${field.name}-${option.value}`} />
@@ -350,14 +471,10 @@ const DetailApplication2 = () => {
         
         <div className="container mx-auto px-4 lg:px-6 py-8">
           <div className="max-w-4xl mx-auto">
-            {/* Header */}
-            <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold mb-2">{schema.title}</h1>
-              <p className="text-muted-foreground">{schema.description}</p>
-            </div>
+
 
             {/* Progress */}
-            <div className="mb-8">
+            <div className="mb-6">
               <div className="flex items-center justify-between mb-4">
                 {schema.steps.map((step, index) => {
                   const StepIcon = getStepIcon(index);
@@ -396,22 +513,26 @@ const DetailApplication2 = () => {
             </div>
 
             {/* Form */}
-            <Card className="bg-gradient-card border-0">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+            <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-2xl">
+              <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-t-lg p-4">
+                <CardTitle className="flex items-center gap-2 text-lg">
                   {(() => {
                     const StepIcon = getStepIcon(currentStep);
-                    return <StepIcon className="h-5 w-5" />;
+                    return <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                      <StepIcon className="h-4 w-4 text-white" />
+                    </div>;
                   })()}
-                  {currentStepData.title}
+                  <div>
+                    <div className="font-semibold text-gray-900">{currentStepData.title}</div>
+                    <div className="text-xs text-gray-600 font-normal">{currentStepData.description}</div>
+                  </div>
                 </CardTitle>
-                <CardDescription>{currentStepData.description}</CardDescription>
               </CardHeader>
 
-              <CardContent>
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <CardContent className="p-6">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                   {/* Dynamic Fields */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     {currentStepData.fields.map(renderField)}
                   </div>
 
@@ -488,6 +609,25 @@ const DetailApplication2 = () => {
           </div>
         </div>
       </div>
+      
+      {/* Success Toast */}
+      {showToast && (
+        <div className="fixed top-4 right-4 z-50 animate-in slide-in-from-top-2">
+          <div className="bg-green-600 text-white px-6 py-4 rounded-lg shadow-lg flex items-center gap-3 min-w-[300px]">
+            <CheckCircle className="h-5 w-5 flex-shrink-0" />
+            <div className="flex-1">
+              <p className="font-semibold">Application Submitted Successfully!</p>
+              <p className="text-sm text-green-100">Your application has been received and is being processed.</p>
+            </div>
+            <button 
+              onClick={() => setShowToast(false)}
+              className="text-green-100 hover:text-white transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      )}
     </AppLayout>
   );
 };
