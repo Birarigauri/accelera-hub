@@ -16,7 +16,8 @@ import {
   Calculator,
   UserCircle,
   Award,
-  ClipboardList
+  ClipboardList,
+  CheckCircle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -29,11 +30,13 @@ const Sidebar = () => {
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "Dashboard V2", href: "/dashboard-v2", icon: LayoutDashboard },
     { name: "Dashboard V3", href: "/dashboard-v3", icon: LayoutDashboard },
+    { name: "Dashboard V5", href: "/dashboard-v5", icon: LayoutDashboard },
     { name: "Services", href: "/services", icon: Building },
     { name: "Schemes", href: "/schemes", icon: Shield },
     { name: "My Applications", href: "/scheme-applications", icon: FileText },
     { name: "My Certificates & Licenses", href: "/my-certificates-licenses", icon: Award },
     { name: "Apply for Certificates", href: "/apply-certificates", icon: ClipboardList },
+    { name: "Compliance Process", href: "/compliance-flow", icon: CheckCircle },
     { name: "Eligibility Calculator", href: "/eligibility-calculator", icon: Calculator },
     { name: "Offerings", href: "/offerings", icon: Star },
     { name: "News", href: "/news", icon: Newspaper },

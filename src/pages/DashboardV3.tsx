@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { 
   Building2, 
   FileText, 
@@ -29,6 +30,7 @@ import { SchemesCard } from "@/components/dashboard/SchemesCard";
 
 
 const DashboardV3 = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeAlertsTab, setActiveAlertsTab] = useState('all');
 
@@ -239,7 +241,7 @@ const DashboardV3 = () => {
         <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
           {/* Header Section */}
           <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-xl p-6 mb-8 shadow-lg">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mb-4">
               <div>
                 <h1 className="text-2xl font-bold text-white mb-1">Welcome, John Doe!</h1>
                 <p className="text-blue-100">Your New Entrepreneur Dashboard</p>
@@ -248,6 +250,15 @@ const DashboardV3 = () => {
                 <div className="text-sm text-blue-100">Last Updated</div>
                 <div className="text-lg font-semibold">Today, 2:30 PM</div>
               </div>
+            </div>
+            <div className="flex justify-left">
+              <Button 
+                onClick={() => navigate('/services')}
+                className="bg-white text-blue-600 hover:bg-blue-50 px-6 py-2 font-semibold"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Request New Service
+              </Button>
             </div>
           </div>
 

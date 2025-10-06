@@ -9,6 +9,7 @@ import Register from "./pages/Auth/Register";
 import Dashboard from "./pages/Dashboard";
 import DashboardV2 from "./pages/DashboardV2";
 import DashboardV3 from "./pages/DashboardV3";
+import DashboardV5 from "./pages/DashboardV5";
 import Notifications from "./pages/Notifications";
 import Services from "./pages/Services";
 import ServiceDetails from "./pages/ServiceDetails";
@@ -31,6 +32,8 @@ import SchemeApplications from "./pages/SchemeApplications";
 import ViewApplication from "./pages/ViewApplication";
 import ForgotPassword from "./pages/Auth/ForgotPassword";
 import HomeFuturistic from "./pages/HomeFuturistic";
+import AddBusiness from "./pages/AddBusiness";
+import ComplianceFlow from "./pages/ComplianceFlow";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -48,6 +51,7 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard-v2" element={<DashboardV2 />} />
           <Route path="/dashboard-v3" element={<DashboardV3 />} />
+          <Route path="/dashboard-v5" element={<DashboardV5 />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/services" element={<Services />} />
           <Route path="/services/:id" element={<ServiceDetails />} />
@@ -70,6 +74,8 @@ const App = () => (
           <Route path="/certificate-application/:certificateId" element={<CertificateApplication />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/home-futuristic" element={<HomeFuturistic />} />
+          <Route path="/add-business" element={<AddBusiness />} />
+          <Route path="/compliance-flow" element={<ComplianceFlow />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
