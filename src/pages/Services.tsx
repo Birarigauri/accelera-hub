@@ -223,10 +223,10 @@ const Services = () => {
               </p>
             </div>
             
-            <Button className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm w-full sm:w-auto">
+            {/* <Button className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm w-full sm:w-auto">
               <Plus className="h-4 w-4 mr-2" />
               Request Custom Service
-            </Button>
+            </Button> */}
           </div>
         </div>
 
@@ -235,7 +235,7 @@ const Services = () => {
           <TabsList className="grid w-full grid-cols-2 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100 p-1">
             <TabsTrigger value="catalog" className="data-[state=active]:bg-white data-[state=active]:shadow-md transition-all duration-200">
               <Building className="h-4 w-4 mr-2" />
-              Service Catalog
+              All Service
             </TabsTrigger>
             <TabsTrigger value="my-services" className="data-[state=active]:bg-white data-[state=active]:shadow-md transition-all duration-200">
               <Users className="h-4 w-4 mr-2" />
@@ -314,12 +314,12 @@ const Services = () => {
                           </td>
                           <td className="p-4">
                             <div className="flex items-center gap-2">
-                              <Link to={`/services/${service.id}`}>
+                              {/* <Link to={`/services/${service.id}`}>
                                 <Button size="sm" className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
                                   <Eye className="h-4 w-4 mr-1" />
                                   View Details
                                 </Button>
-                              </Link>
+                              </Link> */}
                               <Button size="sm" variant="outline">
                                 <Users className="h-4 w-4 mr-1" />
                                 Expert
@@ -387,10 +387,10 @@ const Services = () => {
                 <Badge variant="outline" className="bg-white/80">
                   {myServices.length} Total Applications
                 </Badge>
-                <Button variant="outline" className="bg-white/80 hover:bg-white">
+                {/* <Button variant="outline" className="bg-white/80 hover:bg-white">
                   <Plus className="h-4 w-4 mr-2" />
                   New Application
-                </Button>
+                </Button> */}
               </div>
             </div>
 
@@ -458,12 +458,12 @@ const Services = () => {
                                   <Eye className="h-4 w-4 mr-2" />
                                   View Details
                                 </Button>
-                                {service.status === "completed" && service.documents && (
+                                {/* {service.status === "completed" && service.documents && (
                                   <Button size="sm" variant="secondary">
                                     <Download className="h-4 w-4 mr-1" />
                                     Download
                                   </Button>
-                                )}
+                                )} */}
                               </div>
                             </td>
                           </tr>

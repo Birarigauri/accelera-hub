@@ -94,25 +94,25 @@ const SchemeApplications = () => {
       <div className="min-h-screen bg-muted/30">
         <Header />
         
-        <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-8">
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div className="container mx-auto px-4 py-6">
+          {/* Compact Header */}
+          <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold">My Applications</h1>
-              <p className="text-muted-foreground">Track and manage your scheme applications</p>
+              <h1 className="text-2xl font-bold">My Applications</h1>
+              <p className="text-sm text-muted-foreground">Track and manage your scheme applications</p>
             </div>
             <Link to="/scheme-application">
-              <Button className="bg-gradient-to-r from-blue-600 to-purple-600">
-                <Plus className="h-4 w-4 mr-2" />
+              <Button size="sm" className="bg-gradient-to-r from-blue-600 to-purple-600">
+                <Plus className="h-4 w-4 mr-1" />
                 New Application
               </Button>
             </Link>
           </div>
 
-          {/* Filters */}
-          <Card className="mb-6">
-            <CardContent className="p-6">
-              <div className="flex flex-col sm:flex-row gap-4">
+          {/* Compact Filters */}
+          <Card className="mb-4">
+            <CardContent className="p-4">
+              <div className="flex gap-3">
                 <div className="flex-1">
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -120,89 +120,88 @@ const SchemeApplications = () => {
                       placeholder="Search applications..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10"
+                      className="pl-10 h-9"
                     />
                   </div>
                 </div>
-                <div className="flex gap-2">
-                  <select
-                    value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value)}
-                    className="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm"
-                  >
-                    <option value="all">All Status</option>
-                    <option value="draft">Draft</option>
-                    <option value="submitted">Submitted</option>
-                    <option value="under_review">Under Review</option>
-                    <option value="approved">Approved</option>
-                    <option value="rejected">Rejected</option>
-                  </select>
-                  <Button variant="outline">
-                    <Filter className="h-4 w-4 mr-2" />
-                    Filter
-                  </Button>
-                </div>
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  className="h-9 rounded-md border border-input bg-background px-3 text-sm"
+                >
+                  <option value="all">All Status</option>
+                  <option value="draft">Draft</option>
+                  <option value="submitted">Submitted</option>
+                  <option value="under_review">Under Review</option>
+                  <option value="approved">Approved</option>
+                  <option value="rejected">Rejected</option>
+                </select>
               </div>
             </CardContent>
           </Card>
 
-          {/* Applications List */}
-          <div className="grid gap-6">
+          {/* Compact Applications List */}
+          <div className="space-y-3">
             {filteredApplications.map((application) => (
-              <Card key={application.id} className="hover:shadow-lg transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex flex-col lg:flex-row lg:items-center gap-4">
-                    {/* Application Info */}
+              <Card key={application.id} className="hover:shadow-md transition-shadow">
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    {/* Left: Application Info */}
                     <div className="flex-1">
-                      <div className="flex items-start justify-between mb-3">
-                        <div>
-                          <h3 className="text-lg font-semibold mb-1">{application.schemeName}</h3>
-                          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                            <span className="flex items-center gap-1">
-                              <FileText className="h-3 w-3" />
-                              {application.id}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Calendar className="h-3 w-3" />
-                              {new Date(application.appliedDate).toLocaleDateString()}
-                            </span>
-                          </div>
-                        </div>
-                        <Badge className={getStatusColor(application.status)}>
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="font-semibold text-base">{application.schemeName}</h3>
+                        <Badge className={`${getStatusColor(application.status)} text-xs px-2 py-1`}>
                           {getStatusText(application.status)}
                         </Badge>
                       </div>
-
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="text-sm text-muted-foreground">
-                          Scheme ID: <span className="font-medium">{application.schemeId}</span>
-                        </div>
-                        <div className="text-lg font-semibold text-blue-600">
-                          {application.amount}
-                        </div>
+                      <div className="flex items-center gap-4 text-xs text-muted-foreground mb-1">
+                        <span className="flex items-center gap-1">
+                          <FileText className="h-3 w-3" />
+                          {application.id}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          {new Date(application.appliedDate).toLocaleDateString()}
+                        </span>
+                        <span className="font-medium text-blue-600">₹{application.amount}</span>
                       </div>
+                      <div className="text-xs text-muted-foreground">
+                        Scheme ID: <span className="font-medium">{application.schemeId}</span>
+                      </div>
+                    </div>
 
-                      {/* Progress Bar */}
-                      <div className="mb-4">
-                        <div className="flex justify-between text-sm mb-1">
-                          <span>Application Progress</span>
-                          <span>{application.progress}%</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div 
-                            className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-300"
-                            style={{ width: `${application.progress}%` }}
-                          ></div>
+                    {/* Center: Circular Progress */}
+                    <div className="flex items-center gap-3 mx-4">
+                      <div className="relative w-10 h-10">
+                        <svg className="w-10 h-10 transform -rotate-90" viewBox="0 0 36 36">
+                          <path
+                            className="text-gray-200"
+                            stroke="currentColor"
+                            strokeWidth="3"
+                            fill="none"
+                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                          />
+                          <path
+                            className="text-blue-500"
+                            stroke="currentColor"
+                            strokeWidth="3"
+                            strokeDasharray={`${application.progress}, 100`}
+                            strokeLinecap="round"
+                            fill="none"
+                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                          />
+                        </svg>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span className="text-xs font-semibold text-blue-600">{application.progress}%</span>
                         </div>
                       </div>
                     </div>
 
-                    {/* Actions */}
+                    {/* Right: Actions */}
                     <div className="flex gap-2">
                       <Link to={`/view-application/${application.id}`}>
                         <Button variant="outline" size="sm">
-                          <Eye className="h-4 w-4 mr-2" />
-                          View
+                          <Eye className="h-4 w-4" />
                         </Button>
                       </Link>
                       {(application.status === 'draft' || application.status === 'submitted') && (

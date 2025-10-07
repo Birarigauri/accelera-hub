@@ -540,34 +540,8 @@ const AddBusiness = memo(() => {
             </p>
           </div>
 
-          {/* Progress Bar */}
-          <div className="max-w-4xl mx-auto mb-8">
-            <div className="flex items-center justify-between">
-              {[1, 2, 3, 4].map((step) => (
-                <div key={step} className="flex items-center">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center font-semibold transition-all ${
-                    step <= currentStep 
-                      ? 'bg-blue-500 text-white shadow-lg' 
-                      : 'bg-gray-200 text-gray-500'
-                  }`}>
-                    {step < currentStep ? <CheckCircle className="h-6 w-6" /> : getStepIcon(step)}
-                  </div>
-                  {step < 4 && (
-                    <div className={`w-24 h-1 mx-2 transition-all ${
-                      step < currentStep ? 'bg-blue-500' : 'bg-gray-200'
-                    }`} />
-                  )}
-                </div>
-              ))}
-            </div>
-            <div className="flex justify-between mt-2 text-sm font-medium text-gray-600">
-              <span>Location</span>
-              <span>Legal Status</span>
-              <span>Financials</span>
-              <span>Recognition</span>
-            </div>
-          </div>
-
+          {/* Enhanced Progress Steps */}
+        
           {/* Form Content */}
           <div className="max-w-4xl mx-auto">
             {currentStep === 1 && renderStep1()}

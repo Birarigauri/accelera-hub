@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import Sidebar from "./Sidebar";
 import BottomNav from "./BottomNav";
+import ChatBot from "@/components/ui/ChatBot";
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -14,6 +15,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
         {children}
       </div>
       <BottomNav />
+      <ChatBot />
     </div>
   );
 };

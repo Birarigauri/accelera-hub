@@ -469,21 +469,21 @@ const DashboardV5 = memo(() => {
                       <BarChart3 className="h-8 w-8 text-white" />
                     </div>
                     <div>
-                      <h1 className="text-3xl font-bold text-white mb-1">Executive Dashboard V5</h1>
+                      <h1 className="text-3xl font-bold text-white mb-1">Entrepreneur Dashboard</h1>
                       <p className="text-blue-100 text-lg">Business intelligence and compliance monitoring</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <div className="min-w-[320px]">
-                      <div className="text-base text-white mb-3 font-semibold text-center tracking-wide">🏢 Choose Your Business</div>
+                  <div className=" items-center gap-3">
+                    <div className="mb-2 text-sm text-white font-medium whitespace-nowrap">🏢 Choose Your Business</div>
+                    <div className="min-w-[240px]">
                       <Select value={selectedBusiness} onValueChange={setSelectedBusiness}>
-                        <SelectTrigger className="bg-white/25 border-2 border-white/40 text-white backdrop-blur-md hover:bg-white/35 transition-all duration-300 h-14 text-lg shadow-xl rounded-xl">
-                          <SelectValue className="text-white font-semibold" placeholder="Select a business..." />
+                        <SelectTrigger className="bg-white/25 border border-white/40 text-white backdrop-blur-md hover:bg-white/35 transition-all duration-300 h-10 text-sm shadow-lg rounded-lg">
+                          <SelectValue className="text-white font-medium" placeholder="Select business..." />
                         </SelectTrigger>
-                        <SelectContent className="bg-white/95 backdrop-blur-md border-2 border-gray-200 shadow-2xl rounded-xl p-2">
+                        <SelectContent className="bg-white backdrop-blur-md border border-gray-200 shadow-xl rounded-lg">
                           {Object.entries(businessData).map(([key, business]) => (
-                            <SelectItem key={key} value={key} className="hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 cursor-pointer py-4 px-4 rounded-lg mb-1 transition-all duration-200 pl-4 [&>span:first-child]:hidden">
-                              <span className="font-semibold text-gray-900 text-base">{business.name}</span>
+                            <SelectItem key={key} value={key} className="hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 cursor-pointer py-2 px-3 rounded text-sm transition-all duration-200 text-gray-900">
+                              <span className="font-medium">{business.name}</span>
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -508,13 +508,23 @@ const DashboardV5 = memo(() => {
                     </div>
                   </div>
                   
-                  {/* Add New Business Button */}
-                  <Link to="/add-business">
-                    <Button className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 border-2 border-emerald-400 text-white backdrop-blur-sm px-8 py-3 text-base font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                      <Plus className="h-5 w-5 mr-3" />
-                      Add New Business
-                    </Button>
-                  </Link>
+                  <div className="flex items-center gap-4">
+                    {/* Apply New Service Button */}
+                    <Link to="/services">
+                      <Button className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 border-2 border-blue-400 text-white backdrop-blur-sm px-6 py-3 text-base font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                        <Building2 className="h-5 w-5 mr-2" />
+                        Apply New Service
+                      </Button>
+                    </Link>
+                    
+                    {/* Add New Business Button */}
+                    <Link to="/add-business">
+                      <Button className="bg-gradient-to-r from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700 border-2 border-purple-400 text-white backdrop-blur-sm px-6 py-3 text-base font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                        <Plus className="h-5 w-5 mr-2" />
+                        Add New Business
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>

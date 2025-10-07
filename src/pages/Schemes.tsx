@@ -244,46 +244,38 @@ const Schemes = () => {
         </div>
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-gradient-card border-0">
-            <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <Target className="h-6 w-6 text-blue-600" />
-              </div>
-              <div className="text-2xl font-bold text-blue-600 mb-1">18</div>
-              <p className="text-sm text-muted-foreground">Available Schemes</p>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-gradient-card border-0">
-            <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <CheckCircle className="h-6 w-6 text-green-600" />
-              </div>
-              <div className="text-2xl font-bold text-green-600 mb-1">3</div>
-              <p className="text-sm text-muted-foreground">Applications Submitted</p>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-gradient-card border-0">
-            <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <IndianRupee className="h-6 w-6 text-purple-600" />
-              </div>
-              <div className="text-2xl font-bold text-purple-600 mb-1">₹48L</div>
-              <p className="text-sm text-muted-foreground">Total Applied Amount</p>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-gradient-card border-0">
-            <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <Award className="h-6 w-6 text-orange-600" />
-              </div>
-              <div className="text-2xl font-bold text-orange-600 mb-1">87%</div>
-              <p className="text-sm text-muted-foreground">Avg Eligibility Score</p>
-            </CardContent>
-          </Card>
+        <div className="flex justify-center mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl">
+            <Card className="bg-gradient-to-br from-blue-50 via-blue-100 to-indigo-100 border-0 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 rounded-2xl">
+              <CardContent className="p-8 text-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                  <Target className="h-8 w-8 text-white" />
+                </div>
+                <div className="text-3xl font-bold text-blue-700 mb-2">18</div>
+                <p className="text-sm font-medium text-blue-600">Available Schemes</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-gradient-to-br from-green-50 via-green-100 to-emerald-100 border-0 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 rounded-2xl">
+              <CardContent className="p-8 text-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                  <CheckCircle className="h-8 w-8 text-white" />
+                </div>
+                <div className="text-3xl font-bold text-green-700 mb-2">3</div>
+                <p className="text-sm font-medium text-green-600">Applications Submitted</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-gradient-to-br from-orange-50 via-orange-100 to-amber-100 border-0 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 rounded-2xl">
+              <CardContent className="p-8 text-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                  <Award className="h-8 w-8 text-white" />
+                </div>
+                <div className="text-3xl font-bold text-orange-700 mb-2">87%</div>
+                <p className="text-sm font-medium text-orange-600">Avg Eligibility Score</p>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         {/* Schemes Tabs */}
@@ -293,13 +285,13 @@ const Schemes = () => {
               value="discover" 
               className="flex-1 text-center py-3 px-2 text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-md text-gray-600"
             >
-              Discover
+              All Schemes
             </TabsTrigger>
             <TabsTrigger 
               value="my-applications" 
               className="flex-1 text-center py-3 px-2 text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-md text-gray-600"
             >
-              My Applied Services
+              My Applied Schemes
             </TabsTrigger>
             <TabsTrigger 
               value="recommended" 
@@ -359,7 +351,7 @@ const Schemes = () => {
                       <TableRow className="bg-gray-50/50">
                         <TableHead className="font-semibold text-gray-700 py-4">Scheme Details</TableHead>
                         <TableHead className="font-semibold text-gray-700 text-center">Category</TableHead>
-                        <TableHead className="font-semibold text-gray-700 text-center">Funding</TableHead>
+                        {/* <TableHead className="font-semibold text-gray-700 text-center">Funding</TableHead> */}
                         <TableHead className="font-semibold text-gray-700 text-center">Eligibility</TableHead>
                         <TableHead className="font-semibold text-gray-700 text-center">Deadline</TableHead>
                         <TableHead className="font-semibold text-gray-700 text-center">Actions</TableHead>
@@ -399,12 +391,7 @@ const Schemes = () => {
                                 {scheme.category.toUpperCase()}
                               </Badge>
                             </TableCell>
-                            <TableCell className="text-center">
-                              <div className="space-y-1">
-                                <div className="font-semibold text-green-600 text-sm">{scheme.fundingAmount}</div>
-                                <div className="text-xs text-gray-500">{scheme.subsidy}</div>
-                              </div>
-                            </TableCell>
+
                             <TableCell className="text-center">
                               <div className={`text-lg font-bold ${getEligibilityColor(scheme.eligibility)}`}>
                                 {scheme.eligibility}%
@@ -575,16 +562,101 @@ const Schemes = () => {
           </TabsContent>
 
           {/* Recommended */}
-          <TabsContent value="recommended">
-            <Card className="text-center p-12 bg-gradient-card border-0">
-              <Star className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Personalized Recommendations</h3>
-              <p className="text-muted-foreground mb-6">
-                Get AI-powered scheme recommendations based on your business profile and needs
-              </p>
-              <Button variant="hero">
-                Generate Recommendations
-              </Button>
+          <TabsContent value="recommended" className="space-y-6">
+            <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-yellow-50 to-orange-50 border-b border-yellow-200 pb-4">
+                <CardTitle className="flex items-center gap-3 text-xl">
+                  <div className="w-10 h-10 bg-yellow-100 rounded-xl flex items-center justify-center">
+                    <Star className="h-5 w-5 text-yellow-600" />
+                  </div>
+                  Suggested Schemes (2)
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="grid gap-6">
+                  {/* Scheme 1 */}
+                  <Card className="border border-green-200 bg-gradient-to-r from-green-50 to-emerald-50 hover:shadow-lg transition-all">
+                    <CardContent className="p-6">
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                          <Award className="h-6 w-6 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <h3 className="text-lg font-bold text-gray-900">MSME Technology Upgradation Scheme</h3>
+                            <Badge className="bg-green-100 text-green-700 text-xs px-2 py-1">95% Match</Badge>
+                          </div>
+                          <p className="text-sm text-gray-600 mb-4">Credit linked capital subsidy for technology upgradation in MSME sector. Perfect for your manufacturing business profile.</p>
+                          <div className="flex items-center gap-6 text-sm text-gray-500 mb-4">
+                            <span className="flex items-center gap-1">
+                              <IndianRupee className="h-4 w-4" />
+                              Up to ₹1 crore
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Calendar className="h-4 w-4" />
+                              Deadline: May 15, 2024
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <MapPin className="h-4 w-4" />
+                              All States
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <Button className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white">
+                              Apply Now
+                            </Button>
+                            <Button variant="outline" size="sm">
+                              <Eye className="h-4 w-4 mr-1" />
+                              View Details
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Scheme 2 */}
+                  <Card className="border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 hover:shadow-lg transition-all">
+                    <CardContent className="p-6">
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                          <Zap className="h-6 w-6 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <h3 className="text-lg font-bold text-gray-900">Digital India Innovation Fund</h3>
+                            <Badge className="bg-blue-100 text-blue-700 text-xs px-2 py-1">88% Match</Badge>
+                          </div>
+                          <p className="text-sm text-gray-600 mb-4">Funding for digital innovation and technology startups. Ideal for businesses looking to adopt digital technologies.</p>
+                          <div className="flex items-center gap-6 text-sm text-gray-500 mb-4">
+                            <span className="flex items-center gap-1">
+                              <IndianRupee className="h-4 w-4" />
+                              Up to ₹50 lakhs
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Calendar className="h-4 w-4" />
+                              Deadline: Apr 30, 2024
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <MapPin className="h-4 w-4" />
+                              Tier 1 & 2 cities
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <Button className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white">
+                              Apply Now
+                            </Button>
+                            <Button variant="outline" size="sm">
+                              <Eye className="h-4 w-4 mr-1" />
+                              View Details
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </CardContent>
             </Card>
           </TabsContent>
         </Tabs>

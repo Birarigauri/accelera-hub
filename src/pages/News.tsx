@@ -174,25 +174,14 @@ const News = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
-              <Newspaper className="h-6 w-6 text-white" />
-            </div>
+           
             <div>
-              <h1 className="text-4xl font-bold text-gray-900">📰 News Hub</h1>
+              <h1 className="text-4xl font-bold text-gray-900">News Hub</h1>
               <p className="text-gray-600">Latest updates, policies & business insights</p>
             </div>
           </div>
           
-          <div className="flex justify-center gap-3 mt-6">
-            <Button variant="outline" className="flex items-center gap-2">
-              <Bookmark className="h-4 w-4" />
-              My Bookmarks
-            </Button>
-            <Button className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
-              <Bell className="h-4 w-4 mr-2" />
-              Subscribe
-            </Button>
-          </div>
+          
         </div>
 
         {/* Search and Filters */}

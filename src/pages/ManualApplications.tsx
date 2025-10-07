@@ -33,6 +33,7 @@ import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "@/components/ui/use-toast";
 import Header from "@/components/layout/Header";
 import AppLayout from "@/components/layout/AppLayout";
 
@@ -452,16 +453,16 @@ const ManualApplications = () => {
                           <Download className="h-4 w-4 mr-2" />
                           Download Certificate
                         </Button>
-                        {!service.hasReview && (
+                        {/* {!service.hasReview && (
                           <Button size="sm" variant="outline" className="w-full">
                             <Star className="h-4 w-4 mr-2" />
                             Add Review / Rating
                           </Button>
-                        )}
-                        <Button size="sm" variant="outline" className="w-full">
+                        )} */}
+                        {/* <Button size="sm" variant="outline" className="w-full">
                           <BarChart3 className="h-4 w-4 mr-2" />
                           Add to Compliance Tracker
-                        </Button>
+                        </Button> */}
                       </div>
                     </CardContent>
                   </Card>
@@ -611,10 +612,17 @@ const ManualApplications = () => {
                   {/* Action Button */}
                   <Button 
                     className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white"
-                    onClick={() => setShowDetailsModal(false)}
+                    onClick={() => {
+                      setShowDetailsModal(false);
+                      toast({
+                        title: "Expert Connection Initiated",
+                        description: "Our expert will connect in few time",
+                        duration: 5000,
+                        className: "fixed top-4 right-4 bg-green-600 text-white border-green-500 shadow-2xl z-50 max-w-sm p-3 rounded-lg transition-all duration-300 ease-in-out animate-in fade-in slide-in-from-right-2",
+                      });
+                    }}
                   >
-                    <MessageCircle className="h-4 w-4 mr-2" />
-                    Chat with Expert
+                    Connect with Expert
                   </Button>
                 </div>
               )}
