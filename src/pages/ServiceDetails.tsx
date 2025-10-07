@@ -321,7 +321,7 @@ startxref
             <div className="space-y-6">
               {/* Service Header */}
               <Card className="bg-white shadow-xl border-0 rounded-2xl overflow-hidden">
-                <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-1">
+                <div className="bg-gradient-to-r from-blue-500 to-purple-600 ">
                   <div className="bg-white rounded-xl">
                     <CardContent className="p-6">
                   <div className="flex flex-col sm:flex-row items-start gap-4 mb-6">
@@ -330,21 +330,13 @@ startxref
                     </div>
                     <div className="flex-1">
                       <h1 className="text-2xl font-bold mb-2">{service.title}</h1>
-                      <p className="text-muted-foreground mb-4">{service.description}</p>
+                      <p className="text-muted-foreground mb-1">{service.description}</p>
                     </div>
                   </div>
 
 
                     
-                    {/* Proceed Button */}
-                    <div className="text-center pb-6">
-                      <Button 
-                        onClick={() => navigate('/compliance-flow')}
-                        className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-3 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-                      >
-                        🚀 Proceed with Application
-                      </Button>
-                    </div>
+                 
                      </CardContent>
                   </div>
                 </div>

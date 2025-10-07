@@ -1,5 +1,5 @@
 import { useState, useEffect, memo, useMemo, useCallback, lazy, Suspense } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { 
   AlertTriangle, 
   CheckCircle, 
@@ -598,7 +598,7 @@ const DashboardV5 = memo(() => {
                 {/* Enhanced Items */}
                 <div className="space-y-3 flex-1">
                   {filteredComplianceData.slice(0, 2).map((item) => (
-                    <Link key={item.id} to={item.name.includes('GSTR') ? '/compliance-flow' : '#'}>
+                    <Link key={item.id} to={item.name.includes('GSTR') ? "/services/1" : '#'}>
                       <div className="flex items-center justify-between p-3 bg-white/80 rounded-lg hover:bg-white hover:shadow-md transition-all border border-gray-100 cursor-pointer">
                         <div className="flex items-center gap-3">
                           <div className={`w-3 h-3 rounded-full shadow-sm ${
@@ -606,7 +606,7 @@ const DashboardV5 = memo(() => {
                             item.status === 'pending' ? 'bg-yellow-500' : 'bg-green-500'
                           }`}></div>
                           <div>
-                            <div className="text-sm font-medium text-gray-900">{item.name}</div>
+                       <div className="text-sm font-medium text-gray-900">{item.name}</div>
                             <div className="text-xs text-gray-600">Due: {item.dueDate}</div>
                           </div>
                         </div>
