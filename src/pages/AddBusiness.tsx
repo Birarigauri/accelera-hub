@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
   MapPin, 
@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/select";
 import AppLayout from "@/components/layout/AppLayout";
 import Header from "@/components/layout/Header";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 
 const indianStates = [
   { value: "andhra-pradesh", label: "Andhra Pradesh" },
@@ -133,7 +134,7 @@ interface FormData {
   qualityCertifications: string;
 }
 
-const AddBusiness = () => {
+const AddBusiness = memo(() => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({
@@ -161,28 +162,28 @@ const AddBusiness = () => {
 
   const totalSteps = 4;
 
-  const handleInputChange = (field: keyof FormData, value: string) => {
+  const handleInputChange = useCallback((field: keyof FormData, value: string) => {
     setFormData(prev => ({ 
       ...prev, 
       [field]: value,
       // Clear district when state changes
       ...(field === 'state' && { district: '' })
     }));
-  };
+  }, []);
 
-  const nextStep = () => {
+  const nextStep = useCallback(() => {
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1);
     }
-  };
+  }, [currentStep, totalSteps]);
 
-  const prevStep = () => {
+  const prevStep = useCallback(() => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     }
-  };
+  }, [currentStep]);
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     console.log('Form submitted:', formData);
     
     // Show enhanced success toast
@@ -197,7 +198,7 @@ const AddBusiness = () => {
     setTimeout(() => {
       navigate('/dashboard-v5');
     }, 1000);
-  };
+  }, [formData, navigate, toast]);
 
   const RadioOption = ({ 
     name, 
@@ -609,6 +610,10 @@ const AddBusiness = () => {
       </div>
     </AppLayout>
   );
-};
+});
+
+
+
+AddBusiness.displayName = "AddBusiness";
 
 export default AddBusiness;

@@ -13,7 +13,8 @@ const Register = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    fullName: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -105,35 +106,31 @@ const Register = () => {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-6 lg:p-8">
         <div className="w-full max-w-md sm:max-w-lg">
           <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-center relative">
+            <div className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-center relative">
               <button
                 onClick={() => navigate("/")}
-                className="absolute left-4 top-4 w-8 h-8 bg-white/20 hover:bg-white/30 rounded-lg flex items-center justify-center transition-colors"
+                className="absolute left-3 top-2 w-6 h-6 bg-white/20 hover:bg-white/30 rounded flex items-center justify-center transition-colors"
               >
-                <Home className="h-4 w-4" />
+                <Home className="h-3 w-3" />
               </button>
-              <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center mx-auto mb-2">
-                <UserPlus className="h-5 w-5" />
-              </div>
-              <h2 className="text-xl font-bold mb-1">Create Your Account</h2>
-              <p className="text-blue-100 text-sm">Join thousands of successful entrepreneurs</p>
+              <h2 className="text-base font-semibold">Create Account</h2>
             </div>
 
             <div className="p-4 sm:p-6">
               <form onSubmit={handleSubmit} className="space-y-2 sm:space-y-3">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div className="space-y-1">
-                    <Label htmlFor="fullName" className="text-xs font-semibold text-gray-700">
-                      Full Name *
+                    <Label htmlFor="firstName" className="text-xs font-semibold text-gray-700">
+                      First Name *
                     </Label>
                     <div className="relative">
                       <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                       <Input
-                        id="fullName"
+                        id="firstName"
                         type="text"
-                        placeholder="Full name"
-                        value={formData.fullName}
-                        onChange={(e) => handleInputChange("fullName", e.target.value)}
+                        placeholder="First name"
+                        value={formData.firstName}
+                        onChange={(e) => handleInputChange("firstName", e.target.value)}
                         className="pl-10 h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 rounded-md transition-all"
                         required
                       />
@@ -141,23 +138,40 @@ const Register = () => {
                   </div>
 
                   <div className="space-y-1">
-                    <Label htmlFor="email" className="text-xs font-semibold text-gray-700">
-                      Email Address *
+                    <Label htmlFor="lastName" className="text-xs font-semibold text-gray-700">
+                      Last Name *
                     </Label>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                       <Input
-                        id="email"
-                        type="email"
-                        placeholder="Email address"
-                        value={formData.email}
-                        onChange={(e) => handleInputChange("email", e.target.value)}
+                        id="lastName"
+                        type="text"
+                        placeholder="Last name"
+                        value={formData.lastName}
+                        onChange={(e) => handleInputChange("lastName", e.target.value)}
                         className="pl-10 h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 rounded-md transition-all"
                         required
                       />
                     </div>
                   </div>
-
+                </div>
+                
+                <div className="space-y-1">
+                  <Label htmlFor="email" className="text-xs font-semibold text-gray-700">
+                    Email Address *
+                  </Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="Email address"
+                      value={formData.email}
+                      onChange={(e) => handleInputChange("email", e.target.value)}
+                      className="pl-10 h-10 border-gray-200 focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 rounded-md transition-all"
+                      required
+                    />
+                  </div>
                 </div>
                 
                 {/* CAPTCHA */}

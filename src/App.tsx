@@ -34,6 +34,9 @@ import ForgotPassword from "./pages/Auth/ForgotPassword";
 import HomeFuturistic from "./pages/HomeFuturistic";
 import AddBusiness from "./pages/AddBusiness";
 import ComplianceFlow from "./pages/ComplianceFlow";
+import ExpertsListing from "./pages/ExpertsListing";
+import ManualApplications from "./pages/ManualApplications";
+import MyDownloads from "./pages/MyDownloads";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -76,6 +79,9 @@ const App = () => (
           <Route path="/home-futuristic" element={<HomeFuturistic />} />
           <Route path="/add-business" element={<AddBusiness />} />
           <Route path="/compliance-flow" element={<ComplianceFlow />} />
+          <Route path="/experts" element={<ExpertsListing />} />
+          <Route path="/manual-applications" element={<ManualApplications />} />
+          <Route path="/my-downloads" element={<MyDownloads />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

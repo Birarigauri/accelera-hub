@@ -17,7 +17,11 @@ import {
   TrendingUp,
   MapPin,
   Calendar,
-  IndianRupee
+  IndianRupee,
+  ChevronLeft,
+  ChevronRight,
+  Eye,
+  ExternalLink
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,12 +29,15 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import Header from "@/components/layout/Header";
 import AppLayout from "@/components/layout/AppLayout";
 
 const Schemes = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
 
   const schemeCategories = [
     { id: "all", label: "All Schemes", count: 18 },
@@ -168,6 +175,36 @@ const Schemes = () => {
     return true;
   });
 
+  const totalPages = Math.ceil(filteredSchemes.length / itemsPerPage);
+  const paginatedSchemes = filteredSchemes.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case "startup": return Zap;
+      case "msme": return Building;
+      case "manufacturing": return TrendingUp;
+      case "technology": return Award;
+      default: return Target;
+    }
+  };
+
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case "startup": return "bg-blue-100 text-blue-700";
+      case "msme": return "bg-green-100 text-green-700";
+      case "manufacturing": return "bg-purple-100 text-purple-700";
+      case "technology": return "bg-orange-100 text-orange-700";
+      default: return "bg-gray-100 text-gray-700";
+    }
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "approved": return "text-green-600 bg-green-100";
@@ -194,7 +231,7 @@ const Schemes = () => {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Scheme Eligibility</h1>
+            <h1 className="text-3xl font-bold mb-2">Government Schemes</h1>
             <p className="text-muted-foreground">
               Discover funding opportunities and government schemes tailored for your business
             </p>
@@ -262,7 +299,7 @@ const Schemes = () => {
               value="my-applications" 
               className="flex-1 text-center py-3 px-2 text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-md text-gray-600"
             >
-              My Apps
+              My Applied Services
             </TabsTrigger>
             <TabsTrigger 
               value="recommended" 
@@ -305,170 +342,236 @@ const Schemes = () => {
               </CardContent>
             </Card>
 
-            {/* Schemes Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredSchemes.map((scheme) => (
-                <Card key={scheme.id} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-gradient-card border-0 relative">
-                  {scheme.trending && (
-                    <div className="absolute -top-2 -right-2 z-10">
-                      <Badge className="bg-gradient-primary text-white">Trending</Badge>
+            {/* Schemes Table */}
+            <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-200 pb-4">
+                <CardTitle className="flex items-center gap-3 text-xl">
+                  <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                    <Target className="h-5 w-5 text-blue-600" />
+                  </div>
+                  Available Schemes ({filteredSchemes.length})
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-gray-50/50">
+                        <TableHead className="font-semibold text-gray-700 py-4">Scheme Details</TableHead>
+                        <TableHead className="font-semibold text-gray-700 text-center">Category</TableHead>
+                        <TableHead className="font-semibold text-gray-700 text-center">Funding</TableHead>
+                        <TableHead className="font-semibold text-gray-700 text-center">Eligibility</TableHead>
+                        <TableHead className="font-semibold text-gray-700 text-center">Deadline</TableHead>
+                        <TableHead className="font-semibold text-gray-700 text-center">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {paginatedSchemes.map((scheme) => {
+                        const IconComponent = getCategoryIcon(scheme.category);
+                        return (
+                          <TableRow key={scheme.id} className="hover:bg-blue-50/30 transition-colors border-b border-gray-100">
+                            <TableCell className="py-4">
+                              <div className="flex items-start gap-3">
+                                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                                  <IconComponent className="h-5 w-5 text-white" />
+                                </div>
+                                <div className="min-w-0 flex-1">
+                                  <div className="flex items-center gap-2 mb-1">
+                                    <h3 className="font-semibold text-gray-900 text-sm leading-tight">{scheme.title}</h3>
+
+                                  </div>
+                                  <p className="text-xs text-gray-600 leading-relaxed line-clamp-2">{scheme.description}</p>
+                                  <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+                                    <span className="flex items-center gap-1">
+                                      <Users className="h-3 w-3" />
+                                      {scheme.applications} apps
+                                    </span>
+                                    <span className="flex items-center gap-1">
+                                      <CheckCircle className="h-3 w-3" />
+                                      {scheme.approved} approved
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-center">
+                              <Badge className={`${getCategoryColor(scheme.category)} text-xs font-medium px-2 py-1`}>
+                                {scheme.category.toUpperCase()}
+                              </Badge>
+                            </TableCell>
+                            <TableCell className="text-center">
+                              <div className="space-y-1">
+                                <div className="font-semibold text-green-600 text-sm">{scheme.fundingAmount}</div>
+                                <div className="text-xs text-gray-500">{scheme.subsidy}</div>
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-center">
+                              <div className={`text-lg font-bold ${getEligibilityColor(scheme.eligibility)}`}>
+                                {scheme.eligibility}%
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-center">
+                              <div className="text-sm font-medium text-gray-700">
+                                {new Date(scheme.deadline).toLocaleDateString('en-IN', { 
+                                  day: '2-digit', 
+                                  month: 'short',
+                                  year: 'numeric'
+                                })}
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-center">
+                              <div className="flex items-center justify-center gap-2">
+                                <Link to={`/schemes/${scheme.id}`}>
+                                  <Button size="sm" className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-3 py-1.5 text-xs">
+                                    Apply
+                                  </Button>
+                                </Link>
+                                <Button variant="outline" size="sm" className="px-2 py-1.5">
+                                  <Eye className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
+                
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50/30">
+                    <div className="text-sm text-gray-600">
+                      Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredSchemes.length)} of {filteredSchemes.length} schemes
                     </div>
-                  )}
-                  
-                  <CardHeader className="pb-4">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className={`w-12 h-12 rounded-lg bg-gradient-primary flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                        <scheme.icon className="h-6 w-6 text-white" />
-                      </div>
-                      <div className="text-right">
-                        <div className={`text-lg font-bold ${getEligibilityColor(scheme.eligibility)} mb-1`}>
-                          {scheme.eligibility}%
-                        </div>
-                        <div className="text-xs text-muted-foreground">Eligibility</div>
-                      </div>
-                    </div>
-                    
-                    <CardTitle className="text-lg mb-2">{scheme.title}</CardTitle>
-                    <CardDescription className="text-sm leading-relaxed">
-                      {scheme.description}
-                    </CardDescription>
-                  </CardHeader>
-
-                  <CardContent className="pt-0">
-                    <div className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <p className="font-medium text-primary mb-1">{scheme.fundingAmount}</p>
-                          <p className="text-xs text-muted-foreground">Max Funding</p>
-                        </div>
-                        <div>
-                          <p className="font-medium mb-1">{scheme.subsidy}</p>
-                          <p className="text-xs text-muted-foreground">Subsidy</p>
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2 text-sm">
-                          <Calendar className="h-4 w-4 text-muted-foreground" />
-                          <span>Deadline: {new Date(scheme.deadline).toLocaleDateString()}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm">
-                          <MapPin className="h-4 w-4 text-muted-foreground" />
-                          <span>{scheme.location}</span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between text-xs text-muted-foreground">
-                        <span>{scheme.applications} applications</span>
-                        <span>{scheme.approved} approved</span>
-                      </div>
-
-                      <div className="flex gap-2 pt-4">
-                        <Link to={`/schemes/${scheme.id}`} className="flex-1">
-                          <Button className="w-full" variant="default">
-                            Apply Now
-                            <ArrowRight className="h-4 w-4 ml-2" />
-                          </Button>
-                        </Link>
-                        <Button variant="outline" size="icon">
-                          <FileText className="h-4 w-4" />
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className="px-3 py-1.5"
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                      </Button>
+                      
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                        <Button
+                          key={page}
+                          variant={currentPage === page ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => handlePageChange(page)}
+                          className="px-3 py-1.5 min-w-[32px]"
+                        >
+                          {page}
                         </Button>
-                      </div>
+                      ))}
+                      
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className="px-3 py-1.5"
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* My Applications */}
-          <TabsContent value="my-applications" className="space-y-4 sm:space-y-6">
-            <div className="grid gap-4 sm:gap-6">
-              {myApplications.map((application) => (
-                <Card key={application.id} className="bg-gradient-card border-0">
-                  <CardContent className="p-4 sm:p-6">
-                    <div className="flex flex-col sm:flex-row items-start gap-4">
-                      <div className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center flex-shrink-0">
-                        <Target className="h-6 w-6 text-white" />
-                      </div>
-                      
-                      <div className="flex-1 min-w-0 w-full">
-                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-2">
-                          <div className="min-w-0">
-                            <h3 className="text-base sm:text-lg font-semibold mb-1 truncate">{application.schemeName}</h3>
-                            <p className="text-xs sm:text-sm text-muted-foreground">
-                              Applied on {new Date(application.appliedDate).toLocaleDateString()}
-                            </p>
-                          </div>
-                          
-                          <div className="flex items-center justify-between sm:flex-col sm:items-end gap-2">
+          <TabsContent value="my-applications" className="space-y-6">
+            <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 border-b border-green-200 pb-4">
+                <CardTitle className="flex items-center gap-3 text-xl">
+                  <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
+                    <FileText className="h-5 w-5 text-green-600" />
+                  </div>
+                  My Applications ({myApplications.length})
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-gray-50/50">
+                        <TableHead className="font-semibold text-gray-700 py-4">Scheme Details</TableHead>
+                        <TableHead className="font-semibold text-gray-700 text-center">Status</TableHead>
+                        <TableHead className="font-semibold text-gray-700 text-center">Amount</TableHead>
+                        <TableHead className="font-semibold text-gray-700 text-center">Progress</TableHead>
+                        <TableHead className="font-semibold text-gray-700 text-center">Applied Date</TableHead>
+                        <TableHead className="font-semibold text-gray-700 text-center">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {myApplications.map((application) => (
+                        <TableRow key={application.id} className="hover:bg-green-50/30 transition-colors border-b border-gray-100">
+                          <TableCell className="py-4">
+                            <div className="flex items-start gap-3">
+                              <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <Target className="h-5 w-5 text-white" />
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <h3 className="font-semibold text-gray-900 text-sm leading-tight mb-1">{application.schemeName}</h3>
+                                {application.nextStep && (
+                                  <p className="text-xs text-gray-600 leading-relaxed">{application.nextStep}</p>
+                                )}
+                                {application.approvedDate && (
+                                  <p className="text-xs text-green-600 font-medium">Approved: {new Date(application.approvedDate).toLocaleDateString()}</p>
+                                )}
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-center">
                             <Badge className={getStatusColor(application.status)}>
-                              {application.status.replace('-', ' ')}
+                              {application.status.replace('-', ' ').toUpperCase()}
                             </Badge>
-                            <p className="text-sm font-medium">{application.amount}</p>
-                          </div>
-                        </div>
-
-                        <div className="space-y-3 sm:space-y-4">
-                          <div>
-                            <div className="flex items-center justify-between mb-2">
-                              <span className="text-xs sm:text-sm font-medium">Progress</span>
-                              <span className="text-xs sm:text-sm text-muted-foreground">{application.progress}%</span>
+                          </TableCell>
+                          <TableCell className="text-center">
+                            <div className="font-semibold text-green-600 text-sm">{application.amount}</div>
+                          </TableCell>
+                          <TableCell className="text-center">
+                            <div className="space-y-2">
+                              <div className="text-sm font-medium">{application.progress}%</div>
+                              <Progress value={application.progress} className="h-2 w-16 mx-auto" />
                             </div>
-                            <Progress value={application.progress} className="h-2" />
-                          </div>
-
-                          {application.nextStep && (
-                            <div>
-                              <p className="font-medium mb-1 text-xs sm:text-sm">Next Step</p>
-                              <p className="text-xs sm:text-sm text-muted-foreground">{application.nextStep}</p>
+                          </TableCell>
+                          <TableCell className="text-center">
+                            <div className="text-sm font-medium text-gray-700">
+                              {new Date(application.appliedDate).toLocaleDateString('en-IN', { 
+                                day: '2-digit', 
+                                month: 'short',
+                                year: 'numeric'
+                              })}
                             </div>
-                          )}
-
-                          {application.approvedDate && (
-                            <div>
-                              <p className="font-medium mb-1 text-xs sm:text-sm">Approved Date</p>
-                              <p className="text-xs sm:text-sm text-muted-foreground">
-                                {new Date(application.approvedDate).toLocaleDateString()}
-                              </p>
-                            </div>
-                          )}
-
-                          <div>
-                            <p className="font-medium mb-2 text-xs sm:text-sm">Documents</p>
-                            <div className="flex flex-wrap gap-1 sm:gap-2">
-                              {application.documents.map((doc, index) => (
-                                <Badge key={index} variant="outline" className="text-xs">
-                                  <FileText className="h-3 w-3 mr-1" />
-                                  {doc}
-                                </Badge>
-                              ))}
-                            </div>
-                          </div>
-
-                          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-3 sm:pt-4">
-                            <Button variant="outline" size="sm" className="w-full sm:w-auto hover:bg-blue-50 hover:border-blue-200">
-                              <FileText className="h-4 w-4 mr-2" />
-                              View Details
-                            </Button>
-                            <Button variant="outline" size="sm" className="w-full sm:w-auto hover:bg-green-50 hover:border-green-200">
-                              <Clock className="h-4 w-4 mr-2" />
-                              Track Status
-                            </Button>
-                            {application.status === "approved" && (
-                              <Button variant="default" size="sm" className="w-full sm:w-auto bg-green-600 hover:bg-green-700">
-                                <CheckCircle className="h-4 w-4 mr-2" />
-                                Download
+                          </TableCell>
+                          <TableCell className="text-center">
+                            <div className="flex items-center justify-center gap-2">
+                              <Button variant="outline" size="sm" className="px-2 py-1.5">
+                                <Eye className="h-3 w-3" />
                               </Button>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                              <Button variant="outline" size="sm" className="px-2 py-1.5">
+                                <Clock className="h-3 w-3" />
+                              </Button>
+                              {application.status === "approved" && (
+                                <Button size="sm" className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-3 py-1.5 text-xs">
+                                  <CheckCircle className="h-3 w-3 mr-1" />
+                                  Download
+                                </Button>
+                              )}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* Recommended */}

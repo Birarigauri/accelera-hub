@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo, useMemo, useCallback, lazy, Suspense } from "react";
 import { Link } from "react-router-dom";
 import { 
   AlertTriangle, 
@@ -33,7 +33,8 @@ import Header from "@/components/layout/Header";
 import { DashboardCard } from "@/components/dashboard/DashboardCard";
 import { ComplianceTab } from "@/components/dashboard/ComplianceTab";
 import { ComplianceItem } from "@/components/dashboard/ComplianceItem";
-import { KPICard } from "@/components/dashboard/KPICard";
+import KPICard from "@/components/common/KPICard";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 import {
   Select,
   SelectContent,
@@ -355,7 +356,7 @@ const businessData = {
   }
 };
 
-const DashboardV5 = () => {
+const DashboardV5 = memo(() => {
   const [selectedBusiness, setSelectedBusiness] = useState('tech-solutions');
   const [activeComplianceTab, setActiveComplianceTab] = useState('all');
   const [complianceFilter, setComplianceFilter] = useState('');
@@ -392,34 +393,43 @@ const DashboardV5 = () => {
     }
   ];
   
-  const filteredAlerts = alerts.filter(alert => {
-    if (activeAlertsTab === 'all') return true;
-    return alert.type === activeAlertsTab;
-  });
+  const filteredAlerts = useMemo(() => 
+    alerts.filter(alert => {
+      if (activeAlertsTab === 'all') return true;
+      return alert.type === activeAlertsTab;
+    }), 
+    [alerts, activeAlertsTab]
+  );
   
-  const currentBusiness = businessData[selectedBusiness as keyof typeof businessData];
+  const currentBusiness = useMemo(() => 
+    businessData[selectedBusiness as keyof typeof businessData], 
+    [selectedBusiness]
+  );
   
-  const filteredComplianceData = complianceData.filter(item => {
-    const matchesTab = activeComplianceTab === 'all' || 
-      (activeComplianceTab === 'overdue' && item.status === 'overdue') ||
-      (activeComplianceTab === 'thisweek' && ['pending', 'upcoming'].includes(item.status)) ||
-      (activeComplianceTab === 'completed' && item.status === 'completed');
-    
-    const matchesFilter = !complianceFilter || 
-      item.name.toLowerCase().includes(complianceFilter.toLowerCase()) ||
-      item.type.toLowerCase().includes(complianceFilter.toLowerCase());
-    
-    return matchesTab && matchesFilter;
-  });
+  const filteredComplianceData = useMemo(() => 
+    complianceData.filter(item => {
+      const matchesTab = activeComplianceTab === 'all' || 
+        (activeComplianceTab === 'overdue' && item.status === 'overdue') ||
+        (activeComplianceTab === 'thisweek' && ['pending', 'upcoming'].includes(item.status)) ||
+        (activeComplianceTab === 'completed' && item.status === 'completed');
+      
+      const matchesFilter = !complianceFilter || 
+        item.name.toLowerCase().includes(complianceFilter.toLowerCase()) ||
+        item.type.toLowerCase().includes(complianceFilter.toLowerCase());
+      
+      return matchesTab && matchesFilter;
+    }), 
+    [activeComplianceTab, complianceFilter]
+  );
   
-  const getTabCount = (tab: string) => {
+  const getTabCount = useCallback((tab: string) => {
     switch (tab) {
       case 'overdue': return complianceData.filter(item => item.status === 'overdue').length;
       case 'thisweek': return complianceData.filter(item => ['pending', 'upcoming'].includes(item.status)).length;
       case 'completed': return complianceData.filter(item => item.status === 'completed').length;
       default: return complianceData.length;
     }
-  };
+  }, []);
   
   return (
     <AppLayout>
@@ -933,6 +943,8 @@ const DashboardV5 = () => {
       </div>
     </AppLayout>
   );
-};
+});
+
+DashboardV5.displayName = "DashboardV5";
 
 export default DashboardV5;

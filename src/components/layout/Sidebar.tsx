@@ -17,7 +17,10 @@ import {
   UserCircle,
   Award,
   ClipboardList,
-  CheckCircle
+  CheckCircle,
+  Users,
+  Briefcase,
+  Download
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -34,9 +37,12 @@ const Sidebar = () => {
     { name: "Services", href: "/services", icon: Building },
     { name: "Schemes", href: "/schemes", icon: Shield },
     { name: "My Applications", href: "/scheme-applications", icon: FileText },
+    { name: "Application Desk", href: "/manual-applications", icon: Briefcase },
     { name: "My Certificates & Licenses", href: "/my-certificates-licenses", icon: Award },
+    { name: "My Downloads", href: "/my-downloads", icon: Download },
     { name: "Apply for Certificates", href: "/apply-certificates", icon: ClipboardList },
     { name: "Compliance Process", href: "/compliance-flow", icon: CheckCircle },
+    { name: "Experts", href: "/experts", icon: Users },
     { name: "Eligibility Calculator", href: "/eligibility-calculator", icon: Calculator },
     { name: "Offerings", href: "/offerings", icon: Star },
     { name: "News", href: "/news", icon: Newspaper },
@@ -49,7 +55,7 @@ const Sidebar = () => {
 
   return (
     <div className={cn(
-      "bg-white border-r border-gray-200 h-screen sticky top-0 overflow-y-auto hidden md:block transition-all duration-300 shadow-lg",
+      "bg-white border-r border-gray-200 h-screen sticky top-0 overflow-y-auto hidden md:block transition-all duration-300 shadow-lg custom-scrollbar",
       isCollapsed ? "w-16" : "w-64"
     )}>
       <div className={cn("p-4", isCollapsed ? "p-2" : "p-6")}>

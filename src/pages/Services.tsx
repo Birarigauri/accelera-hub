@@ -21,7 +21,9 @@ import {
   Calendar,
   TrendingUp,
   Eye,
-  Download
+  Download,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -35,6 +37,10 @@ import AppLayout from "@/components/layout/AppLayout";
 const Services = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+  const [myServicesPage, setMyServicesPage] = useState(1);
+  const [myServicesPerPage] = useState(5);
 
   const serviceCategories = [
     { id: "all", label: "All Services", count: 24 },
@@ -175,6 +181,14 @@ const Services = () => {
     return true;
   });
 
+  const totalPages = Math.ceil(filteredServices.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedServices = filteredServices.slice(startIndex, startIndex + itemsPerPage);
+
+  const myServicesTotalPages = Math.ceil(myServices.length / myServicesPerPage);
+  const myServicesStartIndex = (myServicesPage - 1) * myServicesPerPage;
+  const paginatedMyServices = myServices.slice(myServicesStartIndex, myServicesStartIndex + myServicesPerPage);
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "completed": return "text-green-600 bg-green-100";
@@ -200,18 +214,20 @@ const Services = () => {
         
         <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-8">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4 sm:gap-0">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Services & Licenses</h1>
-            <p className="text-muted-foreground">
-              Complete business services with expert guidance and support
-            </p>
+        <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 rounded-2xl p-6 mb-6 shadow-xl">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="text-white">
+              <h1 className="text-2xl sm:text-3xl font-bold mb-1">🏢 Business Services</h1>
+              <p className="text-blue-100 text-sm sm:text-base">
+                Complete business services with expert guidance and support
+              </p>
+            </div>
+            
+            <Button className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm w-full sm:w-auto">
+              <Plus className="h-4 w-4 mr-2" />
+              Request Custom Service
+            </Button>
           </div>
-          
-          <Button variant="hero" className="w-full sm:w-auto">
-            <Plus className="h-4 w-4 mr-2" />
-            Request Custom Service
-          </Button>
         </div>
 
         {/* Services Tabs */}
@@ -260,82 +276,103 @@ const Services = () => {
               </CardContent>
             </Card>
 
-            {/* Services Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {filteredServices.map((service) => (
-                <Card key={service.id} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-gradient-card border-0 relative">
-                  {service.popular && (
-                    <div className="absolute -top-2 -right-2 z-10">
-                      <Badge className="bg-gradient-primary text-white">Popular</Badge>
-                    </div>
-                  )}
-                  
-                  <CardHeader className="pb-4">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className={`w-12 h-12 rounded-lg bg-gradient-primary flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                        <service.icon className="h-6 w-6 text-white" />
-                      </div>
-                      <div className="text-right">
-                        <div className="flex items-center gap-1 mb-1">
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                          <span className="text-sm font-medium">{service.rating}</span>
-                          <span className="text-xs text-muted-foreground">({service.reviews})</span>
-                        </div>
-                      </div>
+            {/* Services Table */}
+            <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
+              <CardContent className="p-0">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50 border-b">
+                      <tr>
+                        <th className="text-left p-4 font-semibold text-gray-900">Service</th>
+                        <th className="text-left p-4 font-semibold text-gray-900">Category</th>
+                        <th className="text-left p-4 font-semibold text-gray-900">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {paginatedServices.map((service) => (
+                        <tr key={service.id} className="border-b hover:bg-gray-50 transition-colors">
+                          <td className="p-4">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-lg bg-gradient-primary flex items-center justify-center flex-shrink-0">
+                                <service.icon className="h-5 w-5 text-white" />
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <h3 className="font-semibold text-gray-900">{service.title}</h3>
+                                  {service.popular && (
+                                    <Badge className="bg-gradient-primary text-white text-xs">Popular</Badge>
+                                  )}
+                                </div>
+                                <p className="text-sm text-gray-600 line-clamp-2">{service.description}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="p-4">
+                            <Badge variant="secondary" className="capitalize">
+                              {service.category}
+                            </Badge>
+                          </td>
+                          <td className="p-4">
+                            <div className="flex items-center gap-2">
+                              <Link to={`/services/${service.id}`}>
+                                <Button size="sm" className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+                                  <Eye className="h-4 w-4 mr-1" />
+                                  View Details
+                                </Button>
+                              </Link>
+                              <Button size="sm" variant="outline">
+                                <Users className="h-4 w-4 mr-1" />
+                                Expert
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                
+                {/* Pagination */}
+                <div className="flex items-center justify-between p-4 border-t bg-gray-50">
+                  <div className="text-sm text-gray-600">
+                    Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredServices.length)} of {filteredServices.length} services
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                      disabled={currentPage === 1}
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                    
+                    <div className="flex items-center gap-1">
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                        <Button
+                          key={page}
+                          size="sm"
+                          variant={currentPage === page ? "default" : "outline"}
+                          onClick={() => setCurrentPage(page)}
+                          className="w-8 h-8 p-0"
+                        >
+                          {page}
+                        </Button>
+                      ))}
                     </div>
                     
-                    <CardTitle className="text-lg mb-2">{service.title}</CardTitle>
-                    <CardDescription className="text-sm leading-relaxed">
-                      {service.description}
-                    </CardDescription>
-                  </CardHeader>
-
-                  <CardContent className="pt-0">
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-2xl font-bold text-primary">{service.price}</span>
-                            <span className="text-sm text-muted-foreground line-through">{service.originalPrice}</span>
-                          </div>
-                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                            <Clock className="h-3 w-3" />
-                            {service.duration}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <p className="text-sm font-medium">What's included:</p>
-                        <ul className="space-y-1">
-                          {service.features.slice(0, 3).map((feature, index) => (
-                            <li key={index} className="text-xs text-muted-foreground flex items-center gap-2">
-                              <CheckCircle className="h-3 w-3 text-green-500" />
-                              {feature}
-                            </li>
-                          ))}
-                          {service.features.length > 3 && (
-                            <li className="text-xs text-primary">+{service.features.length - 3} more</li>
-                          )}
-                        </ul>
-                      </div>
-
-                      <div className="flex gap-2 pt-4">
-                        <Link to={`/services/${service.id}`} className="flex-1">
-                          <Button className="w-full" variant="default">
-                            Get Started
-                            <ArrowRight className="h-4 w-4 ml-2" />
-                          </Button>
-                        </Link>
-                        <Button variant="outline" size="icon">
-                          <Users className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                      disabled={currentPage === totalPages}
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* My Services */}
@@ -357,136 +394,126 @@ const Services = () => {
               </div>
             </div>
 
-            <div className="grid gap-4">
-              {myServices.map((service) => {
-                const StatusIcon = getStatusIcon(service.status);
-                return (
-                  <Card key={service.id} className="bg-gradient-card border-0 hover:shadow-lg transition-all duration-300 group">
-                    <CardContent className="p-6">
-                      <div className="flex items-start gap-4">
-                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center transition-transform group-hover:scale-110 ${
-                          service.status === 'completed' ? 'bg-gradient-to-r from-green-500 to-emerald-500' :
-                          service.status === 'in-progress' ? 'bg-gradient-to-r from-blue-500 to-cyan-500' :
-                          'bg-gradient-to-r from-yellow-500 to-orange-500'
-                        }`}>
-                          <StatusIcon className="h-6 w-6 text-white" />
-                        </div>
-                        
-                        <div className="flex-1 min-w-0">
-                          <div className="flex flex-col sm:flex-row items-start justify-between mb-4 gap-3 sm:gap-0">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2 mb-2">
-                                <h3 className="text-lg font-semibold">{service.title}</h3>
-                                {service.status === 'completed' && <CheckCircle className="h-5 w-5 text-green-500" />}
-                              </div>
-                              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                                <div className="flex items-center gap-1">
-                                  <Calendar className="h-4 w-4" />
-                                  Submitted {new Date(service.submittedDate).toLocaleDateString()}
+            {/* My Services Table */}
+            <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
+              <CardContent className="p-0">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50 border-b">
+                      <tr>
+                        <th className="text-left p-4 font-semibold text-gray-900">Service</th>
+                        <th className="text-left p-4 font-semibold text-gray-900">Status</th>
+                        <th className="text-left p-4 font-semibold text-gray-900">Progress</th>
+                        <th className="text-left p-4 font-semibold text-gray-900">Expert</th>
+                        <th className="text-left p-4 font-semibold text-gray-900">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {paginatedMyServices.map((service) => {
+                        const StatusIcon = getStatusIcon(service.status);
+                        return (
+                          <tr key={service.id} className="border-b hover:bg-gray-50 transition-colors">
+                            <td className="p-4">
+                              <div className="flex items-center gap-3">
+                                <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                                  service.status === 'completed' ? 'bg-gradient-to-r from-green-500 to-emerald-500' :
+                                  service.status === 'in-progress' ? 'bg-gradient-to-r from-blue-500 to-cyan-500' :
+                                  'bg-gradient-to-r from-yellow-500 to-orange-500'
+                                }`}>
+                                  <StatusIcon className="h-5 w-5 text-white" />
                                 </div>
-                                {service.completedDate && (
-                                  <div className="flex items-center gap-1">
-                                    <CheckCircle className="h-4 w-4" />
-                                    Completed {new Date(service.completedDate).toLocaleDateString()}
-                                  </div>
-                                )}
+                                <div className="min-w-0 flex-1">
+                                  <h3 className="font-semibold text-gray-900 mb-1">{service.title}</h3>
+                                  <p className="text-sm text-gray-600">
+                                    Submitted {new Date(service.submittedDate).toLocaleDateString()}
+                                  </p>
+                                </div>
                               </div>
-                            </div>
-                            
-                            <div className="flex items-center gap-3">
+                            </td>
+                            <td className="p-4">
                               <Badge className={`${getStatusColor(service.status)} font-medium px-3 py-1`}>
                                 {service.status.replace('-', ' ').toUpperCase()}
                               </Badge>
-                              <div className="text-right">
-                                <div className="text-lg font-bold text-primary">{service.amount}</div>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="space-y-4">
-                            <div className="bg-muted/30 p-4 rounded-lg">
-                              <div className="flex items-center justify-between mb-3">
-                                <div className="flex items-center gap-2">
-                                  <TrendingUp className="h-4 w-4 text-primary" />
-                                  <span className="text-sm font-medium">Application Progress</span>
+                            </td>
+                            <td className="p-4">
+                              <div className="w-24">
+                                <div className="flex items-center justify-between mb-1">
+                                  <span className="text-xs text-gray-600">Progress</span>
+                                  <span className="text-xs font-semibold text-primary">{service.progress}%</span>
                                 </div>
-                                <span className="text-sm font-semibold text-primary">{service.progress}%</span>
+                                <Progress value={service.progress} className="h-2" />
                               </div>
-                              <Progress value={service.progress} className="h-3" />
-                              <div className="flex justify-between text-xs text-muted-foreground mt-2">
-                                <span>Started</span>
-                                <span>In Progress</span>
-                                <span>Completed</span>
+                            </td>
+                            <td className="p-4">
+                              <div className="text-sm">
+                                <p className="font-medium text-gray-900">{service.expert}</p>
+                                {service.nextStep && (
+                                  <p className="text-xs text-gray-500 mt-1">{service.nextStep}</p>
+                                )}
                               </div>
-                            </div>
-
-                            <div className="grid md:grid-cols-2 gap-4 text-sm">
-                              <div>
-                                <p className="font-medium mb-1">Assigned Expert</p>
-                                <p className="text-muted-foreground">{service.expert}</p>
-                              </div>
-                              
-                              {service.status === "completed" && service.completedDate && (
-                                <div>
-                                  <p className="font-medium mb-1">Completed Date</p>
-                                  <p className="text-muted-foreground">
-                                    {new Date(service.completedDate).toLocaleDateString()}
-                                  </p>
-                                </div>
-                              )}
-                              
-                              {service.nextStep && (
-                                <div>
-                                  <p className="font-medium mb-1">Next Step</p>
-                                  <p className="text-muted-foreground">{service.nextStep}</p>
-                                </div>
-                              )}
-                            </div>
-
-                            {service.documents && (
-                              <div>
-                                <p className="font-medium mb-2">Documents Available</p>
-                                <div className="flex flex-wrap gap-2">
-                                  {service.documents.map((doc, index) => (
-                                    <Badge key={index} variant="outline" className="text-xs">
-                                      <FileText className="h-3 w-3 mr-1" />
-                                      {doc}
-                                    </Badge>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-
-                            <div className="flex flex-wrap gap-3 pt-4">
-                              <Button variant="default" size="sm" className="flex-1 sm:flex-none">
-                                <Eye className="h-4 w-4 mr-2" />
-                                View Details
-                              </Button>
-                              <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
-                                <Phone className="h-4 w-4 mr-2" />
-                                Contact Expert
-                              </Button>
-                              {service.status === "in-progress" && (
-                                <Button variant="secondary" size="sm" className="flex-1 sm:flex-none">
-                                  <Upload className="h-4 w-4 mr-2" />
-                                  Upload Documents
+                            </td>
+                            <td className="p-4">
+                              <div className="flex items-center gap-2">
+                                <Button size="sm" className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white">
+                                  <Eye className="h-4 w-4 mr-2" />
+                                  View Details
                                 </Button>
-                              )}
-                              {service.status === "completed" && service.documents && (
-                                <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
-                                  <Download className="h-4 w-4 mr-2" />
-                                  Download
-                                </Button>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
+                                {service.status === "completed" && service.documents && (
+                                  <Button size="sm" variant="secondary">
+                                    <Download className="h-4 w-4 mr-1" />
+                                    Download
+                                  </Button>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+                
+                {/* My Services Pagination */}
+                <div className="flex items-center justify-between p-4 border-t bg-gray-50">
+                  <div className="text-sm text-gray-600">
+                    Showing {myServicesStartIndex + 1} to {Math.min(myServicesStartIndex + myServicesPerPage, myServices.length)} of {myServices.length} applications
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      onClick={() => setMyServicesPage(prev => Math.max(prev - 1, 1))}
+                      disabled={myServicesPage === 1}
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                    
+                    <div className="flex items-center gap-1">
+                      {Array.from({ length: myServicesTotalPages }, (_, i) => i + 1).map((page) => (
+                        <Button
+                          key={page}
+                          size="sm"
+                          variant={myServicesPage === page ? "default" : "outline"}
+                          onClick={() => setMyServicesPage(page)}
+                          className="w-8 h-8 p-0"
+                        >
+                          {page}
+                        </Button>
+                      ))}
+                    </div>
+                    
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      onClick={() => setMyServicesPage(prev => Math.min(prev + 1, myServicesTotalPages))}
+                      disabled={myServicesPage === myServicesTotalPages}
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
         </div>

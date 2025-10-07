@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { 
   ArrowLeft, 
   CheckCircle, 
@@ -12,18 +12,126 @@ import {
   Download,
   Shield,
   Award,
-  Building
+  Building,
+  Bot,
+  UserCheck,
+
+  Sparkles
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import Header from "@/components/layout/Header";
 import AppLayout from "@/components/layout/AppLayout";
 
 const ServiceDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const [showApplicationForm, setShowApplicationForm] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
+
+  const downloadTemplate = () => {
+    // Create a dummy PDF content
+    const pdfContent = `%PDF-1.4
+1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+
+2 0 obj
+<<
+/Type /Pages
+/Kids [3 0 R]
+/Count 1
+>>
+endobj
+
+3 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612 792]
+/Contents 4 0 R
+/Resources <<
+/Font <<
+/F1 5 0 R
+>>
+>>
+>>
+endobj
+
+4 0 obj
+<<
+/Length 44
+>>
+stream
+BT
+/F1 12 Tf
+72 720 Td
+(Certificate Template) Tj
+ET
+endstream
+endobj
+
+5 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+endobj
+
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000274 00000 n 
+0000000369 00000 n 
+trailer
+<<
+/Size 6
+/Root 1 0 R
+>>
+startxref
+466
+%%EOF`;
+    
+    const blob = new Blob([pdfContent], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${service.title.replace(/\s+/g, '_')}_Template.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+  const [formData, setFormData] = useState({
+    businessLocation: '',
+    operationStates: '',
+    existingCertificates: '',
+    pendingRenewals: '',
+    certificationType: '',
+    documentsReady: '',
+    documentAssistance: false,
+    expertGuidance: false,
+    governmentSchemes: false,
+    complianceTracking: false,
+    registrationType: '',
+    yearsInOperation: '',
+    industrySector: ''
+  });
   
   const serviceData = {
     "1": {
@@ -73,6 +181,22 @@ const ServiceDetails = () => {
         {
           question: "Can foreigners be directors?",
           answer: "Yes, foreigners can be directors but at least one director must be an Indian resident."
+        },
+        {
+          question: "What documents are required for company registration?",
+          answer: "You need PAN cards, Aadhaar cards, passport photos of directors, registered office address proof, and NOC from property owner."
+        },
+        {
+          question: "How long does the registration process take?",
+          answer: "The complete company registration process typically takes 7-10 working days from document submission."
+        },
+        {
+          question: "Can I register a company online?",
+          answer: "Yes, the entire company registration process can be completed online through the MCA portal with proper documentation."
+        },
+        {
+          question: "What are the ongoing compliance requirements?",
+          answer: "Companies must file annual returns, conduct board meetings, maintain statutory registers, and comply with ROC filings."
         }
       ],
       expert: {
@@ -132,6 +256,22 @@ const ServiceDetails = () => {
         {
           question: "How long is GST registration valid?",
           answer: "GST registration is valid until cancelled. Annual returns must be filed to maintain active status."
+        },
+        {
+          question: "What documents are needed for GST registration?",
+          answer: "You need business PAN, Aadhaar of proprietor/directors, business registration certificate, address proof, and bank statements."
+        },
+        {
+          question: "Can I get GST registration for multiple states?",
+          answer: "Yes, you need separate GST registration for each state where you have business operations or warehouses."
+        },
+        {
+          question: "What happens if I don't file GST returns on time?",
+          answer: "Late filing attracts penalties and interest. Continuous non-filing can lead to GST registration cancellation."
+        },
+        {
+          question: "Is there any fee for GST registration?",
+          answer: "GST registration is free of cost. However, professional service charges may apply for assistance."
         }
       ],
       expert: {
@@ -176,12 +316,14 @@ const ServiceDetails = () => {
             Back to Services
           </Link>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+          <div className="max-w-6xl mx-auto">
             {/* Main Content */}
-            <div className="lg:col-span-2 space-y-4 lg:space-y-6 order-2 lg:order-1">
+            <div className="space-y-6">
               {/* Service Header */}
-              <Card className="bg-gradient-card border-0">
-                <CardContent className="p-6">
+              <Card className="bg-white shadow-xl border-0 rounded-2xl overflow-hidden">
+                <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-1">
+                  <div className="bg-white rounded-xl">
+                    <CardContent className="p-6">
                   <div className="flex flex-col sm:flex-row items-start gap-4 mb-6">
                     <div className="w-16 h-16 bg-gradient-primary rounded-lg flex items-center justify-center">
                       <service.icon className="h-8 w-8 text-white" />
@@ -189,39 +331,116 @@ const ServiceDetails = () => {
                     <div className="flex-1">
                       <h1 className="text-2xl font-bold mb-2">{service.title}</h1>
                       <p className="text-muted-foreground mb-4">{service.description}</p>
-                      <div className="flex items-center gap-4 text-sm">
-                        <div className="flex items-center gap-1">
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                          <span className="font-medium">{service.rating}</span>
-                          <span className="text-muted-foreground">({service.reviews} reviews)</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Users className="h-4 w-4 text-muted-foreground" />
-                          <span>{service.completedApplications}+ completed</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <CheckCircle className="h-4 w-4 text-green-500" />
-                          <span>{service.successRate}% success rate</span>
-                        </div>
-                      </div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 p-3 sm:p-4 bg-muted/50 rounded-lg">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-primary mb-1">{service.price}</div>
-                      <div className="text-sm text-muted-foreground line-through">{service.originalPrice}</div>
+
+                    
+                    {/* Proceed Button */}
+                    <div className="text-center pb-6">
+                      <Button 
+                        onClick={() => navigate('/compliance-flow')}
+                        className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-8 py-3 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                      >
+                        🚀 Proceed with Application
+                      </Button>
                     </div>
-                    <div className="text-center">
-                      <div className="flex items-center justify-center gap-1 mb-1">
-                        <Clock className="h-4 w-4 text-muted-foreground" />
-                        <span className="font-medium">{service.duration}</span>
-                      </div>
-                      <div className="text-sm text-muted-foreground">Processing Time</div>
+                     </CardContent>
+                  </div>
+                </div>
+               
+              </Card>
+
+              {/* Service Classification Table */}
+              <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-200">
+                  <CardTitle className="flex items-center gap-3 text-xl">
+                    <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                      <Building className="h-5 w-5 text-blue-600" />
                     </div>
-                    <div className="text-center">
-                      <Badge className="bg-green-100 text-green-700">Available</Badge>
-                    </div>
+                    📊 Service Classification Matrix
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <div className="overflow-x-auto">
+                    <table className="w-full min-w-full">
+                      <thead>
+                        <tr className="bg-gray-50 border-b">
+                          <th className="text-left p-4 font-semibold text-gray-900 border-r">Category</th>
+                          <th className="text-left p-4 font-semibold text-gray-900 border-r">Options</th>
+                          <th className="text-left p-4 font-semibold text-gray-900 border-r">Processing Time</th>
+                          <th className="text-left p-4 font-semibold text-gray-900">Complexity</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b hover:bg-blue-50/50 transition-colors">
+                          <td className="p-4 border-r">
+                            <div className="flex items-center gap-2 font-medium text-blue-700">
+                              <FileText className="h-4 w-4" />
+                              By Type
+                            </div>
+                          </td>
+                          <td className="p-4 border-r">
+                            <div className="flex flex-wrap gap-2">
+                              <Badge className="bg-blue-100 text-blue-700 border-blue-300">Trade License</Badge>
+                              <Badge className="bg-green-100 text-green-700 border-green-300">Food License</Badge>
+                              <Badge className="bg-orange-100 text-orange-700 border-orange-300">Pollution Certificate</Badge>
+                            </div>
+                          </td>
+                          <td className="p-4 border-r text-sm text-gray-600">3-15 days</td>
+                          <td className="p-4">
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                              <span className="text-sm">Medium</span>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr className="border-b hover:bg-purple-50/50 transition-colors">
+                          <td className="p-4 border-r">
+                            <div className="flex items-center gap-2 font-medium text-purple-700">
+                              <Shield className="h-4 w-4" />
+                              By Authority
+                            </div>
+                          </td>
+                          <td className="p-4 border-r">
+                            <div className="flex flex-wrap gap-2">
+                              <Badge className="bg-purple-100 text-purple-700 border-purple-300">Central Govt</Badge>
+                              <Badge className="bg-indigo-100 text-indigo-700 border-indigo-300">State Govt</Badge>
+                              <Badge className="bg-gray-100 text-gray-700 border-gray-300">Local Body</Badge>
+                            </div>
+                          </td>
+                          <td className="p-4 border-r text-sm text-gray-600">5-30 days</td>
+                          <td className="p-4">
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 bg-red-400 rounded-full"></div>
+                              <span className="text-sm">High</span>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr className="hover:bg-green-50/50 transition-colors">
+                          <td className="p-4 border-r">
+                            <div className="flex items-center gap-2 font-medium text-green-700">
+                              <Award className="h-4 w-4" />
+                              By Level
+                            </div>
+                          </td>
+                          <td className="p-4 border-r">
+                            <div className="flex flex-wrap gap-2">
+                              <Badge className="bg-green-100 text-green-700 border-green-300">Basic</Badge>
+                              <Badge className="bg-yellow-100 text-yellow-700 border-yellow-300">Intermediate</Badge>
+                              <Badge className="bg-red-100 text-red-700 border-red-300">Advanced</Badge>
+                            </div>
+                          </td>
+                          <td className="p-4 border-r text-sm text-gray-600">1-21 days</td>
+                          <td className="p-4">
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                              <span className="text-sm">Variable</span>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </CardContent>
               </Card>
@@ -229,25 +448,34 @@ const ServiceDetails = () => {
               {/* Service Details Tabs */}
               <Tabs defaultValue="overview" className="space-y-6">
                 <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 bg-white">
-                  <TabsTrigger value="overview">Overview</TabsTrigger>
+                  <TabsTrigger value="overview">Description</TabsTrigger>
                   <TabsTrigger value="process">Process</TabsTrigger>
                   <TabsTrigger value="documents">Documents</TabsTrigger>
                   <TabsTrigger value="faqs">FAQs</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="overview">
-                  <Card className="bg-gradient-card border-0">
-                    <CardHeader>
-                      <CardTitle>What's Included</CardTitle>
+                  <Card className="bg-white shadow-lg border-0 rounded-2xl">
+                    <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-200">
+                      <CardTitle className="flex items-center gap-2 text-xl">
+                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <FileText className="h-4 w-4 text-blue-600" />
+                        </div>
+                        📋 Service Description
+                      </CardTitle>
                     </CardHeader>
-                    <CardContent>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-                        {service.features.map((feature, index) => (
-                          <div key={index} className="flex items-center gap-3">
-                            <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                            <span>{feature}</span>
-                          </div>
-                        ))}
+                    <CardContent className="p-6">
+                      <div className="prose max-w-none">
+                        <p className="text-gray-700 leading-relaxed mb-4">
+                          {service.id === 1 
+                            ? 'Company registration is the legal process of incorporating a business entity under the Companies Act. This comprehensive service helps entrepreneurs establish their business as a separate legal entity, providing limited liability protection and credibility in the market. Our expert team handles all documentation, compliance requirements, and government filings to ensure a smooth registration process.'
+                            : 'GST (Goods and Services Tax) registration is mandatory for businesses with annual turnover exceeding the prescribed threshold. This service ensures your business complies with GST regulations and can legally collect and remit taxes. Our specialists guide you through the entire registration process, helping you understand tax implications and maintain proper compliance from day one.'}
+                        </p>
+                        <p className="text-gray-700 leading-relaxed">
+                          {service.id === 1
+                            ? 'With our streamlined approach, you can focus on building your business while we handle the complex legal formalities. We provide end-to-end support including name approval, document preparation, filing with ROC, and post-incorporation compliance guidance.'
+                            : 'Our GST registration service includes thorough documentation review, application filing, follow-up with tax authorities, and guidance on GST compliance requirements. We ensure your business is properly registered and equipped to handle GST obligations efficiently.'}
+                        </p>
                       </div>
                     </CardContent>
                   </Card>
@@ -298,102 +526,397 @@ const ServiceDetails = () => {
                 </TabsContent>
 
                 <TabsContent value="faqs">
-                  <Card className="bg-gradient-card border-0">
-                    <CardHeader>
-                      <CardTitle>Frequently Asked Questions</CardTitle>
+                  <Card className="bg-white shadow-lg border-0 rounded-2xl">
+                    <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50 border-b border-purple-200">
+                      <CardTitle className="flex items-center gap-2 text-xl">
+                        <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                          <MessageCircle className="h-4 w-4 text-purple-600" />
+                        </div>
+                        ❓ Frequently Asked Questions
+                      </CardTitle>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-6">
                       <div className="space-y-4">
                         {service.faqs.map((faq, index) => (
-                          <div key={index} className="p-4 bg-muted/50 rounded-lg">
-                            <h4 className="font-semibold mb-2">{faq.question}</h4>
-                            <p className="text-muted-foreground">{faq.answer}</p>
+                          <div key={index} className="group border border-gray-200 rounded-xl p-5 hover:shadow-md hover:border-purple-300 transition-all duration-300">
+                            <div className="flex items-start gap-3">
+                              <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <span className="text-purple-600 font-bold text-sm">Q</span>
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="font-bold text-gray-900 mb-3 group-hover:text-purple-700 transition-colors">{faq.question}</h4>
+                                <div className="flex items-start gap-3">
+                                  <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <span className="text-green-600 font-bold text-sm">A</span>
+                                  </div>
+                                  <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         ))}
+                      </div>
+                      
+                      {/* Contact for More Questions */}
+                      <div className="mt-8 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
+                        <div className="text-center">
+                          <h4 className="font-semibold text-gray-900 mb-2">Still have questions?</h4>
+                          <p className="text-gray-600 text-sm mb-3">Our experts are here to help you with personalized guidance</p>
+                          <Button className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-lg">
+                            <MessageCircle className="h-4 w-4 mr-2" />
+                            Ask an Expert
+                          </Button>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
                 </TabsContent>
               </Tabs>
-            </div>
+              
+              {/* Proceed Button */}
+              <div className="text-center py-8">
+                <Button 
+                  onClick={() => setShowApplicationForm(!showApplicationForm)}
+                  className="bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white px-12 py-4 text-xl font-bold rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                >
+                  {showApplicationForm ? '📋 Hide Application Form' : '🚀 Proceed with Service Apply'}
+                </Button>
+                <p className="text-gray-600 mt-3 text-sm">{showApplicationForm ? 'Click to hide the application form' : 'Start your service application process'}</p>
+              </div>
 
-            {/* Sidebar */}
-            <div className="space-y-6">
-              {/* Action Card */}
-              <Card className="bg-gradient-primary text-white border-0">
-                <CardContent className="p-6">
-                  <div className="text-center mb-6">
-                    <div className="text-3xl font-bold mb-2">{service.price}</div>
-                    <div className="text-white/80 line-through">{service.originalPrice}</div>
-                  </div>
-                  <Button variant="glass" className="w-full mb-3">
-                    Get Started Now
-                  </Button>
-                  <Button variant="outline" className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20">
-                    <MessageCircle className="h-4 w-4 mr-2" />
-                    Chat with Expert
-                  </Button>
-                </CardContent>
-              </Card>
+              {/* Application Form */}
+              {showApplicationForm && !formSubmitted && (
+                <div className="mt-8">
+                  <div className="bg-gradient-to-br from-blue-50 via-purple-50 to-green-50 p-1 rounded-3xl shadow-2xl">
+                    <Card className="bg-white/95 backdrop-blur-sm shadow-xl border-0 rounded-3xl overflow-hidden">
+                      <CardHeader className="bg-gradient-to-r from-emerald-500 via-blue-500 to-purple-600 text-white relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/20 via-blue-400/20 to-purple-400/20 animate-pulse"></div>
+                        <CardTitle className="flex items-center gap-3 text-2xl font-bold relative z-10">
+                          <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/30">
+                            <FileText className="h-5 w-5 text-white" />
+                          </div>
+                          📝 Service Application Form
+                        </CardTitle>
+                        <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+                        <div className="absolute -bottom-2 -left-2 w-16 h-16 bg-white/10 rounded-full blur-lg"></div>
+                      </CardHeader>
+                      <CardContent className="p-8 bg-gradient-to-br from-gray-50/50 to-blue-50/30">
+                      <p className="text-gray-600 mb-6">Please fill out the form below to proceed with your {service.title} application.</p>
+                      
+                      <form className="space-y-6">
+                        {/* Business Location */}
+                        <div className="space-y-2">
+                          <Label htmlFor="businessLocation" className="text-sm font-medium">Is your business located in an industrial area / SEZ / home office / rural area?</Label>
+                          <Select value={formData.businessLocation} onValueChange={(value) => setFormData({...formData, businessLocation: value})}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select business location type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="industrial">Industrial Area</SelectItem>
+                              <SelectItem value="sez">SEZ (Special Economic Zone)</SelectItem>
+                              <SelectItem value="home">Home Office</SelectItem>
+                              <SelectItem value="rural">Rural Area</SelectItem>
+                              <SelectItem value="commercial">Commercial Area</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
 
-              {/* Expert Card */}
-              <Card className="bg-gradient-card border-0">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Award className="h-5 w-5" />
-                    Assigned Expert
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center mb-4">
-                    <div className="w-16 h-16 bg-muted rounded-full mx-auto mb-3"></div>
-                    <h4 className="font-semibold">{service.expert.name}</h4>
-                    <p className="text-sm text-muted-foreground">{service.expert.specialization}</p>
-                  </div>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span>Experience:</span>
-                      <span className="font-medium">{service.expert.experience}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Rating:</span>
-                      <div className="flex items-center gap-1">
-                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                        <span className="font-medium">{service.expert.rating}</span>
-                      </div>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Cases:</span>
-                      <span className="font-medium">{service.expert.completedCases}+</span>
-                    </div>
-                  </div>
-                  <Button variant="outline" className="w-full mt-4">
-                    <Phone className="h-4 w-4 mr-2" />
-                    Contact Expert
-                  </Button>
-                </CardContent>
-              </Card>
+                        {/* Operation States */}
+                        <div className="space-y-2">
+                          <Label htmlFor="operationStates" className="text-sm font-medium">Do you operate in multiple states or single-state only?</Label>
+                          <Select value={formData.operationStates} onValueChange={(value) => setFormData({...formData, operationStates: value})}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select operation scope" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="single">Single State Only</SelectItem>
+                              <SelectItem value="multiple">Multiple States</SelectItem>
+                              <SelectItem value="pan-india">Pan India</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
 
-              {/* Support Card */}
-              <Card className="bg-gradient-card border-0">
-                <CardHeader>
-                  <CardTitle>Need Help?</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <Button variant="outline" className="w-full justify-start">
-                    <Download className="h-4 w-4 mr-2" />
-                    Download Checklist
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start">
-                    <MessageCircle className="h-4 w-4 mr-2" />
-                    Live Chat Support
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start">
-                    <Phone className="h-4 w-4 mr-2" />
-                    Call: 1800-123-4567
-                  </Button>
-                </CardContent>
-              </Card>
+                        {/* Existing Certificates */}
+                        <div className="space-y-2">
+                          <Label htmlFor="existingCertificates" className="text-sm font-medium">Do you already possess any existing certificates or licenses?</Label>
+                          <Textarea 
+                            id="existingCertificates"
+                            placeholder="List your existing certificates (e.g., FSSAI, GST, Pollution NOC, ISO, etc.)"
+                            value={formData.existingCertificates}
+                            onChange={(e) => setFormData({...formData, existingCertificates: e.target.value})}
+                            className="min-h-[80px]"
+                          />
+                        </div>
+
+                        {/* Pending Renewals */}
+                        <div className="space-y-2">
+                          <Label htmlFor="pendingRenewals" className="text-sm font-medium">Are there any pending renewals or expired certificates you want to update?</Label>
+                          <Select value={formData.pendingRenewals} onValueChange={(value) => setFormData({...formData, pendingRenewals: value})}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select renewal status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="none">No Pending Renewals</SelectItem>
+                              <SelectItem value="some">Some Renewals Pending</SelectItem>
+                              <SelectItem value="many">Multiple Renewals Pending</SelectItem>
+                              <SelectItem value="expired">Have Expired Certificates</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        {/* Certification Type */}
+                        <div className="space-y-2">
+                          <Label htmlFor="certificationType" className="text-sm font-medium">Do you require mandatory or optional certifications for your business category?</Label>
+                          <Select value={formData.certificationType} onValueChange={(value) => setFormData({...formData, certificationType: value})}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select certification requirement" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="mandatory">Mandatory Certifications</SelectItem>
+                              <SelectItem value="optional">Optional Certifications</SelectItem>
+                              <SelectItem value="both">Both Mandatory & Optional</SelectItem>
+                              <SelectItem value="unsure">Not Sure</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        {/* Documents Ready */}
+                        <div className="space-y-2">
+                          <Label htmlFor="documentsReady" className="text-sm font-medium">Do you have basic business documents ready?</Label>
+                          <p className="text-xs text-gray-500 mb-2">PAN, Aadhaar, Udyam, Bank Statement, Address Proof, etc.</p>
+                          <Select value={formData.documentsReady} onValueChange={(value) => setFormData({...formData, documentsReady: value})}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select document readiness" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">All Documents Ready</SelectItem>
+                              <SelectItem value="most">Most Documents Ready</SelectItem>
+                              <SelectItem value="some">Some Documents Ready</SelectItem>
+                              <SelectItem value="none">No Documents Ready</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        {/* Toggle Questions */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="flex items-center justify-between p-4 border rounded-lg">
+                            <div className="space-y-1">
+                              <Label className="text-sm font-medium">Document Assistance</Label>
+                              <p className="text-xs text-gray-500">Need help with document templates?</p>
+                            </div>
+                            <Switch 
+                              checked={formData.documentAssistance}
+                              onCheckedChange={(checked) => setFormData({...formData, documentAssistance: checked})}
+                            />
+                          </div>
+
+                          <div className="flex items-center justify-between p-4 border rounded-lg">
+                            <div className="space-y-1">
+                              <Label className="text-sm font-medium">Expert Guidance</Label>
+                              <p className="text-xs text-gray-500">Connect with compliance expert?</p>
+                            </div>
+                            <Switch 
+                              checked={formData.expertGuidance}
+                              onCheckedChange={(checked) => setFormData({...formData, expertGuidance: checked})}
+                            />
+                          </div>
+
+                          <div className="flex items-center justify-between p-4 border rounded-lg">
+                            <div className="space-y-1">
+                              <Label className="text-sm font-medium">Government Schemes</Label>
+                              <p className="text-xs text-gray-500">Apply for MSME benefits?</p>
+                            </div>
+                            <Switch 
+                              checked={formData.governmentSchemes}
+                              onCheckedChange={(checked) => setFormData({...formData, governmentSchemes: checked})}
+                            />
+                          </div>
+
+                          <div className="flex items-center justify-between p-4 border rounded-lg md:col-span-2">
+                            <div className="space-y-1">
+                              <Label className="text-sm font-medium">Compliance Dashboard Tracking</Label>
+                              <p className="text-xs text-gray-500">Track this certification in your dashboard automatically?</p>
+                            </div>
+                            <Switch 
+                              checked={formData.complianceTracking}
+                              onCheckedChange={(checked) => setFormData({...formData, complianceTracking: checked})}
+                            />
+                          </div>
+                        </div>
+
+                        {/* Registration Type */}
+                        <div className="space-y-2">
+                          <Label htmlFor="registrationType" className="text-sm font-medium">What is your business registration type?</Label>
+                          <Select value={formData.registrationType} onValueChange={(value) => setFormData({...formData, registrationType: value})}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select registration type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="udyam">Udyam Registration</SelectItem>
+                              <SelectItem value="gst">GST Registration</SelectItem>
+                              <SelectItem value="shop-act">Shop Act License</SelectItem>
+                              <SelectItem value="company">Company Registration</SelectItem>
+                              <SelectItem value="partnership">Partnership Firm</SelectItem>
+                              <SelectItem value="proprietorship">Sole Proprietorship</SelectItem>
+                              <SelectItem value="not-registered">Not Registered</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        {/* Years in Operation */}
+                        <div className="space-y-2">
+                          <Label htmlFor="yearsInOperation" className="text-sm font-medium">How many years have you been in operation?</Label>
+                          <Select value={formData.yearsInOperation} onValueChange={(value) => setFormData({...formData, yearsInOperation: value})}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select years of operation" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="startup">Startup (Less than 1 year)</SelectItem>
+                              <SelectItem value="1-2">1-2 years</SelectItem>
+                              <SelectItem value="3-5">3-5 years</SelectItem>
+                              <SelectItem value="6-10">6-10 years</SelectItem>
+                              <SelectItem value="10+">More than 10 years</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        {/* Industry Sector */}
+                        <div className="space-y-2">
+                          <Label htmlFor="industrySector" className="text-sm font-medium">What is your industry sector?</Label>
+                          <Select value={formData.industrySector} onValueChange={(value) => setFormData({...formData, industrySector: value})}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select industry sector" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="manufacturing">Manufacturing</SelectItem>
+                              <SelectItem value="trading">Trading</SelectItem>
+                              <SelectItem value="services">Services</SelectItem>
+                              <SelectItem value="food">Food & Beverages</SelectItem>
+                              <SelectItem value="it">Information Technology</SelectItem>
+                              <SelectItem value="construction">Construction</SelectItem>
+                              <SelectItem value="healthcare">Healthcare</SelectItem>
+                              <SelectItem value="education">Education</SelectItem>
+                              <SelectItem value="retail">Retail</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        {/* Submit Button */}
+                        {!formSubmitted && (
+                          <div className="pt-6 border-t">
+                            <Button 
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setFormSubmitted(true);
+                              }}
+                              className="w-full bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white py-3 text-lg font-semibold rounded-xl"
+                            >
+                              🚀 Submit Application
+                            </Button>
+                          </div>
+                        )}
+                      </form>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              )}
+
+              {/* Success Cards after Form Submission */}
+              {formSubmitted && (
+                <div className="mt-8 space-y-6">
+                  {/* Success Message */}
+                  <div className="text-center mb-8">
+                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <CheckCircle className="h-8 w-8 text-green-600" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">✨ Application Submitted Successfully!</h3>
+                    <p className="text-gray-600">Choose your next step to proceed with your {service.title}</p>
+                  </div>
+
+                  {/* Three Cards */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* Template Options Card */}
+                    <Card className="bg-white shadow-lg border-0 rounded-2xl hover:shadow-xl transition-all duration-300">
+                      <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b border-blue-200">
+                        <CardTitle className="flex items-center gap-2 text-lg">
+                          <FileText className="h-5 w-5 text-blue-600" />
+                          📝 Template Options
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-6 space-y-4">
+                        <Button 
+                          variant="outline"
+                          className="w-full h-auto p-4 flex flex-col items-start gap-2 border-2 hover:border-purple-500 hover:bg-purple-50 transition-all"
+                        >
+                          <div className="flex items-center gap-2 w-full">
+                            <Sparkles className="h-5 w-5 text-purple-600" />
+                            <span className="font-semibold">Create Template</span>
+                          </div>
+                          <p className="text-sm text-gray-600 text-left">Design a new certificate format</p>
+                        </Button>
+                        
+                        <Button 
+                          variant="outline"
+                          onClick={downloadTemplate}
+                          className="w-full h-auto p-4 flex flex-col items-start gap-2 border-2 hover:border-green-500 hover:bg-green-50 transition-all"
+                        >
+                          <div className="flex items-center gap-2 w-full">
+                            <Download className="h-5 w-5 text-green-600" />
+                            <span className="font-semibold">Get Template</span>
+                          </div>
+                          <p className="text-sm text-gray-600 text-left">Prefilled with your data</p>
+                        </Button>
+                      </CardContent>
+                    </Card>
+
+                    {/* Expert Assistance Card */}
+                    <Card className="bg-white shadow-lg border-0 rounded-2xl hover:shadow-xl transition-all duration-300">
+                      <CardHeader className="bg-gradient-to-r from-orange-50 to-red-50 border-b border-orange-200">
+                        <CardTitle className="flex items-center gap-2 text-lg">
+                          <UserCheck className="h-5 w-5 text-orange-600" />
+                          👥 Expert Assistance
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-6">
+                        <Button 
+                          onClick={() => navigate('/experts')}
+                          className="w-full h-auto p-6 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-xl"
+                        >
+                          <div className="flex flex-col items-center text-center">
+                            <UserCheck className="h-8 w-8 mb-2" />
+                            <span className="font-semibold text-lg">Connect with Expert</span>
+                            <p className="text-sm text-orange-100 mt-1">View profiles, ratings & experience</p>
+                          </div>
+                        </Button>
+                      </CardContent>
+                    </Card>
+
+                    {/* AI Assistant Card */}
+                    <Card className="bg-white shadow-lg border-0 rounded-2xl hover:shadow-xl transition-all duration-300">
+                      <CardHeader className="bg-gradient-to-r from-indigo-50 to-purple-50 border-b border-indigo-200">
+                        <CardTitle className="flex items-center gap-2 text-lg">
+                          <Bot className="h-5 w-5 text-indigo-600" />
+                          🤖 AI Assistant
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="p-6">
+                        <Button 
+                          className="w-full h-auto p-6 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl"
+                        >
+                          <div className="flex flex-col items-center text-center">
+                            <Bot className="h-8 w-8 mb-2" />
+                            <span className="font-semibold text-lg">AI Chatbot</span>
+                            <p className="text-sm text-indigo-100 mt-1">Get instant help & guidance</p>
+                          </div>
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

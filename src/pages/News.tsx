@@ -13,7 +13,8 @@ import {
   Zap,
   Globe,
   Calendar,
-  ChevronRight
+  ChevronRight,
+  Bell
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -171,31 +172,40 @@ const News = () => {
         
         <div className="container mx-auto px-4 lg:px-6 py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">News & Announcements</h1>
-            <p className="text-muted-foreground">
-              Stay updated with the latest business news, policy changes, and opportunities
-            </p>
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center">
+              <Newspaper className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold text-gray-900">📰 News Hub</h1>
+              <p className="text-gray-600">Latest updates, policies & business insights</p>
+            </div>
           </div>
           
-          <Button variant="outline" className="hidden md:flex">
-            <Bookmark className="h-4 w-4 mr-2" />
-            My Bookmarks
-          </Button>
+          <div className="flex justify-center gap-3 mt-6">
+            <Button variant="outline" className="flex items-center gap-2">
+              <Bookmark className="h-4 w-4" />
+              My Bookmarks
+            </Button>
+            <Button className="bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+              <Bell className="h-4 w-4 mr-2" />
+              Subscribe
+            </Button>
+          </div>
         </div>
 
         {/* Search and Filters */}
-        <Card className="mb-8 bg-gradient-card border-0">
+        <Card className="mb-8 bg-white shadow-lg border-0 rounded-2xl">
           <CardContent className="p-6">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <div className="space-y-4">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <Input
-                  placeholder="Search news and announcements..."
+                  placeholder="🔍 Search news, policies, announcements..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
+                  className="pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 text-base"
                 />
               </div>
               
@@ -206,9 +216,13 @@ const News = () => {
                     variant={selectedCategory === category.id ? "default" : "outline"}
                     size="sm"
                     onClick={() => setSelectedCategory(category.id)}
-                    className="whitespace-nowrap"
+                    className={`whitespace-nowrap rounded-full px-4 py-2 transition-all ${
+                      selectedCategory === category.id 
+                        ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md' 
+                        : 'border-gray-300 hover:border-blue-400 hover:bg-blue-50'
+                    }`}
                   >
-                    {category.label} ({category.count})
+                    {category.label} <span className="ml-1 text-xs opacity-75">({category.count})</span>
                   </Button>
                 ))}
               </div>
@@ -221,18 +235,20 @@ const News = () => {
           <div className="lg:col-span-2 space-y-8">
             {/* Featured News */}
             <section>
-              <div className="flex items-center gap-2 mb-6">
-                <TrendingUp className="h-5 w-5 text-primary" />
-                <h2 className="text-xl font-semibold">Featured Stories</h2>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-8 h-8 bg-gradient-to-r from-orange-400 to-red-500 rounded-lg flex items-center justify-center">
+                  <TrendingUp className="h-4 w-4 text-white" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900">🔥 Trending Stories</h2>
               </div>
               
               <div className="space-y-6">
                 {featuredNews.map((article, index) => (
-                  <Card key={article.id} className={`group hover:shadow-lg transition-all duration-300 bg-gradient-card border-0 ${index === 0 ? 'lg:col-span-2' : ''}`}>
+                  <Card key={article.id} className={`group hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 bg-white border-0 rounded-2xl overflow-hidden ${index === 0 ? 'lg:col-span-2 border-l-4 border-l-blue-500' : ''}`}>
                     <CardContent className="p-6">
                       <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center flex-shrink-0">
-                          <article.icon className="h-6 w-6 text-white" />
+                        <div className={`w-14 h-14 bg-gradient-to-r ${article.category === 'policy' ? 'from-blue-500 to-blue-600' : article.category === 'startup' ? 'from-green-500 to-green-600' : 'from-purple-500 to-purple-600'} rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg`}>
+                          <article.icon className="h-7 w-7 text-white" />
                         </div>
                         
                         <div className="flex-1 min-w-0">
@@ -295,15 +311,17 @@ const News = () => {
 
             {/* Regular News */}
             <section>
-              <div className="flex items-center gap-2 mb-6">
-                <Newspaper className="h-5 w-5 text-primary" />
-                <h2 className="text-xl font-semibold">Latest News</h2>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-lg flex items-center justify-center">
+                  <Newspaper className="h-4 w-4 text-white" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900">📈 Latest Updates</h2>
               </div>
               
               <div className="space-y-4">
                 {regularNews.map((article) => (
-                  <Card key={article.id} className="group hover:shadow-md transition-all duration-300 bg-gradient-card border-0">
-                    <CardContent className="p-4">
+                  <Card key={article.id} className="group hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 bg-white border border-gray-100 rounded-xl">
+                    <CardContent className="p-5">
                       <div className="flex items-start gap-3">
                         <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center flex-shrink-0">
                           <article.icon className="h-5 w-5 text-muted-foreground" />
@@ -367,9 +385,12 @@ const News = () => {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Quick Links */}
-            <Card className="bg-gradient-card border-0">
-              <CardHeader>
-                <CardTitle className="text-lg">Quick Links</CardTitle>
+            <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                  <Globe className="h-5 w-5 text-blue-600" />
+                  🔗 Quick Access
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <a href="#" className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
@@ -392,25 +413,30 @@ const News = () => {
             </Card>
 
             {/* Newsletter Signup */}
-            <Card className="bg-gradient-primary text-white border-0">
+            <Card className="bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 rounded-2xl shadow-xl">
               <CardContent className="p-6">
                 <div className="text-center">
-                  <Newspaper className="h-8 w-8 mx-auto mb-3 opacity-90" />
-                  <h3 className="font-semibold mb-2">Stay Updated</h3>
+                  <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+                    <Newspaper className="h-6 w-6" />
+                  </div>
+                  <h3 className="font-bold text-lg mb-2">📧 Newsletter</h3>
                   <p className="text-sm text-white/90 mb-4">
-                    Get the latest business news and policy updates delivered to your inbox
+                    Get daily updates on policies, schemes & business opportunities
                   </p>
-                  <Button variant="glass" size="sm" className="w-full">
-                    Subscribe to Newsletter
+                  <Button className="w-full bg-white text-purple-600 hover:bg-gray-100 font-semibold">
+                    Subscribe Now
                   </Button>
                 </div>
               </CardContent>
             </Card>
 
             {/* Popular Tags */}
-            <Card className="bg-gradient-card border-0">
-              <CardHeader>
-                <CardTitle className="text-lg">Popular Topics</CardTitle>
+            <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-green-600" />
+                  🏷️ Trending Topics
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2">

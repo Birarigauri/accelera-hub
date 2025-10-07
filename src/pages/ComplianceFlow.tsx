@@ -1,4 +1,5 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, memo, lazy, Suspense } from "react";
+import { useNavigate } from "react-router-dom";
 import { 
   CheckCircle, 
   Clock, 
@@ -15,15 +16,17 @@ import {
   Globe,
   Send,
   ChevronRight,
+  ChevronLeft,
   ChevronDown,
   ChevronUp,
   Play,
   BookOpen,
   Phone,
+  Star,
+  Eye,
   Shield,
   Zap,
   Heart,
-  Star,
   Users,
   FileCheck,
   Headphones,
@@ -35,6 +38,9 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import AppLayout from "@/components/layout/AppLayout";
 import Header from "@/components/layout/Header";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
+import ProcessStep from "@/components/common/ProcessStep";
+import ExpertCard from "@/components/common/ExpertCard";
 
 interface ProcessStep {
   id: number;
@@ -57,15 +63,97 @@ interface ComplianceMetadata {
   estimatedDuration: string;
 }
 
-const ComplianceFlow = () => {
+const ComplianceFlow = memo(() => {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(2);
-  const [showKnowledgeBase, setShowKnowledgeBase] = useState(false);
+  const [showKnowledgeBase, setShowKnowledgeBase] = useState(true);
   const [showChatBot, setShowChatBot] = useState(false);
+  const [currentKnowledgeIndex, setCurrentKnowledgeIndex] = useState(0);
   const [chatMessage, setChatMessage] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [notifications, setNotifications] = useState<string[]>([]);
   const [selectedDocument, setSelectedDocument] = useState<string | null>(null);
   const [showDocumentPrep, setShowDocumentPrep] = useState(false);
+  const [uploadedDocs, setUploadedDocs] = useState<string[]>([]);
+  const [currentExpertIndex, setCurrentExpertIndex] = useState(0);
+  const [selectedExpert, setSelectedExpert] = useState(null);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  
+  const experts = [
+    {
+      name: "CA Rajesh Kumar",
+      title: "GST Specialist",
+      experience: "5+ years",
+      rating: 4.9,
+      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+      expertise: ["GST Registration", "Tax Filing", "Compliance"],
+      color: "blue",
+      verified: true
+    },
+    {
+      name: "Adv. Priya Sharma",
+      title: "Legal Compliance Expert",
+      experience: "7+ years",
+      rating: 4.8,
+      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=face",
+      expertise: ["Corporate Law", "Contracts", "IPR"],
+      color: "green",
+      verified: true
+    },
+    {
+      name: "CS Amit Patel",
+      title: "Company Secretary",
+      experience: "6+ years",
+      rating: 4.7,
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+      expertise: ["ROC Filing", "Board Meetings", "Annual Returns"],
+      color: "purple",
+      verified: true
+    },
+    {
+      name: "CA Sneha Gupta",
+      title: "Tax Consultant",
+      experience: "8+ years",
+      rating: 5.0,
+      image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&h=150&fit=crop&crop=face",
+      expertise: ["Income Tax", "TDS", "Audit"],
+      color: "orange",
+      verified: true
+    },
+    {
+      name: "CA Vikram Singh",
+      title: "Financial Advisor",
+      experience: "9+ years",
+      rating: 4.9,
+      image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face",
+      expertise: ["Financial Planning", "Investment", "Loans"],
+      color: "blue",
+      verified: true
+    },
+    {
+      name: "Adv. Meera Joshi",
+      title: "Business Lawyer",
+      experience: "6+ years",
+      rating: 4.8,
+      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=face",
+      expertise: ["Business Law", "Litigation", "Arbitration"],
+      color: "green",
+      verified: true
+    }
+  ];
+  
+  const getCardsPerSlide = () => {
+    if (typeof window !== 'undefined') {
+      if (window.innerWidth >= 1024) return 3; // lg
+      if (window.innerWidth >= 768) return 2;  // md
+      return 1; // sm
+    }
+    return 3;
+  };
+  
+  const cardsPerSlide = getCardsPerSlide();
+  const totalSlides = Math.ceil(experts.length / cardsPerSlide);
 
   const processSteps: ProcessStep[] = [
     {
@@ -100,12 +188,12 @@ const ComplianceFlow = () => {
     },
     {
       id: 4,
-      title: "Certificate Issuance & Download",
-      description: "Receive and download your official GST registration certificate",
+      title: "🎉 Certificate Ready & Download",
+      description: "Your official GST registration certificate is ready! Download and save your digital certificate instantly.",
       difficulty: 'green',
       status: 'pending',
-      requiredDocs: ["Verification Completion Confirmation", "Payment Receipt"],
-      estimatedTime: "Instant",
+      requiredDocs: ["Verification Completion Confirmation", "Payment Receipt", "Digital Certificate"],
+      estimatedTime: "Instant Download",
       isOnline: true
     }
   ];
@@ -121,10 +209,60 @@ const ComplianceFlow = () => {
   };
 
   const knowledgeBaseItems = [
-    { type: 'video', title: 'Complete GST Registration Walkthrough', duration: '12:30', views: '2.1K', rating: 4.8 },
-    { type: 'content', title: 'Comprehensive Step-by-Step Guide', pages: '12 pages', downloads: '850', rating: 4.9 },
-    { type: 'faq', title: 'Frequently Asked Questions', items: '25 FAQs', helpful: '95%', rating: 4.7 },
-    { type: 'manual', title: 'Official GST Registration Manual', size: '3.2 MB', downloads: '1.2K', rating: 4.6 }
+    { 
+      type: 'video', 
+      title: 'GST Registration Walkthrough', 
+      subtitle: 'Complete video guide',
+      duration: '12:30',
+      views: '2.4K views',
+      rating: 4.8,
+      description: 'Step-by-step video tutorial covering the entire GST registration process with real examples'
+    },
+    { 
+      type: 'content', 
+      title: 'Step-by-Step Guide', 
+      subtitle: 'Detailed documentation',
+      pages: '8 pages',
+      views: '1.8K reads',
+      rating: 4.9,
+      description: 'Comprehensive written guide with screenshots and detailed explanations for each step'
+    },
+    { 
+      type: 'faq', 
+      title: 'Common Questions', 
+      subtitle: 'Frequently asked questions',
+      items: '15 FAQs',
+      views: '3.2K views',
+      rating: 4.7,
+      description: 'Most common questions and expert answers about GST registration process'
+    },
+    { 
+      type: 'manual', 
+      title: 'User Manual PDF', 
+      subtitle: 'Downloadable reference',
+      size: '2.4 MB',
+      views: '956 downloads',
+      rating: 4.6,
+      description: 'Complete reference manual for offline reading and printing with all forms'
+    },
+    {
+      type: 'expert',
+      title: 'Expert Consultation',
+      subtitle: '1-on-1 guidance',
+      duration: '30 mins',
+      views: '500+ sessions',
+      rating: 4.9,
+      description: 'Personal consultation with GST registration experts for complex cases'
+    },
+    {
+      type: 'webinar',
+      title: 'Live Q&A Session',
+      subtitle: 'Interactive session',
+      duration: 'Weekly',
+      views: 'Live now',
+      rating: 4.8,
+      description: 'Join live sessions with experts and other entrepreneurs for real-time help'
+    }
   ];
 
   const getDifficultyColor = (difficulty: string) => {
@@ -168,6 +306,10 @@ const ComplianceFlow = () => {
     setCurrentStep(stepId);
   }, []);
 
+  const handleExpertConnect = useCallback((expertName: string) => {
+    console.log(`Connecting to ${expertName}`);
+  }, []);
+
   const handleContinueProcess = useCallback(async () => {
     setIsProcessing(true);
     try {
@@ -206,14 +348,7 @@ const ComplianceFlow = () => {
               <h1 className="text-2xl font-bold text-gray-900 mb-1">Compliance Journey</h1>
             </div>
             
-            {/* Progress Bar */}
-            <div className="max-w-xl mx-auto">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-medium text-gray-700">Progress</span>
-                <span className="text-sm font-bold text-blue-600">{completedSteps}/{metadata.totalSteps} completed</span>
-              </div>
-              <Progress value={progressPercentage} className="h-2" />
-            </div>
+
           </div>
 
           {/* Main Flow - Step by Step - Full Width */}
@@ -357,101 +492,174 @@ const ComplianceFlow = () => {
             {/* Document Requirements */}
             <div className="lg:col-span-12">
               <Card className="border border-gray-200 shadow-sm bg-white">
-                <CardHeader className="bg-gray-50 border-b border-gray-200 py-2">
-                  <CardTitle className="flex items-center gap-2 text-sm">
-                    <FileText className="h-4 w-4 text-gray-600" />
-                    Document Requirements
+                <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-200 py-4">
+                  <CardTitle className="flex items-center justify-between text-base">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                        <FileText className="h-5 w-5 text-blue-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-gray-900">📋 Document Checklist</h3>
+                        <p className="text-xs text-gray-600">Upload required documents to proceed</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="flex items-center gap-2 mb-1">
+                        <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-gradient-to-r from-green-400 to-green-500 transition-all duration-500"
+                            style={{ width: `${(uploadedDocs.length / (currentStepData?.requiredDocs.length || 1)) * 100}%` }}
+                          ></div>
+                        </div>
+                        <span className="text-xs font-semibold text-gray-700">
+                          {uploadedDocs.length}/{currentStepData?.requiredDocs.length}
+                        </span>
+                      </div>
+                      <Badge variant="outline" className="text-xs bg-blue-100 text-blue-700 border-blue-300">
+                        {uploadedDocs.length === currentStepData?.requiredDocs.length ? '✅ Complete' : '⏳ In Progress'}
+                      </Badge>
+                    </div>
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="p-3">
+                <CardContent className="p-4">
                   {currentStepData && (
-                    <div className="space-y-2">
-                      <div>
-                        <h4 className="font-semibold text-gray-900 mb-2">{currentStepData.title}</h4>
-                        <p className="text-sm text-gray-600">{currentStepData.description}</p>
-                      </div>
-                      
-                      {/* Required Documents */}
-                      <div>
-                        <h5 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                          <FileText className="h-4 w-4 text-blue-500" />
-                          Required Documents
-                        </h5>
-                        <div className="space-y-3">
-                          {currentStepData.requiredDocs.map((doc, index) => (
+                    <div className="space-y-4">
+                      {/* Documents Grid */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {currentStepData.requiredDocs.map((doc, index) => {
+                          const isUploaded = uploadedDocs.includes(doc);
+                          return (
                             <div 
                               key={index} 
-                              className={`p-3 rounded-lg border-2 transition-all cursor-pointer ${
-                                selectedDocument === doc 
-                                  ? 'border-blue-500 bg-blue-50' 
-                                  : 'border-gray-200 bg-gray-50 hover:border-gray-300'
+                              className={`group p-4 rounded-2xl border-2 transition-all duration-300 cursor-pointer ${
+                                isUploaded 
+                                  ? 'border-green-300 bg-gradient-to-r from-green-50 to-emerald-50 shadow-md' 
+                                  : 'border-dashed border-gray-300 hover:border-blue-400 hover:bg-blue-50/50'
                               }`}
-                              onClick={() => setSelectedDocument(selectedDocument === doc ? null : doc)}
+                              onDragOver={(e) => e.preventDefault()}
+                              onDrop={(e) => {
+                                e.preventDefault();
+                                if (!isUploaded) {
+                                  setUploadedDocs(prev => [...prev, doc]);
+                                }
+                              }}
                             >
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                                    <FileText className="h-4 w-4 text-blue-600" />
+                              <div className="flex items-start justify-between mb-3">
+                                <div className="flex items-start gap-3">
+                                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${
+                                    isUploaded ? 'bg-green-100' : 'bg-gray-100 group-hover:bg-blue-100'
+                                  }`}>
+                                    {isUploaded ? (
+                                      <CheckCircle className="h-4 w-4 text-green-600" />
+                                    ) : (
+                                      <FileText className="h-4 w-4 text-gray-600 group-hover:text-blue-600" />
+                                    )}
                                   </div>
-                                  <span className="text-sm font-medium text-gray-900">{doc}</span>
+                                  <div className="flex-1">
+                                    <span className="text-sm font-semibold text-gray-900 block leading-tight">{doc}</span>
+                                    <span className="text-xs text-gray-500 mt-1 block">
+                                      {isUploaded ? '✅ Uploaded successfully' : '📎 Drag & drop or click to upload'}
+                                    </span>
+                                  </div>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                  <Button size="sm" variant="outline" className="text-xs">
-                                    <Upload className="h-3 w-3 mr-1" />
-                                    Upload
-                                  </Button>
-                                </div>
+                                {isUploaded && (
+                                  <Badge className="bg-green-100 text-green-700 text-xs px-2 py-1">
+                                    ✓ Done
+                                  </Badge>
+                                )}
                               </div>
-                              {selectedDocument === doc && (
-                                <div className="mt-3 pt-3 border-t border-blue-200">
-                                  <p className="text-xs text-gray-600 mb-2">Document requirements:</p>
-                                  <ul className="text-xs text-gray-500 space-y-1">
-                                    <li>• Clear, high-resolution scan or photo</li>
-                                    <li>• All corners visible and text readable</li>
-                                    <li>• Accepted formats: PDF, JPG, PNG</li>
-                                  </ul>
-                                </div>
-                              )}
+                              
+                              <div className="flex gap-2">
+                                {!isUploaded ? (
+                                  <>
+                                    <Button 
+                                      size="sm" 
+                                      className="flex-1 text-xs py-2 h-auto bg-blue-500 hover:bg-blue-600 text-white rounded-lg"
+                                      onClick={() => setUploadedDocs(prev => [...prev, doc])}
+                                    >
+                                      <Upload className="h-3 w-3 mr-1" />
+                                      Upload File
+                                    </Button>
+                                    <Button size="sm" variant="ghost" className="text-xs py-2 h-auto text-gray-500 hover:text-blue-600 px-3">
+                                      <HelpCircle className="h-3 w-3" />
+                                    </Button>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Button size="sm" variant="outline" className="flex-1 text-xs py-2 h-auto border-green-300 text-green-700 hover:bg-green-50">
+                                      <Eye className="h-3 w-3 mr-1" />
+                                      View File
+                                    </Button>
+                                    <Button 
+                                      size="sm" 
+                                      variant="ghost" 
+                                      className="text-xs py-2 h-auto text-red-500 hover:text-red-700 px-3"
+                                      onClick={() => setUploadedDocs(prev => prev.filter(d => d !== doc))}
+                                    >
+                                      <Download className="h-3 w-3" />
+                                    </Button>
+                                  </>
+                                )}
+                              </div>
                             </div>
-                          ))}
+                          );
+                        })}
+                      </div>
+
+                      {/* Quick Tips */}
+                      <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-2xl p-4">
+                        <div className="flex items-start gap-3">
+                          <div className="w-8 h-8 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <span className="text-amber-600 text-sm">💡</span>
+                          </div>
+                          <div>
+                            <p className="text-sm font-semibold text-amber-900 mb-2">Upload Guidelines</p>
+                            <ul className="text-xs text-amber-800 space-y-1">
+                              <li>✓ Clear, high-resolution scans</li>
+                              <li>✓ PDF, JPG, PNG (Max 5MB each)</li>
+                              <li>✓ All text must be readable</li>
+                              <li>✓ Original documents preferred</li>
+                            </ul>
+                          </div>
                         </div>
                       </div>
 
-
-
                       {/* Action Buttons */}
-                      <div className="space-y-2">
+                      <div className="flex gap-3 pt-2">
                         {currentStepData.difficulty === 'red' ? (
-                          <Button className="w-full bg-red-500 hover:bg-red-600 text-white">
+                          <Button className="flex-1 bg-red-500 hover:bg-red-600 text-white py-2.5 rounded-xl">
                             <Phone className="h-4 w-4 mr-2" />
                             Schedule Expert Visit
                           </Button>
                         ) : (
-                          <Button 
-                            className="w-full bg-green-500 hover:bg-green-600 text-white disabled:opacity-50"
-                            onClick={handleContinueProcess}
-                            disabled={isProcessing}
-                          >
-                            {isProcessing ? (
-                              <>
-                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                                Processing...
-                              </>
-                            ) : (
-                              <>
-                                <Send className="h-4 w-4 mr-2" />
-                                Continue Process
-                              </>
-                            )}
-                          </Button>
+                          <>
+                            <Button variant="outline" className="px-6 py-2.5 rounded-xl border-gray-300">
+                              Save Draft
+                            </Button>
+                            <Button 
+                              className="flex-1 bg-green-500 hover:bg-green-600 text-white disabled:opacity-50 py-2.5 rounded-xl"
+                              onClick={handleContinueProcess}
+                              disabled={isProcessing}
+                            >
+                              {isProcessing ? (
+                                <>
+                                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                  Processing...
+                                </>
+                              ) : (
+                                <>
+                                  <Send className="h-4 w-4 mr-2" />
+                                  Continue Process
+                                </>
+                              )}
+                            </Button>
+                          </>
                         )}
                       </div>
                     </div>
                   )}
                 </CardContent>
               </Card>
-
-
             </div>
 
 
@@ -613,87 +821,149 @@ const ComplianceFlow = () => {
               </div>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <Card className="border border-gray-200 hover:shadow-lg hover:border-blue-300 transition-all duration-300 transform hover:-translate-y-1">
-                <CardContent className="p-6 text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full mx-auto mb-4 flex items-center justify-center shadow-md">
-                    <User className="h-8 w-8 text-blue-600" />
-                  </div>
-                  <h3 className="font-bold text-gray-900 mb-1">Rajesh Kumar</h3>
-                  <p className="text-sm text-gray-600 mb-3">GST Specialist • 5+ years</p>
-                  <div className="flex items-center justify-center gap-1 mb-4">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                    ))}
-                    <span className="text-sm text-gray-600 ml-2 font-semibold">4.9</span>
-                  </div>
-                  <Button size="sm" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold">
-                    Connect Now
-                  </Button>
-                </CardContent>
-              </Card>
+            {/* Expert Carousel */}
+            <div className="relative mb-8">
+              <div className="overflow-hidden rounded-2xl">
+                <div 
+                  className="flex transition-transform duration-500 ease-in-out"
+                  style={{ transform: `translateX(-${currentExpertIndex * 100}%)` }}
+                >
+                  {Array.from({ length: totalSlides }).map((_, slideIndex) => (
+                    <div key={slideIndex} className="w-full flex-shrink-0">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+                        {experts
+                          .slice(slideIndex * cardsPerSlide, (slideIndex + 1) * cardsPerSlide)
+                          .map((expert, expertIndex) => {
+                            const colors = {
+                              blue: { bg: 'from-blue-500 to-blue-600', light: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200' },
+                              green: { bg: 'from-green-500 to-green-600', light: 'bg-green-50', text: 'text-green-700', border: 'border-green-200' },
+                              purple: { bg: 'from-purple-500 to-purple-600', light: 'bg-purple-50', text: 'text-purple-700', border: 'border-purple-200' },
+                              orange: { bg: 'from-orange-500 to-orange-600', light: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200' }
+                            };
+                            
+                            return (
+                              <div key={expertIndex} className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 overflow-hidden group">
+                                {/* Header with gradient */}
+                                <div className={`h-20 bg-gradient-to-r ${colors[expert.color].bg} relative`}>
+                                  <div className="absolute inset-0 bg-black/10"></div>
+                                  <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2">
+                                    <div className="relative">
+                                      <img 
+                                        src={expert.image} 
+                                        alt={expert.name}
+                                        className="w-16 h-16 rounded-full object-cover border-4 border-white shadow-xl"
+                                      />
+                                      <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-400 rounded-full border-2 border-white animate-pulse"></div>
+                                      {expert.verified && (
+                                        <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-blue-500 rounded-full border-2 border-white flex items-center justify-center">
+                                          <CheckCircle className="h-3 w-3 text-white" />
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                {/* Content */}
+                                <div className="pt-10 pb-6 px-6 text-center">
+                                  <h3 className="font-bold text-gray-900 text-lg mb-1">{expert.name}</h3>
+                                  <p className="text-sm text-gray-600 mb-3">{expert.title}</p>
+                                  
+                                  {/* Stats Row */}
+                                  <div className="flex items-center justify-center gap-4 mb-4">
+                                    <div className="flex items-center gap-1">
+                                      <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                                      <span className="text-sm font-semibold text-gray-700">{expert.rating}</span>
+                                    </div>
+                                    <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
+                                    <div className="text-sm text-gray-500">{expert.experience}</div>
+                                  </div>
+                                  
+                                  {/* Expertise */}
+                                  <div className="flex flex-wrap gap-2 justify-center mb-6">
+                                    {expert.expertise.slice(0, 2).map((skill, skillIndex) => (
+                                      <span key={skillIndex} className={`text-xs px-3 py-1 rounded-full font-medium ${colors[expert.color].light} ${colors[expert.color].text} ${colors[expert.color].border} border`}>
+                                        {skill}
+                                      </span>
+                                    ))}
+                                  </div>
+                                  
+                                  {/* Connect Actions */}
+                                  <div className="space-y-3">
+                                    <Button 
+                                      className={`w-full bg-gradient-to-r ${colors[expert.color].bg} hover:shadow-lg text-white font-semibold py-3 rounded-xl transition-all duration-300 group-hover:scale-105`}
+                                      onClick={() => {
+                                        setSuccessMessage(`Connection request submitted successfully! ${expert.name} will contact you within 2-4 hours to discuss your compliance requirements.`);
+                                        setShowSuccessAlert(true);
+                                      }}
+                                    >
+                                      <MessageCircle className="h-4 w-4 mr-2" />
+                                      Connect Now
+                                    </Button>
+                                    <Button 
+                                      variant="outline" 
+                                      size="sm" 
+                                      className="w-full text-xs py-2 rounded-lg border-gray-200 hover:bg-gray-50"
+                                      onClick={() => setSelectedExpert(expert)}
+                                    >
+                                      <Eye className="h-3 w-3 mr-1" />
+                                      View Profile
+                                    </Button>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
               
-              <Card className="border border-gray-200 hover:shadow-lg hover:border-green-300 transition-all duration-300 transform hover:-translate-y-1">
-                <CardContent className="p-6 text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-green-200 rounded-full mx-auto mb-4 flex items-center justify-center shadow-md">
-                    <User className="h-8 w-8 text-green-600" />
-                  </div>
-                  <h3 className="font-bold text-gray-900 mb-1">Priya Sharma</h3>
-                  <p className="text-sm text-gray-600 mb-3">Compliance Expert • 7+ years</p>
-                  <div className="flex items-center justify-center gap-1 mb-4">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                    ))}
-                    <span className="text-sm text-gray-600 ml-2 font-semibold">4.8</span>
-                  </div>
-                  <Button size="sm" className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold">
-                    Connect Now
-                  </Button>
-                </CardContent>
-              </Card>
+              {/* Modern Navigation */}
+              <div className="flex items-center justify-center gap-6 mt-8">
+                <Button
+                  onClick={() => setCurrentExpertIndex(prev => prev === 0 ? totalSlides - 1 : prev - 1)}
+                  variant="outline"
+                  size="lg"
+                  className="w-12 h-12 rounded-full border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-all duration-300"
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </Button>
+                
+                <Button
+                  onClick={() => setCurrentExpertIndex(prev => prev === totalSlides - 1 ? 0 : prev + 1)}
+                  variant="outline"
+                  size="lg"
+                  className="w-12 h-12 rounded-full border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-all duration-300"
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </Button>
+              </div>
               
-              <Card className="border border-gray-200 hover:shadow-lg hover:border-purple-300 transition-all duration-300 transform hover:-translate-y-1">
-                <CardContent className="p-6 text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-purple-100 to-purple-200 rounded-full mx-auto mb-4 flex items-center justify-center shadow-md">
-                    <User className="h-8 w-8 text-purple-600" />
-                  </div>
-                  <h3 className="font-bold text-gray-900 mb-1">Amit Patel</h3>
-                  <p className="text-sm text-gray-600 mb-3">Legal Advisor • 6+ years</p>
-                  <div className="flex items-center justify-center gap-1 mb-4">
-                    {[...Array(4)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                    ))}
-                    <Star className="h-4 w-4 text-gray-300" />
-                    <span className="text-sm text-gray-600 ml-2 font-semibold">4.7</span>
-                  </div>
-                  <Button size="sm" className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold">
-                    Connect Now
-                  </Button>
-                </CardContent>
-              </Card>
-              
-              <Card className="border border-gray-200 hover:shadow-lg hover:border-orange-300 transition-all duration-300 transform hover:-translate-y-1">
-                <CardContent className="p-6 text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-orange-100 to-orange-200 rounded-full mx-auto mb-4 flex items-center justify-center shadow-md">
-                    <User className="h-8 w-8 text-orange-600" />
-                  </div>
-                  <h3 className="font-bold text-gray-900 mb-1">Sneha Gupta</h3>
-                  <p className="text-sm text-gray-600 mb-3">Tax Consultant • 8+ years</p>
-                  <div className="flex items-center justify-center gap-1 mb-4">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                    ))}
-                    <span className="text-sm text-gray-600 ml-2 font-semibold">5.0</span>
-                  </div>
-                  <Button size="sm" className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold">
-                    Connect Now
-                  </Button>
-                </CardContent>
-              </Card>
+              {/* Dots Indicator */}
+              {totalSlides > 1 && (
+                <div className="flex justify-center gap-2 mt-4">
+                  {Array.from({ length: totalSlides }).map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentExpertIndex(index)}
+                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                        index === currentExpertIndex 
+                          ? 'bg-blue-600 scale-125' 
+                          : 'bg-gray-300 hover:bg-gray-400'
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
+              </div>
             </div>
             
             <div className="text-center">
-              <Button className="bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black text-white px-8 py-3 font-semibold shadow-lg">
+              <Button 
+                className="bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black text-white px-8 py-3 font-semibold shadow-lg"
+                onClick={() => navigate('/experts')}
+              >
                 <ExternalLink className="h-5 w-5 mr-2" />
                 View All Experts
               </Button>
@@ -743,6 +1013,169 @@ const ComplianceFlow = () => {
           </div>
         </div>
         
+        {/* Expert Profile Modal */}
+        {selectedExpert && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto custom-scrollbar">
+              {/* Header */}
+              <div className={`h-32 bg-gradient-to-r ${selectedExpert.color === 'blue' ? 'from-blue-500 to-blue-600' : selectedExpert.color === 'green' ? 'from-green-500 to-green-600' : selectedExpert.color === 'purple' ? 'from-purple-500 to-purple-600' : 'from-orange-500 to-orange-600'} relative`}>
+                <button 
+                  onClick={() => setSelectedExpert(null)}
+                  className="absolute top-4 right-4 w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/30"
+                >
+                  ×
+                </button>
+                <div className="absolute -bottom-12 left-8">
+                  <img 
+                    src={selectedExpert.image} 
+                    alt={selectedExpert.name}
+                    className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-xl"
+                  />
+                </div>
+              </div>
+              
+              {/* Content */}
+              <div className="pt-16 p-8">
+                <div className="flex items-start justify-between mb-6">
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-1">{selectedExpert.name}</h2>
+                    <p className="text-lg text-gray-600 mb-2">{selectedExpert.title}</p>
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-1">
+                        <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                        <span className="font-semibold">{selectedExpert.rating}</span>
+                      </div>
+                      <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
+                      <span className="text-gray-600">{selectedExpert.experience}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                    <span className="text-sm text-green-600 font-medium">Online</span>
+                  </div>
+                </div>
+                
+                {/* About */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">About</h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    Leading compliance consultancy with 10+ years of expertise in business registrations, trade licenses, and regulatory compliance. Specialized in helping businesses navigate complex regulatory requirements with proven track record of success.
+                  </p>
+                </div>
+                
+                {/* Stats */}
+                <div className="grid grid-cols-3 gap-4 mb-6">
+                  <div className="text-center p-4 bg-gray-50 rounded-xl">
+                    <div className="text-2xl font-bold text-gray-900">10+</div>
+                    <div className="text-sm text-gray-600">Years Experience</div>
+                  </div>
+                  <div className="text-center p-4 bg-gray-50 rounded-xl">
+                    <div className="text-2xl font-bold text-gray-900">99%</div>
+                    <div className="text-sm text-gray-600">Success Rate</div>
+                  </div>
+                  <div className="text-center p-4 bg-gray-50 rounded-xl">
+                    <div className="text-2xl font-bold text-gray-900">650+</div>
+                    <div className="text-sm text-gray-600">Completed</div>
+                  </div>
+                </div>
+                
+                {/* Services */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Services Offered</h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    {['IEC Application', 'Business Registration', 'Compliance Management', 'Legal Advisory'].map((service, index) => (
+                      <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
+                        <CheckCircle className="h-4 w-4 text-green-500" />
+                        <span className="text-sm text-gray-700">{service}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Certifications & Languages */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">Certifications</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {['CA', 'CS', 'LLB', 'DGFT Expert'].map((cert, index) => (
+                        <span key={index} className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                          {cert}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">Languages</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {['English', 'Hindi', 'Kannada', 'Tamil'].map((lang, index) => (
+                        <span key={index} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium">
+                          {lang}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Contact */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3">Contact Information</h3>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                      <Phone className="h-4 w-4 text-gray-600" />
+                      <span className="text-gray-700">+91 76543****</span>
+                    </div>
+                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                      <MessageCircle className="h-4 w-4 text-gray-600" />
+                      <span className="text-gray-700">support@compliancehub.co.in</span>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Action Buttons */}
+                <div className="flex gap-3">
+                  <Button 
+                    className={`flex-1 bg-gradient-to-r ${selectedExpert.color === 'blue' ? 'from-blue-500 to-blue-600' : selectedExpert.color === 'green' ? 'from-green-500 to-green-600' : selectedExpert.color === 'purple' ? 'from-purple-500 to-purple-600' : 'from-orange-500 to-orange-600'} text-white font-semibold py-3 rounded-xl`}
+                    onClick={() => {
+                      setSuccessMessage(`Connection request submitted successfully! ${selectedExpert.name} will contact you within 2-4 hours to discuss your compliance requirements.`);
+                      setSelectedExpert(null);
+                      setShowSuccessAlert(true);
+                    }}
+                  >
+                    <MessageCircle className="h-4 w-4 mr-2" />
+                    Connect Now
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Success Alert Modal */}
+        {showSuccessAlert && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-3xl max-w-md w-full p-8 text-center shadow-2xl">
+              {/* Success Icon */}
+              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <CheckCircle className="h-12 w-12 text-green-500" />
+              </div>
+              
+              {/* Title */}
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Success!</h2>
+              
+              {/* Message */}
+              <p className="text-gray-600 mb-8 leading-relaxed">{successMessage}</p>
+              
+              {/* OK Button */}
+              <Button 
+                onClick={() => setShowSuccessAlert(false)}
+                className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-xl text-lg"
+              >
+                OK
+              </Button>
+            </div>
+          </div>
+        )}
+        
         {/* Trust Footer */}
         <div className="mt-16 py-8 bg-gradient-to-r from-gray-50 to-blue-50 border-t border-gray-200">
           <div className="container mx-auto px-6 text-center">
@@ -763,9 +1196,13 @@ const ComplianceFlow = () => {
             <p className="text-xs text-gray-500">Your compliance journey is protected by enterprise-grade security and backed by certified experts.</p>
           </div>
         </div>
-       </div>
+     
     </AppLayout>
   );
-};
+});
+
+
+
+ComplianceFlow.displayName = "ComplianceFlow";
 
 export default ComplianceFlow;
