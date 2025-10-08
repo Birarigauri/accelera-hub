@@ -40,7 +40,7 @@ const Sidebar = () => {
     { name: "My Applications", href: "/scheme-applications", icon: FileText },
     { name: "My Downloads", href: "/my-downloads", icon: Download },
     { name: "Notifications", href: "/notifications-v2", icon: Bell },
-    { name: "Offerings", href: "/offerings", icon: Star },
+    { name: "Offerings", href: "/offerings-v2", icon: Star },
     // { name: "News", href: "/news", icon: Newspaper },
     // { name: "My Certificates & Licenses", href: "/my-certificates-licenses", icon: Award },
     // { name: "Apply for Certificates", href: "/apply-certificates", icon: ClipboardList },
