@@ -292,7 +292,7 @@ const HeroSlider = ({ currentSlide, setCurrentSlide, nextSlide, prevSlide }: any
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.9 }}
                         >
-                            <a href={`${window.location.protocol}//${window.location.hostname}:8080/dashboard`}>
+                            <Link to={`/dashboard-v5`}>
                                 <motion.div 
                                     whileHover={{ scale: 1.05, rotateX: 5 }} 
                                     whileTap={{ scale: 0.95 }}
@@ -304,7 +304,7 @@ const HeroSlider = ({ currentSlide, setCurrentSlide, nextSlide, prevSlide }: any
                                         <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-2 transition-transform" />
                                     </Button>
                                 </motion.div>
-                            </a>
+                            </Link>
                             <motion.div 
                                 whileHover={{ scale: 1.05, rotateX: 5 }} 
                                 whileTap={{ scale: 0.95 }}
@@ -375,14 +375,14 @@ const QuickLinksSection = () => {
     const baseUrl = `${window.location.protocol}//${window.location.hostname}:8080`;
     
     const quickLinks = [
-        { icon: Building, title: "Dashboard", description: "Access your business dashboard", link: `${baseUrl}/dashboard`, color: "from-blue-500 to-cyan-500" },
-        { icon: Shield, title: "Services", description: "Explore all business services", link: `${baseUrl}/services`, color: "from-green-500 to-emerald-500" },
-        { icon: Award, title: "Schemes", description: "Government schemes & benefits", link: `${baseUrl}/schemes`, color: "from-purple-500 to-violet-500" },
-        { icon: FileText, title: "Scheme Applications", description: "Apply for government schemes", link: `${baseUrl}/scheme-applications`, color: "from-orange-500 to-red-500" },
-        { icon: Calculator, title: "Eligibility Calculator", description: "Check scheme eligibility", link: `${baseUrl}/eligibility-calculator`, color: "from-indigo-500 to-blue-500" },
-        { icon: Briefcase, title: "Offerings", description: "Our service offerings", link: `${baseUrl}/offerings`, color: "from-pink-500 to-rose-500" },
-        { icon: BookOpen, title: "News", description: "Latest business news & updates", link: `${baseUrl}/news`, color: "from-teal-500 to-cyan-500" },
-        { icon: UserCheck, title: "Profile", description: "Manage your profile", link: `${baseUrl}/profile`, color: "from-yellow-500 to-orange-500" }
+        { icon: Building, title: "Dashboard", description: "Access your business dashboard", link: `/dashboard-v5`, color: "from-blue-500 to-cyan-500" },
+        { icon: Shield, title: "Services", description: "Explore all business services", link: `/services`, color: "from-green-500 to-emerald-500" },
+        { icon: Award, title: "Schemes", description: "Government schemes & benefits", link: `/schemes`, color: "from-purple-500 to-violet-500" },
+        { icon: FileText, title: "Scheme Applications", description: "Apply for government schemes", link: `/scheme-applications`, color: "from-orange-500 to-red-500" },
+        { icon: Calculator, title: "Eligibility Calculator", description: "Check scheme eligibility", link: `/eligibility-calculator`, color: "from-indigo-500 to-blue-500" },
+        { icon: Briefcase, title: "Offerings", description: "Our service offerings", link: `/offerings`, color: "from-pink-500 to-rose-500" },
+        { icon: BookOpen, title: "News", description: "Latest business news & updates", link: `/news`, color: "from-teal-500 to-cyan-500" },
+        { icon: UserCheck, title: "Profile", description: "Manage your profile", link: `/profile`, color: "from-yellow-500 to-orange-500" }
     ];
 
     return (
@@ -414,7 +414,7 @@ const QuickLinksSection = () => {
                             whileHover={{ y: -5, scale: 1.02 }}
                             className="group cursor-pointer"
                         >
-                            <a href={item.link}>
+                            <Link to={item.link}>
                                 <Card className="h-full bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:bg-white">
                                     <CardContent className="p-6 text-center">
                                         <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${item.color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
@@ -428,7 +428,7 @@ const QuickLinksSection = () => {
                                         </p>
                                     </CardContent>
                                 </Card>
-                            </a>
+                            </Link>
                         </motion.div>
                     ))}
                 </div>

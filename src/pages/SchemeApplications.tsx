@@ -75,7 +75,7 @@ const SchemeApplications = () => {
     switch (status) {
       case 'approved': return 'Approved';
       case 'rejected': return 'Rejected';
-      case 'under_review': return 'Under Review';
+      case 'under_review': return 'In Progress';
       case 'submitted': return 'Submitted';
       case 'draft': return 'Draft';
       default: return status;
@@ -155,15 +155,15 @@ const SchemeApplications = () => {
                         </Badge>
                       </div>
                       <div className="flex items-center gap-4 text-xs text-muted-foreground mb-1">
-                        <span className="flex items-center gap-1">
+                        {/* <span className="flex items-center gap-1">
                           <FileText className="h-3 w-3" />
                           {application.id}
-                        </span>
+                        </span> */}
                         <span className="flex items-center gap-1">
                           <Calendar className="h-3 w-3" />
                           {new Date(application.appliedDate).toLocaleDateString()}
                         </span>
-                        <span className="font-medium text-blue-600">₹{application.amount}</span>
+                        {/* <span className="font-medium text-blue-600">₹{application.amount}</span> */}
                       </div>
                       <div className="text-xs text-muted-foreground">
                         Scheme ID: <span className="font-medium">{application.schemeId}</span>
@@ -171,7 +171,7 @@ const SchemeApplications = () => {
                     </div>
 
                     {/* Center: Circular Progress */}
-                    <div className="flex items-center gap-3 mx-4">
+                    {/* <div className="flex items-center gap-3 mx-4">
                       <div className="relative w-10 h-10">
                         <svg className="w-10 h-10 transform -rotate-90" viewBox="0 0 36 36">
                           <path
@@ -195,7 +195,7 @@ const SchemeApplications = () => {
                           <span className="text-xs font-semibold text-blue-600">{application.progress}%</span>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
 
                     {/* Right: Actions */}
                     <div className="flex gap-2">

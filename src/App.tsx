@@ -18,6 +18,8 @@ import SchemeDetails from "./pages/SchemeDetails";
 import News from "./pages/News";
 import Offerings from "./pages/Offerings";
 import OfferingDetails from "./pages/OfferingDetails";
+import OfferingsV2 from "./pages/OfferingsV2";
+import OfferingDetail from "./pages/OfferingDetail";
 import Profile from "./pages/Profile";
 import ProfileV2 from "./pages/ProfileV2";
 import DetailApplication from "./pages/DetailApplication";
@@ -63,6 +65,8 @@ const App = () => (
           <Route path="/news" element={<News />} />
           <Route path="/offerings" element={<Offerings />} />
           <Route path="/offerings/:type/:id" element={<OfferingDetails />} />
+          <Route path="/offerings-v2" element={<OfferingsV2 />} />
+          <Route path="/offerings/:id" element={<OfferingDetail />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile-v2" element={<ProfileV2 />} />
           <Route path="/eligibility-calculator" element={<EligibilityCalculator />} />
