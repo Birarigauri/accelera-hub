@@ -1,12 +1,12 @@
 import { useState, useEffect, memo, useMemo, useCallback, lazy, Suspense } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { 
-  AlertTriangle, 
-  CheckCircle, 
-  Clock, 
-  FileText, 
-  ExternalLink, 
-  TrendingUp, 
+import {
+  AlertTriangle,
+  CheckCircle,
+  Clock,
+  FileText,
+  ExternalLink,
+  TrendingUp,
   Bell,
   Shield,
   Award,
@@ -129,7 +129,7 @@ const FundingSlider = ({ schemesData }: { schemesData: any[] }) => {
   return (
     <div className="relative">
       <div className="overflow-hidden rounded-lg">
-        <div 
+        <div
           className="flex transition-transform duration-500 ease-in-out"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         >
@@ -161,47 +161,46 @@ const FundingSlider = ({ schemesData }: { schemesData: any[] }) => {
           ))}
         </div>
       </div>
-      
+
       {/* Navigation Controls */}
       <div className="flex items-center justify-between mt-4">
         <div className="flex items-center gap-2">
-          <Button 
-            size="sm" 
-            variant="outline" 
+          <Button
+            size="sm"
+            variant="outline"
             onClick={prevSlide}
             className="p-2 h-8 w-8"
           >
             <ChevronLeft className="h-3 w-3" />
           </Button>
-          <Button 
-            size="sm" 
-            variant="outline" 
+          <Button
+            size="sm"
+            variant="outline"
             onClick={nextSlide}
             className="p-2 h-8 w-8"
           >
             <ChevronRight className="h-3 w-3" />
           </Button>
         </div>
-        
+
         {/* Dots Indicator */}
         <div className="flex items-center gap-1">
           {schemesData.map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                index === currentIndex 
-                  ? 'bg-green-600 w-4' 
+              className={`w-2 h-2 rounded-full transition-all duration-200 ${index === currentIndex
+                  ? 'bg-green-600 w-4'
                   : 'bg-gray-300 hover:bg-gray-400'
-              }`}
+                }`}
             />
           ))}
         </div>
-        
+
         {/* Auto-play Toggle */}
-        <Button 
-          size="sm" 
-          variant="ghost" 
+        <Button
+          size="sm"
+          variant="ghost"
           onClick={() => setIsAutoPlaying(!isAutoPlaying)}
           className="p-2 text-xs"
         >
@@ -242,7 +241,7 @@ const NewsSlider = ({ newsData }: { newsData: any[] }) => {
   return (
     <div className="relative">
       <div className="overflow-hidden rounded-lg">
-        <div 
+        <div
           className="flex transition-transform duration-500 ease-in-out"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         >
@@ -272,47 +271,46 @@ const NewsSlider = ({ newsData }: { newsData: any[] }) => {
           ))}
         </div>
       </div>
-      
+
       {/* Navigation Controls */}
       <div className="flex items-center justify-between mt-4">
         <div className="flex items-center gap-2">
-          <Button 
-            size="sm" 
-            variant="outline" 
+          <Button
+            size="sm"
+            variant="outline"
             onClick={prevSlide}
             className="p-2 h-8 w-8"
           >
             <ChevronLeft className="h-3 w-3" />
           </Button>
-          <Button 
-            size="sm" 
-            variant="outline" 
+          <Button
+            size="sm"
+            variant="outline"
             onClick={nextSlide}
             className="p-2 h-8 w-8"
           >
             <ChevronRight className="h-3 w-3" />
           </Button>
         </div>
-        
+
         {/* Dots Indicator */}
         <div className="flex items-center gap-1">
           {newsData.map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                index === currentIndex 
-                  ? 'bg-indigo-600 w-4' 
+              className={`w-2 h-2 rounded-full transition-all duration-200 ${index === currentIndex
+                  ? 'bg-indigo-600 w-4'
                   : 'bg-gray-300 hover:bg-gray-400'
-              }`}
+                }`}
             />
           ))}
         </div>
-        
+
         {/* Auto-play Toggle */}
-        <Button 
-          size="sm" 
-          variant="ghost" 
+        <Button
+          size="sm"
+          variant="ghost"
           onClick={() => setIsAutoPlaying(!isAutoPlaying)}
           className="p-2 text-xs"
         >
@@ -362,7 +360,7 @@ const DashboardV5 = memo(() => {
   const [complianceFilter, setComplianceFilter] = useState('');
   const [showComplianceFilters, setShowComplianceFilters] = useState(false);
   const [activeAlertsTab, setActiveAlertsTab] = useState('all');
-  
+
   const alerts = [
     {
       id: "1",
@@ -392,36 +390,36 @@ const DashboardV5 = memo(() => {
       color: "green"
     }
   ];
-  
-  const filteredAlerts = useMemo(() => 
+
+  const filteredAlerts = useMemo(() =>
     alerts.filter(alert => {
       if (activeAlertsTab === 'all') return true;
       return alert.type === activeAlertsTab;
-    }), 
+    }),
     [alerts, activeAlertsTab]
   );
-  
-  const currentBusiness = useMemo(() => 
-    businessData[selectedBusiness as keyof typeof businessData], 
+
+  const currentBusiness = useMemo(() =>
+    businessData[selectedBusiness as keyof typeof businessData],
     [selectedBusiness]
   );
-  
-  const filteredComplianceData = useMemo(() => 
+
+  const filteredComplianceData = useMemo(() =>
     complianceData.filter(item => {
-      const matchesTab = activeComplianceTab === 'all' || 
+      const matchesTab = activeComplianceTab === 'all' ||
         (activeComplianceTab === 'overdue' && item.status === 'overdue') ||
         (activeComplianceTab === 'thisweek' && ['pending', 'upcoming'].includes(item.status)) ||
         (activeComplianceTab === 'completed' && item.status === 'completed');
-      
-      const matchesFilter = !complianceFilter || 
+
+      const matchesFilter = !complianceFilter ||
         item.name.toLowerCase().includes(complianceFilter.toLowerCase()) ||
         item.type.toLowerCase().includes(complianceFilter.toLowerCase());
-      
+
       return matchesTab && matchesFilter;
-    }), 
+    }),
     [activeComplianceTab, complianceFilter]
   );
-  
+
   const getTabCount = useCallback((tab: string) => {
     switch (tab) {
       case 'overdue': return complianceData.filter(item => item.status === 'overdue').length;
@@ -430,13 +428,13 @@ const DashboardV5 = memo(() => {
       default: return complianceData.length;
     }
   }, []);
-  
+
   return (
     <AppLayout>
       <div className={`min-h-screen ${currentBusiness.bgColor} relative transition-all duration-500`}>
         <div className="absolute inset-0 bg-white/40"></div>
         <Header />
-        
+
         <div className="container mx-auto px-6 py-6 relative z-10">
           {/* Newly Added Business Notification */}
           {selectedBusiness === 'retail-mart' && (
@@ -452,7 +450,7 @@ const DashboardV5 = memo(() => {
               </div>
             </div>
           )}
-          
+
           <div className="mb-8">
             {/* Enhanced Executive Header */}
             <div className="relative bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 rounded-2xl p-8 mb-8 overflow-hidden shadow-2xl">
@@ -460,7 +458,7 @@ const DashboardV5 = memo(() => {
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600/90 via-indigo-600/90 to-purple-700/90"></div>
               <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -translate-y-48 translate-x-48"></div>
               <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full translate-y-32 -translate-x-32"></div>
-              
+
               <div className="relative z-10">
                 {/* Header Section */}
                 <div className="flex items-center justify-between mb-6">
@@ -491,13 +489,13 @@ const DashboardV5 = memo(() => {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* User Info Section */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className="w-14 h-14 rounded-2xl border-3 border-white/50 overflow-hidden shadow-lg">
-                      <img 
-                        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" 
+                      <img
+                        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
                         alt="Rajesh Kumar"
                         className="w-full h-full object-cover"
                       />
@@ -507,16 +505,16 @@ const DashboardV5 = memo(() => {
                       <div className="text-blue-100 text-sm font-medium">Entrepreneur & Business Owner</div>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center gap-4">
                     {/* Apply New Service Button */}
                     <Link to="/services">
                       <Button className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 border-2 border-blue-400 text-white backdrop-blur-sm px-6 py-3 text-base font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
                         <Building2 className="h-5 w-5 mr-2" />
-                       New Service request
+                        New Service request
                       </Button>
                     </Link>
-                    
+
                     {/* Add New Business Button */}
                     <Link to="/add-business">
                       <Button className="bg-gradient-to-r from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700 border-2 border-purple-400 text-white backdrop-blur-sm px-6 py-3 text-base font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
@@ -532,7 +530,7 @@ const DashboardV5 = memo(() => {
 
           {/* Executive KPIs */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <KPICard 
+            <KPICard
               icon={<Award className="h-6 w-6 text-red-500 mx-auto" />}
               value={currentBusiness.totalCertification}
               label="Total Certification"
@@ -540,7 +538,7 @@ const DashboardV5 = memo(() => {
               statusColor="bg-red-500"
               gradientColor="bg-gradient-to-r from-red-400 to-red-600"
             />
-            <KPICard 
+            <KPICard
               icon={<Shield className="h-6 w-6 text-blue-500 mx-auto" />}
               value={currentBusiness.totalConnect}
               label="Total Connect"
@@ -548,7 +546,7 @@ const DashboardV5 = memo(() => {
               statusColor="bg-blue-500"
               gradientColor="bg-gradient-to-r from-blue-400 to-blue-600"
             />
-            <KPICard 
+            <KPICard
               icon={<FileText className="h-6 w-6 text-green-500 mx-auto" />}
               value={currentBusiness.totalDownloads}
               label="Total Downloads"
@@ -594,35 +592,34 @@ const DashboardV5 = memo(() => {
                     <div className="text-xs text-green-700 font-medium">✅ Completed</div>
                   </div>
                 </div>
-                
+
                 {/* Enhanced Items */}
                 <div className="space-y-3 flex-1">
                   {filteredComplianceData.slice(0, 2).map((item) => (
                     <Link key={item.id} to={item.name.includes('GSTR') ? "/services/1" : '#'}>
                       <div className="flex items-center justify-between p-3 bg-white/80 rounded-lg hover:bg-white hover:shadow-md transition-all border border-gray-100 cursor-pointer">
                         <div className="flex items-center gap-3">
-                          <div className={`w-3 h-3 rounded-full shadow-sm ${
-                            item.status === 'overdue' ? 'bg-red-500 animate-pulse' : 
-                            item.status === 'pending' ? 'bg-yellow-500' : 'bg-green-500'
-                          }`}></div>
+                          <div className={`w-3 h-3 rounded-full shadow-sm ${item.status === 'overdue' ? 'bg-red-500 animate-pulse' :
+                              item.status === 'pending' ? 'bg-yellow-500' : 'bg-green-500'
+                            }`}></div>
                           <div>
-                       <div className="text-sm font-medium text-gray-900">{item.name}</div>
+                            <div className="text-sm font-medium text-gray-900">{item.name}</div>
                             <div className="text-xs text-gray-600">Due: {item.dueDate}</div>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
                           <Badge className={`${getStatusColor(item.status)} px-2 py-1 text-xs font-medium`}>
-                            {item.status === 'overdue' ? '⚠️ Overdue' : 
-                             item.status === 'pending' ? '⏳ Pending' : 
-                             item.status === 'completed' ? '✅ Done' : item.status.toUpperCase()}
+                            {item.status === 'overdue' ? '⚠️ Overdue' :
+                              item.status === 'pending' ? '⏳ Pending' :
+                                item.status === 'completed' ? '✅ Done' : item.status.toUpperCase()}
                           </Badge>
                         </div>
                       </div>
                     </Link>
                   ))}
                 </div>
-                
-                <Link to="/compliance-flow">
+
+                <Link to="/scheme-applications">
                   <Button className="w-full mt-4 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-medium">
                     📊 View All Compliance Items
                   </Button>
@@ -662,7 +659,7 @@ const DashboardV5 = memo(() => {
                           <div className="text-xs text-gray-600">{cert.category}</div>
                         </div>
                       </div>
-                   
+
                     </div>
                   ))}
                 </div>
@@ -707,7 +704,7 @@ const DashboardV5 = memo(() => {
                     </div>
                     <Badge className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm">95%</Badge>
                   </div>
-                  
+
                   <div className="flex items-center justify-between p-3 bg-white/90 rounded-lg hover:bg-white hover:shadow-md transition-all border border-gray-100 hover:border-blue-200">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center shadow-sm">
@@ -720,7 +717,7 @@ const DashboardV5 = memo(() => {
                     </div>
                     <Badge className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm">87%</Badge>
                   </div>
-                  
+
                   <div className="flex items-center justify-between p-3 bg-white/90 rounded-lg hover:bg-white hover:shadow-md transition-all border border-gray-100 hover:border-purple-200">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-gradient-to-br from-purple-100 to-purple-200 rounded-xl flex items-center justify-center shadow-sm">
@@ -733,7 +730,7 @@ const DashboardV5 = memo(() => {
                     </div>
                     <Badge className="bg-gradient-to-r from-purple-100 to-pink-100 text-purple-800 px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm">92%</Badge>
                   </div>
-                  
+
                   <div className="flex items-center justify-between p-3 bg-white/90 rounded-lg hover:bg-white hover:shadow-md transition-all border border-gray-100 hover:border-orange-200">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 bg-gradient-to-br from-orange-100 to-orange-200 rounded-xl flex items-center justify-center shadow-sm">
@@ -747,7 +744,7 @@ const DashboardV5 = memo(() => {
                     <Badge className="bg-gradient-to-r from-orange-100 to-yellow-100 text-orange-800 px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm">78%</Badge>
                   </div>
                 </div>
-                
+
                 <Button className="w-full mt-4 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-medium">
                   🚀 Explore All Schemes
                 </Button>
@@ -756,167 +753,164 @@ const DashboardV5 = memo(() => {
 
             {/* Alerts & Notifications */}
             <Card className="bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50 border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full flex flex-col">
-            <CardHeader className="p-4 border-b border-orange-100">
-              <CardTitle className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg flex items-center justify-center shadow-md">
-                    <Bell className="h-4 w-4 text-white" />
+              <CardHeader className="p-4 border-b border-orange-100">
+                <CardTitle className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg flex items-center justify-center shadow-md">
+                      <Bell className="h-4 w-4 text-white" />
+                    </div>
+                    <div>
+                      <div className="text-base font-semibold text-gray-900">🔔 Alerts & Notifications</div>
+                      <div className="text-xs text-gray-600">Important updates and reminders</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="text-base font-semibold text-gray-900">🔔 Alerts & Notifications</div>
-                    <div className="text-xs text-gray-600">Important updates and reminders</div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-orange-600">3</div>
+                    <div className="text-xs text-orange-500 font-medium">New Alerts</div>
                   </div>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-4 flex-1 flex flex-col">
+                {/* Filter Tabs */}
+                <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1 mb-4">
+                  <Button
+                    size="sm"
+                    onClick={() => setActiveAlertsTab('all')}
+                    className={`text-xs px-3 py-1.5 transition-all duration-200 ${activeAlertsTab === 'all'
+                        ? 'bg-white shadow-sm text-gray-900'
+                        : 'bg-transparent text-gray-600 hover:text-gray-900'
+                      }`}
+                  >
+                    All ({alerts.length})
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={() => setActiveAlertsTab('central')}
+                    className={`text-xs px-3 py-1.5 transition-all duration-200 ${activeAlertsTab === 'central'
+                        ? 'bg-white shadow-sm text-gray-900'
+                        : 'bg-transparent text-gray-600 hover:text-gray-900'
+                      }`}
+                  >
+                    Central ({alerts.filter(a => a.type === 'central').length})
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={() => setActiveAlertsTab('state')}
+                    className={`text-xs px-3 py-1.5 transition-all duration-200 ${activeAlertsTab === 'state'
+                        ? 'bg-white shadow-sm text-gray-900'
+                        : 'bg-transparent text-gray-600 hover:text-gray-900'
+                      }`}
+                  >
+                    State ({alerts.filter(a => a.type === 'state').length})
+                  </Button>
                 </div>
-                <div className="text-right">
-                  <div className="text-2xl font-bold text-orange-600">3</div>
-                  <div className="text-xs text-orange-500 font-medium">New Alerts</div>
-                </div>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-4 flex-1 flex flex-col">
-              {/* Filter Tabs */}
-              <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1 mb-4">
-                <Button 
-                  size="sm" 
-                  onClick={() => setActiveAlertsTab('all')}
-                  className={`text-xs px-3 py-1.5 transition-all duration-200 ${
-                    activeAlertsTab === 'all' 
-                      ? 'bg-white shadow-sm text-gray-900' 
-                      : 'bg-transparent text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  All ({alerts.length})
-                </Button>
-                <Button 
-                  size="sm" 
-                  onClick={() => setActiveAlertsTab('central')}
-                  className={`text-xs px-3 py-1.5 transition-all duration-200 ${
-                    activeAlertsTab === 'central' 
-                      ? 'bg-white shadow-sm text-gray-900' 
-                      : 'bg-transparent text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  Central ({alerts.filter(a => a.type === 'central').length})
-                </Button>
-                <Button 
-                  size="sm" 
-                  onClick={() => setActiveAlertsTab('state')}
-                  className={`text-xs px-3 py-1.5 transition-all duration-200 ${
-                    activeAlertsTab === 'state' 
-                      ? 'bg-white shadow-sm text-gray-900' 
-                      : 'bg-transparent text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  State ({alerts.filter(a => a.type === 'state').length})
-                </Button>
-              </div>
-              
-              <div className="space-y-3 flex-1">
-                {filteredAlerts.map((alert) => {
-                  const IconComponent = alert.icon;
-                  const colorClasses = {
-                    red: { bg: 'bg-white/90', border: 'border-red-200', text: 'text-red-900', desc: 'text-red-700', time: 'text-red-600', icon: 'text-red-600', btn: 'bg-red-50 border-red-200 text-red-700 hover:bg-red-100', iconBg: 'bg-gradient-to-br from-red-100 to-red-200' },
-                    blue: { bg: 'bg-white/90', border: 'border-blue-200', text: 'text-blue-900', desc: 'text-blue-700', time: 'text-blue-600', icon: 'text-blue-600', btn: 'bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100', iconBg: 'bg-gradient-to-br from-blue-100 to-blue-200' },
-                    green: { bg: 'bg-white/90', border: 'border-green-200', text: 'text-green-900', desc: 'text-green-700', time: 'text-green-600', icon: 'text-green-600', btn: 'bg-green-50 border-green-200 text-green-700 hover:bg-green-100', iconBg: 'bg-gradient-to-br from-green-100 to-green-200' }
-                  }[alert.color];
-                  
-                  return (
-                    <div key={alert.id} className={`flex items-start gap-3 p-3 ${colorClasses.bg} rounded-lg border ${colorClasses.border} hover:shadow-md transition-all hover:bg-white`}>
-                      <div className={`w-10 h-10 ${colorClasses.iconBg} rounded-xl flex items-center justify-center shadow-sm flex-shrink-0`}>
-                        <IconComponent className={`h-5 w-5 ${colorClasses.icon}`} />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className={`font-semibold text-sm ${colorClasses.text} mb-1`}>{alert.title}</h4>
-                        <p className={`text-xs ${colorClasses.desc} mb-2 line-clamp-2`}>{alert.description}</p>
-                        <div className="flex items-center justify-between">
-                          <span className={`text-xs ${colorClasses.time} font-medium`}>{alert.time}</span>
-                          <Button size="sm" variant="outline" className={`text-xs px-3 py-1.5  font-medium rounded-full`}>
-                           Know More
-                          </Button>
+
+                <div className="space-y-3 flex-1">
+                  {filteredAlerts.map((alert) => {
+                    const IconComponent = alert.icon;
+                    const colorClasses = {
+                      red: { bg: 'bg-white/90', border: 'border-red-200', text: 'text-red-900', desc: 'text-red-700', time: 'text-red-600', icon: 'text-red-600', btn: 'bg-red-50 border-red-200 text-red-700 hover:bg-red-100', iconBg: 'bg-gradient-to-br from-red-100 to-red-200' },
+                      blue: { bg: 'bg-white/90', border: 'border-blue-200', text: 'text-blue-900', desc: 'text-blue-700', time: 'text-blue-600', icon: 'text-blue-600', btn: 'bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100', iconBg: 'bg-gradient-to-br from-blue-100 to-blue-200' },
+                      green: { bg: 'bg-white/90', border: 'border-green-200', text: 'text-green-900', desc: 'text-green-700', time: 'text-green-600', icon: 'text-green-600', btn: 'bg-green-50 border-green-200 text-green-700 hover:bg-green-100', iconBg: 'bg-gradient-to-br from-green-100 to-green-200' }
+                    }[alert.color];
+
+                    return (
+                      <div key={alert.id} className={`flex items-start gap-3 p-3 ${colorClasses.bg} rounded-lg border ${colorClasses.border} hover:shadow-md transition-all hover:bg-white`}>
+                        <div className={`w-10 h-10 ${colorClasses.iconBg} rounded-xl flex items-center justify-center shadow-sm flex-shrink-0`}>
+                          <IconComponent className={`h-5 w-5 ${colorClasses.icon}`} />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className={`font-semibold text-sm ${colorClasses.text} mb-1`}>{alert.title}</h4>
+                          <p className={`text-xs ${colorClasses.desc} mb-2 line-clamp-2`}>{alert.description}</p>
+                          <div className="flex items-center justify-between">
+                            <span className={`text-xs ${colorClasses.time} font-medium`}>{alert.time}</span>
+                            <Button size="sm" variant="outline" className={`text-xs px-3 py-1.5  font-medium rounded-full`}>
+                              Know More
+                            </Button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
-              
-              {filteredAlerts.length > 0 && (
-                <Button variant="ghost" className="w-full mt-4 text-sm text-gray-600 hover:bg-gray-50">
-                  View All Notifications
-                </Button>
-              )}
-            </CardContent>
-          </Card>
+                    );
+                  })}
+                </div>
+
+                {filteredAlerts.length > 0 && (
+                  <Button variant="ghost" className="w-full mt-4 text-sm text-gray-600 hover:bg-gray-50">
+                    View All Notifications
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
             {/* Entrepreneur's Journey */}
             <Card className="bg-gradient-to-br from-purple-50 to-indigo-50 border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full flex flex-col">
-            <CardHeader className="p-4 border-b border-purple-100">
-              <CardTitle className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-lg flex items-center justify-center">
-                    <Target className="h-4 w-4 text-white" />
+              <CardHeader className="p-4 border-b border-purple-100">
+                <CardTitle className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-lg flex items-center justify-center">
+                      <Target className="h-4 w-4 text-white" />
+                    </div>
+                    <div>
+                      <div className="text-base font-semibold text-gray-900">🚀 Entrepreneur's Journey</div>
+                      <div className="text-xs text-gray-600">Your business growth milestones</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="text-base font-semibold text-gray-900">🚀 Entrepreneur's Journey</div>
-                    <div className="text-xs text-gray-600">Your business growth milestones</div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-purple-600">67%</div>
+                    <div className="text-xs text-purple-500 font-medium">Complete</div>
+                  </div>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-4 flex-1 flex flex-col">
+                {/* Progress Bar */}
+                <div className="mb-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-gray-700">Overall Progress</span>
+                    <span className="text-sm font-bold text-purple-600">2 of 3 completed</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="bg-gradient-to-r from-purple-500 to-indigo-500 h-2 rounded-full" style={{ width: '67%' }}></div>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-2xl font-bold text-purple-600">67%</div>
-                  <div className="text-xs text-purple-500 font-medium">Complete</div>
-                </div>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-4 flex-1 flex flex-col">
-              {/* Progress Bar */}
-              <div className="mb-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-gray-700">Overall Progress</span>
-                  <span className="text-sm font-bold text-purple-600">2 of 3 completed</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-gradient-to-r from-purple-500 to-indigo-500 h-2 rounded-full" style={{width: '67%'}}></div>
-                </div>
-              </div>
-              
-              <div className="space-y-3 flex-1">
-                <div className="flex items-center gap-3 p-3 bg-white/90 rounded-lg hover:bg-white transition-all hover:shadow-md border border-gray-100">
-                  <div className="w-10 h-10 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center shadow-sm">
-                    <CheckCircle className="h-5 w-5 text-green-600" />
+
+                <div className="space-y-3 flex-1">
+                  <div className="flex items-center gap-3 p-3 bg-white/90 rounded-lg hover:bg-white transition-all hover:shadow-md border border-gray-100">
+                    <div className="w-10 h-10 bg-gradient-to-br from-green-100 to-green-200 rounded-xl flex items-center justify-center shadow-sm">
+                      <CheckCircle className="h-5 w-5 text-green-600" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-sm font-semibold text-gray-900">✅ Business Registration</div>
+                      <div className="text-xs text-gray-600 mt-1">Completed on Jan 15, 2023</div>
+                    </div>
+                    <Badge className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 text-xs px-3 py-1.5 font-semibold rounded-full shadow-sm">✓ Done</Badge>
                   </div>
-                  <div className="flex-1">
-                    <div className="text-sm font-semibold text-gray-900">✅ Business Registration</div>
-                    <div className="text-xs text-gray-600 mt-1">Completed on Jan 15, 2023</div>
+
+                  <div className="flex items-center gap-3 p-3 bg-white/90 rounded-lg hover:bg-white transition-all hover:shadow-md border border-gray-100">
+                    <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center shadow-sm">
+                      <Award className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-sm font-semibold text-gray-900">🏆 First Certification</div>
+                      <div className="text-xs text-gray-600 mt-1">Completed on Mar 10, 2023</div>
+                    </div>
+                    <Badge className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-xs px-3 py-1.5 font-semibold rounded-full shadow-sm">✓ Done</Badge>
                   </div>
-                  <Badge className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 text-xs px-3 py-1.5 font-semibold rounded-full shadow-sm">✓ Done</Badge>
+
+                  <div className="flex items-center gap-3 p-3 bg-white/90 rounded-lg hover:bg-white transition-all hover:shadow-md border border-gray-100 border-l-4 border-l-yellow-400">
+                    <div className="w-10 h-10 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-xl flex items-center justify-center shadow-sm animate-pulse">
+                      <Clock className="h-5 w-5 text-yellow-600" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-sm font-semibold text-gray-900">🔄 Business Expansion</div>
+                      <div className="text-xs text-gray-600 mt-1">Currently in progress</div>
+                    </div>
+                    <Badge className="bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800 text-xs px-3 py-1.5 font-semibold rounded-full shadow-sm animate-pulse">⏳ 60%</Badge>
+                  </div>
                 </div>
-                
-                <div className="flex items-center gap-3 p-3 bg-white/90 rounded-lg hover:bg-white transition-all hover:shadow-md border border-gray-100">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center shadow-sm">
-                    <Award className="h-5 w-5 text-blue-600" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-sm font-semibold text-gray-900">🏆 First Certification</div>
-                    <div className="text-xs text-gray-600 mt-1">Completed on Mar 10, 2023</div>
-                  </div>
-                  <Badge className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-xs px-3 py-1.5 font-semibold rounded-full shadow-sm">✓ Done</Badge>
-                </div>
-                
-                <div className="flex items-center gap-3 p-3 bg-white/90 rounded-lg hover:bg-white transition-all hover:shadow-md border border-gray-100 border-l-4 border-l-yellow-400">
-                  <div className="w-10 h-10 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-xl flex items-center justify-center shadow-sm animate-pulse">
-                    <Clock className="h-5 w-5 text-yellow-600" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-sm font-semibold text-gray-900">🔄 Business Expansion</div>
-                    <div className="text-xs text-gray-600 mt-1">Currently in progress</div>
-                  </div>
-                  <Badge className="bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800 text-xs px-3 py-1.5 font-semibold rounded-full shadow-sm animate-pulse">⏳ 60%</Badge>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
 
             {/* Business News Slider */}
             <Card className="bg-gradient-to-br from-indigo-50 via-blue-50 to-purple-50 border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full flex flex-col">

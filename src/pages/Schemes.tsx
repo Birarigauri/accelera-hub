@@ -312,61 +312,71 @@ const Schemes = () => {
                       {paginatedSchemes.map((scheme) => {
                         const IconComponent = getCategoryIcon(scheme.category);
                         return (
-                          <TableRow key={scheme.id} className="hover:bg-blue-50/30 transition-colors border-b border-gray-100">
-                            <TableCell className="py-4">
-                              <div className="flex items-start gap-3">
-                                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                                  <IconComponent className="h-5 w-5 text-white" />
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <h3 className="font-semibold text-gray-900 text-sm leading-tight">{scheme.title}</h3>
-
+                          <TableRow key={scheme.id} className="hover:bg-blue-50/50 transition-all duration-200 border-b-2 border-gray-200 group">
+                            <TableCell className="py-6 px-6">
+                              <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 group-hover:shadow-md group-hover:border-blue-200 transition-all duration-200">
+                                <div className="flex items-start gap-4">
+                                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md">
+                                    <IconComponent className="h-6 w-6 text-white" />
                                   </div>
-                                  <p className="text-xs text-gray-600 leading-relaxed line-clamp-2">{scheme.description}</p>
-                                  <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
-                                    <span className="flex items-center gap-1">
-                                      <Users className="h-3 w-3" />
-                                      {scheme.applications} apps
-                                    </span>
-                                    <span className="flex items-center gap-1">
-                                      <CheckCircle className="h-3 w-3" />
-                                      {scheme.approved} approved
-                                    </span>
+                                  <div className="min-w-0 flex-1">
+                                    <div className="flex items-center gap-2 mb-2">
+                                      <h3 className="font-bold text-gray-900 text-base leading-tight">{scheme.title}</h3>
+                                      {scheme.trending && (
+                                        <Badge className="bg-orange-100 text-orange-700 text-xs px-2 py-1">
+                                          🔥 Trending
+                                        </Badge>
+                                      )}
+                                    </div>
+                                    <p className="text-sm text-gray-600 leading-relaxed mb-3">{scheme.description}</p>
+                                    <div className="flex items-center gap-6 text-xs text-gray-500">
+                                      <span className="flex items-center gap-1">
+                                        <Users className="h-3 w-3" />
+                                        {scheme.applications} applications
+                                      </span>
+                                      <span className="flex items-center gap-1">
+                                        <CheckCircle className="h-3 w-3 text-green-500" />
+                                        {scheme.approved} approved
+                                      </span>
+                                      <span className="flex items-center gap-1">
+                                        <IndianRupee className="h-3 w-3" />
+                                        {scheme.fundingAmount}
+                                      </span>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
                             </TableCell>
-                            <TableCell className="text-center">
-                              <Badge className={`${getCategoryColor(scheme.category)} text-xs font-medium px-2 py-1`}>
-                                {scheme.category.toUpperCase()}
-                              </Badge>
-                            </TableCell>
-
-                            {/* <TableCell className="text-center">
-                              <div className={`text-lg font-bold ${getEligibilityColor(scheme.eligibility)}`}>
-                                {scheme.eligibility}%
-                              </div>
-                            </TableCell> */}
-                            <TableCell className="text-center">
-                              <div className="text-sm font-medium text-gray-700">
-                                {new Date(scheme.deadline).toLocaleDateString('en-IN', { 
-                                  day: '2-digit', 
-                                  month: 'short',
-                                  year: 'numeric'
-                                })}
+                            <TableCell className="text-center py-6 px-4">
+                              <div className="bg-white rounded-lg p-3 border border-gray-100 shadow-sm">
+                                <Badge className={`${getCategoryColor(scheme.category)} text-xs font-medium px-3 py-2`}>
+                                  {scheme.category.toUpperCase()}
+                                </Badge>
                               </div>
                             </TableCell>
-                            <TableCell className="text-center">
-                              <div className="flex items-center justify-center gap-2">
-                                {/* <Link to={`/schemes/${scheme.id}`}>
-                                  <Button size="sm" className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-3 py-1.5 text-xs">
-                                    Apply
+                            <TableCell className="text-center py-6 px-4">
+                              <div className="bg-white rounded-lg p-3 border border-gray-100 shadow-sm">
+                                <div className="text-sm font-bold text-gray-800 mb-1">
+                                  {new Date(scheme.deadline).toLocaleDateString('en-IN', { 
+                                    day: '2-digit', 
+                                    month: 'short'
+                                  })}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  {new Date(scheme.deadline).getFullYear()}
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-center py-6 px-4">
+                              <div className="bg-white rounded-lg p-3 border border-gray-100 shadow-sm">
+                                <div className="flex items-center justify-center gap-2">
+                                  <Button size="sm" className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-4 py-2 text-xs font-medium">
+                                    Apply Now
                                   </Button>
-                                </Link> */}
-                                <Button variant="outline" size="sm" className="px-2 py-1.5">
-                                  <Eye className="h-3 w-3" />
-                                </Button>
+                                  <Button variant="outline" size="sm" className="px-3 py-2 border-gray-300 hover:border-blue-400">
+                                    <Eye className="h-4 w-4" />
+                                  </Button>
+                                </div>
                               </div>
                             </TableCell>
                           </TableRow>
