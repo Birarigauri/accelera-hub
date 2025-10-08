@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, Bell, User, Search } from "lucide-react";
+import { Menu, X, Bell, User, Search, AlertTriangle, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface HeaderProps {
   onMenuToggle?: () => void;
@@ -11,6 +13,37 @@ interface HeaderProps {
 
 const Header = ({ onMenuToggle, showMenu = false }: HeaderProps) => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+
+  const urgentNotifications = [
+    {
+      id: 1,
+      title: "GST Return Filing Due",
+      message: "Your GST return filing is due in 2 days",
+      time: "2 hours ago"
+    },
+    {
+      id: 2,
+      title: "License Renewal Required",
+      message: "Trade license expires in 5 days",
+      time: "4 hours ago"
+    }
+  ];
+
+  const moderateNotifications = [
+    {
+      id: 3,
+      title: "Application Status Update",
+      message: "Your company registration is under review",
+      time: "1 day ago"
+    },
+    {
+      id: 4,
+      title: "New Scheme Available",
+      message: "MSME Technology Upgradation Scheme is now open",
+      time: "2 days ago"
+    }
+  ];
 
   return (
     <header className="bg-white border-b border-border sticky top-0 z-50 shadow-sm">
@@ -56,20 +89,71 @@ const Header = ({ onMenuToggle, showMenu = false }: HeaderProps) => {
         {/* Right Section */}
         <div className="flex items-center gap-3">
           {/* Notifications */}
-          <Link to="/notifications">
+          <div className="relative">
             <div className="relative group">
               <Button 
                 variant="ghost" 
                 size="icon" 
+                onClick={() => setShowNotifications(!showNotifications)}
                 className="relative w-12 h-12 rounded-xl bg-gradient-to-r from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100 border border-blue-100 hover:border-blue-200 transition-all duration-300 hover:scale-110 hover:shadow-lg group-hover:shadow-blue-200/50"
               >
                 <Bell className="h-5 w-5 text-blue-600 group-hover:animate-bounce" />
                 <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg animate-pulse">
-                  <span className="text-white text-xs font-bold">3</span>
+                  <span className="text-white text-xs font-bold">4</span>
                 </div>
               </Button>
             </div>
-          </Link>
+            
+            {/* Notification Popup */}
+            {showNotifications && (
+              <div className="absolute right-0 top-14 w-80 z-50">
+                <Card className="bg-white shadow-xl border border-gray-200 rounded-xl">
+                  <CardContent className="p-0">
+                    <Tabs defaultValue="urgent" className="w-full">
+                      <TabsList className="grid w-full grid-cols-2 bg-gray-100 rounded-t-xl p-1 h-10">
+                        <TabsTrigger value="urgent" className="text-xs px-2 py-1 text-orange-600 data-[state=active]:bg-orange-100 data-[state=active]:text-orange-800 data-[state=active]:shadow-sm">
+                          <AlertTriangle className="h-3 w-3 mr-1" />
+                          Urgent ({urgentNotifications.length})
+                        </TabsTrigger>
+                        <TabsTrigger value="moderate" className="text-xs px-2 py-1 text-blue-600 data-[state=active]:bg-blue-100 data-[state=active]:text-blue-800 data-[state=active]:shadow-sm">
+                          <Clock className="h-3 w-3 mr-1" />
+                          Moderate ({moderateNotifications.length})
+                        </TabsTrigger>
+                      </TabsList>
+                      
+                      <TabsContent value="urgent" className="p-3 space-y-2 max-h-64 overflow-y-auto">
+                        {urgentNotifications.map((notification) => (
+                          <div key={notification.id} className="p-2 bg-orange-50 rounded-lg border border-orange-200">
+                            <h4 className="font-semibold text-orange-800 text-sm">{notification.title}</h4>
+                            <p className="text-orange-700 text-xs mt-1">{notification.message}</p>
+                            <p className="text-orange-600 text-xs mt-1">{notification.time}</p>
+                          </div>
+                        ))}
+                      </TabsContent>
+                      
+                      <TabsContent value="moderate" className="p-3 space-y-2 max-h-64 overflow-y-auto">
+                        {moderateNotifications.map((notification) => (
+                          <div key={notification.id} className="p-2 bg-blue-50 rounded-lg border border-blue-200">
+                            <h4 className="font-semibold text-blue-800 text-sm">{notification.title}</h4>
+                            <p className="text-blue-700 text-xs mt-1">{notification.message}</p>
+                            <p className="text-blue-600 text-xs mt-1">{notification.time}</p>
+                          </div>
+                        ))}
+                      </TabsContent>
+                      
+                      <div className="p-3 border-t border-gray-200">
+                        <Link to="/notifications" onClick={() => setShowNotifications(false)}>
+                          <Button variant="outline" size="sm" className="w-full">
+                            View All Notifications
+                          </Button>
+                        </Link>
+                      </div>
+                    </Tabs>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+          </div>
           
           {/* Profile */}
           <Link to="/profile">
@@ -89,6 +173,14 @@ const Header = ({ onMenuToggle, showMenu = false }: HeaderProps) => {
           </Link>
         </div>
       </div>
+      
+      {/* Overlay to close notifications */}
+      {showNotifications && (
+        <div 
+          className="fixed inset-0 z-40" 
+          onClick={() => setShowNotifications(false)}
+        />
+      )}
     </header>
   );
 };

@@ -50,6 +50,8 @@ const ManualApplications = () => {
   const [review, setReview] = useState("");
   const [showConnectionDialog, setShowConnectionDialog] = useState(false);
   const [connectionInquiry, setConnectionInquiry] = useState<any>(null);
+  const [showServiceModal, setShowServiceModal] = useState(false);
+  const [selectedService, setSelectedService] = useState<any>(null);
 
   // Sample data for manual applications
   const manualApplications = [
@@ -299,37 +301,38 @@ const ManualApplications = () => {
           </div>
 
           {/* Summary Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer">
-              <CardContent className="p-6 text-center">
-                <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center mx-auto mb-3">
-                  <FileText className="h-6 w-6 text-white" />
-                </div>
-                <div className="text-2xl font-bold text-blue-700 mb-1">12</div>
-                <p className="text-sm text-blue-600">Total Applications</p>
-              </CardContent>
-            </Card>
+          <div className="flex justify-center mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl">
+              <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer">
+                <CardContent className="p-4 text-center">
+                  <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center mx-auto mb-2">
+                    <FileText className="h-5 w-5 text-white" />
+                  </div>
+                  <div className="text-xl font-bold text-blue-700 mb-1">12</div>
+                  <p className="text-xs text-blue-600">Total Applications</p>
+                </CardContent>
+              </Card>
 
+              <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer">
+                <CardContent className="p-4 text-center">
+                  <div className="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center mx-auto mb-2">
+                    <Users className="h-5 w-5 text-white" />
+                  </div>
+                  <div className="text-xl font-bold text-purple-700 mb-1">3</div>
+                  <p className="text-xs text-purple-600">Connected with Experts</p>
+                </CardContent>
+              </Card>
 
-            <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer">
-              <CardContent className="p-6 text-center">
-                <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center mx-auto mb-3">
-                  <Users className="h-6 w-6 text-white" />
-                </div>
-                <div className="text-2xl font-bold text-purple-700 mb-1">3</div>
-                <p className="text-sm text-purple-600">Connected with Experts</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-br from-orange-50 to-orange-100 border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer">
-              <CardContent className="p-6 text-center">
-                <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center mx-auto mb-3">
-                  <CheckCircle className="h-6 w-6 text-white" />
-                </div>
-                <div className="text-2xl font-bold text-orange-700 mb-1">4</div>
-                <p className="text-sm text-orange-600">Completed Services</p>
-              </CardContent>
-            </Card>
+              <Card className="bg-gradient-to-br from-orange-50 to-orange-100 border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer">
+                <CardContent className="p-4 text-center">
+                  <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center mx-auto mb-2">
+                    <CheckCircle className="h-5 w-5 text-white" />
+                  </div>
+                  <div className="text-xl font-bold text-orange-700 mb-1">4</div>
+                  <p className="text-xs text-orange-600">Completed Services</p>
+                </CardContent>
+              </Card>
+            </div>
           </div>
 
           {/* Tab Navigation */}
@@ -337,7 +340,7 @@ const ManualApplications = () => {
             <TabsList className="grid w-full grid-cols-3 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100 p-1">
               <TabsTrigger value="manual-applications" className="data-[state=active]:bg-white data-[state=active]:shadow-md transition-all duration-200">
                 <FileText className="h-4 w-4 mr-2" />
-                Manual Applications
+               All Certificates / Licenses
               </TabsTrigger>
               <TabsTrigger value="my-inquiries" className="data-[state=active]:bg-white data-[state=active]:shadow-md transition-all duration-200">
                 <Users className="h-4 w-4 mr-2" />
@@ -393,73 +396,78 @@ const ManualApplications = () => {
             <TabsContent value="my-inquiries" className="space-y-6">
               <div className="space-y-4">
                 {inquiriesList.map((inquiry) => (
-                  <Card key={inquiry.id} className="bg-white shadow-lg border-0 rounded-2xl">
+                  <Card key={inquiry.id} className="bg-white shadow-lg border-0 rounded-2xl hover:shadow-xl transition-all duration-300">
                     <CardContent className="p-6">
-                      <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4">
+                      {/* Service Header */}
+                      <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 mb-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                              <FileText className="h-5 w-5 text-white" />
+                            </div>
+                            <div>
+                              <h3 className="font-bold text-gray-900 text-lg">{inquiry.serviceName}</h3>
+                              <p className="text-sm text-blue-600">{inquiry.serviceType}</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <Badge className={getStatusColor(inquiry.status)}>
+                              {inquiry.status}
+                            </Badge>
+                            <span className="text-xs text-gray-500">ID: {inquiry.id}</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Expert Info & Actions */}
+                      <div className="flex flex-col lg:flex-row items-start gap-4">
                         <div className="flex items-center gap-4 flex-1">
                           <img 
                             src={inquiry.avatar} 
                             alt={inquiry.expertName}
-                            className="w-12 h-12 rounded-full object-cover border-2 border-gray-200 shadow-sm"
+                            className="w-14 h-14 rounded-full object-cover border-3 border-white shadow-lg"
                             onError={(e) => {
-                              e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(inquiry.expertName)}&background=6366f1&color=fff&size=48`;
+                              e.currentTarget.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(inquiry.expertName)}&background=6366f1&color=fff&size=56`;
                             }}
                           />
                           <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <h3 className="font-semibold text-gray-900">{inquiry.expertName}</h3>
-                              <div className="flex items-center gap-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <h4 className="font-semibold text-gray-900 text-lg">{inquiry.expertName}</h4>
+                              <div className="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded-full">
                                 <Star className="h-4 w-4 text-yellow-500 fill-current" />
-                                <span className="text-sm text-gray-600">{inquiry.rating}</span>
+                                <span className="text-sm font-medium text-yellow-700">{inquiry.rating}</span>
                               </div>
                             </div>
-                            <p className="text-sm text-gray-600 mb-1">{inquiry.expertProfile}</p>
-                            <div className="flex items-center gap-2 text-sm text-gray-500">
-                              <span>Inquiry ID: {inquiry.id}</span>
-                              <span>•</span>
+                            <p className="text-sm text-gray-600 mb-2">{inquiry.expertProfile}</p>
+                            <div className="flex items-center gap-2 text-xs text-gray-500">
+                              <Calendar className="h-3 w-3" />
                               <span>{new Date(inquiry.date).toLocaleDateString()}</span>
                             </div>
                           </div>
                         </div>
                         
-                        <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4">
-                          <div className="text-center lg:text-right">
-                            <p className="font-medium text-gray-900">{inquiry.serviceName}</p>
-                            <p className="text-sm text-gray-600">{inquiry.serviceType}</p>
-                          </div>
+                        {/* Action Buttons */}
+                        <div className="flex flex-col gap-2 lg:w-auto w-full">
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => handleViewDetails(inquiry)}
+                            className="w-full lg:w-auto"
+                          >
+                            <Eye className="h-4 w-4 mr-1" />
+                            View Details
+                          </Button>
+                        
+                          <Button 
+                            size="sm" 
+                            className="bg-gradient-to-r from-blue-500 to-purple-600 text-white w-full lg:w-auto"
+                            onClick={() => handleConnectionCheck(inquiry)}
+                          >
+                            <CheckCircle className="h-4 w-4 mr-1" />
+                            Have you connected?
+                          </Button>
                           
-                          <div className="flex items-center gap-2">
-                            <Button 
-                              size="sm" 
-                              variant="outline"
-                              onClick={() => handleViewDetails(inquiry)}
-                            >
-                              <Eye className="h-4 w-4 mr-1" />
-                              View Details
-                            </Button>
-                          
-                            {inquiry.status === "Connected" && (
-                              <Button 
-                                size="sm" 
-                                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white"
-                                onClick={() => handleConnectionCheck(inquiry)}
-                              >
-                                <CheckCircle className="h-4 w-4 mr-1" />
-                                Have you connected?
-                              </Button>
-                            )}
-                            
-                            {inquiry.status === "Completed" && (
-                              <Button 
-                                size="sm" 
-                                className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white"
-                                onClick={() => handleRateExpert(inquiry)}
-                              >
-                                <Star className="h-4 w-4 mr-1" />
-                                Rate Expert
-                              </Button>
-                            )}
-                          </div>
+                       
                         </div>
                       </div>
                     </CardContent>
@@ -472,7 +480,10 @@ const ManualApplications = () => {
             <TabsContent value="completed-services" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {completedServicesList.map((service) => (
-                  <Card key={service.id} className="bg-white shadow-lg border-0 rounded-2xl">
+                  <Card key={service.id} className="bg-white shadow-lg border-0 rounded-2xl hover:shadow-xl transition-all duration-300 cursor-pointer" onClick={() => {
+                    setSelectedService(service);
+                    setShowServiceModal(true);
+                  }}>
                     <CardContent className="p-6">
                       <div className="flex items-start gap-4 mb-4">
                         <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
@@ -490,20 +501,10 @@ const ManualApplications = () => {
                       </div>
                       
                       <div className="space-y-2">
-                        <Button size="sm" className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+                        <Button size="sm" className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white" onClick={(e) => e.stopPropagation()}>
                           <Download className="h-4 w-4 mr-2" />
                           Download Certificate
                         </Button>
-                        {/* {!service.hasReview && (
-                          <Button size="sm" variant="outline" className="w-full">
-                            <Star className="h-4 w-4 mr-2" />
-                            Add Review / Rating
-                          </Button>
-                        )} */}
-                        {/* <Button size="sm" variant="outline" className="w-full">
-                          <BarChart3 className="h-4 w-4 mr-2" />
-                          Add to Compliance Tracker
-                        </Button> */}
                       </div>
                     </CardContent>
                   </Card>
@@ -628,6 +629,109 @@ const ManualApplications = () => {
                   </Button>
                 </div>
               </div>
+            </DialogContent>
+          </Dialog>
+
+          {/* Service Details Modal */}
+          <Dialog open={showServiceModal} onOpenChange={setShowServiceModal}>
+            <DialogContent className="sm:max-w-lg">
+              <DialogHeader>
+                <DialogTitle className="text-lg font-bold text-gray-900">
+                  Service Completion Details
+                </DialogTitle>
+              </DialogHeader>
+              
+              {selectedService && (
+                <div className="space-y-4 py-2">
+                  {/* Service Info */}
+                  <div className="bg-green-50 rounded-lg p-4">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
+                        <CheckCircle className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-gray-900 text-lg">{selectedService.name}</h3>
+                        <p className="text-green-600 text-sm">Successfully Completed</p>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="text-gray-600">Completion Date</p>
+                        <p className="font-medium">{new Date(selectedService.completionDate).toLocaleDateString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-600">Certificate Number</p>
+                        <p className="font-medium">{selectedService.certificateNumber}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-600">Service Type</p>
+                        <p className="font-medium">{selectedService.type}</p>
+                      </div>
+                      <div>
+                        <p className="text-gray-600">Processing Time</p>
+                        <p className="font-medium">7-10 days</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Expert Rating Section */}
+                  <div className="bg-blue-50 rounded-lg p-4">
+                    <h4 className="font-semibold text-gray-900 mb-3">Rate Your Experience</h4>
+                    <div className="flex items-center gap-3 mb-3">
+                      <img 
+                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
+                        alt="Expert"
+                        className="w-10 h-10 rounded-full object-cover"
+                      />
+                      <div>
+                        <p className="font-medium text-gray-900">CA Rajesh Sharma</p>
+                        <p className="text-sm text-gray-600">Service Expert</p>
+                      </div>
+                    </div>
+                    
+                    <div className="text-center mb-4">
+                      <StarRating rating={rating} onRatingChange={setRating} />
+                    </div>
+                    
+                    <Button 
+                      className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white"
+                      onClick={() => {
+                        setShowServiceModal(false);
+                        setShowRatingModal(true);
+                        setSelectedExpert({
+                          expertName: "CA Rajesh Sharma",
+                          expertProfile: "Service Expert",
+                          avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
+                        });
+                      }}
+                      disabled={rating === 0}
+                    >
+                      <Star className="h-4 w-4 mr-2" />
+                      Submit Rating
+                    </Button>
+                  </div>
+                  
+                  {/* Action Buttons */}
+                  <div className="flex gap-3">
+                    <Button 
+                      variant="outline" 
+                      className="flex-1"
+                      onClick={() => alert('Download certificate')}
+                    >
+                      <Download className="h-4 w-4 mr-2" />
+                      Download Certificate
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className="flex-1"
+                      onClick={() => setShowServiceModal(false)}
+                    >
+                      Close
+                    </Button>
+                  </div>
+                </div>
+              )}
             </DialogContent>
           </Dialog>
 

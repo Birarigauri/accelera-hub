@@ -250,23 +250,7 @@ const Schemes = () => {
           </Button>
         </div>
 
-        {/* Quick Stats */}
-        <div className="flex justify-center mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl">
-           
-            
-           
-            <Card className="bg-gradient-to-br from-orange-50 via-orange-100 to-amber-100 border-0 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 rounded-2xl">
-              <CardContent className="p-8 text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                  <Award className="h-8 w-8 text-white" />
-                </div>
-                <div className="text-3xl font-bold text-orange-700 mb-2">87%</div>
-                <p className="text-sm font-medium text-orange-600">Avg Eligibility Score</p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+
 
         {/* Schemes Content */}
         <div className="space-y-6">

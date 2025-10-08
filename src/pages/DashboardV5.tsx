@@ -830,8 +830,8 @@ const DashboardV5 = memo(() => {
                         <p className={`text-xs ${colorClasses.desc} mb-2 line-clamp-2`}>{alert.description}</p>
                         <div className="flex items-center justify-between">
                           <span className={`text-xs ${colorClasses.time} font-medium`}>{alert.time}</span>
-                          <Button size="sm" variant="outline" className={`text-xs px-3 py-1.5 ${colorClasses.btn} font-medium rounded-full`}>
-                            {alert.color === 'red' ? '⚡ Action' : alert.color === 'blue' ? '📖 Learn' : '👁️ View'}
+                          <Button size="sm" variant="outline" className={`text-xs px-3 py-1.5  font-medium rounded-full`}>
+                           Know More
                           </Button>
                         </div>
                       </div>
