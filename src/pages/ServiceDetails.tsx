@@ -28,6 +28,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { toast } from "sonner";
 import Header from "@/components/layout/Header";
 import AppLayout from "@/components/layout/AppLayout";
 
@@ -571,7 +572,7 @@ startxref
                   onClick={() => setShowApplicationForm(!showApplicationForm)}
                   className="bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white px-12 py-4 text-xl font-bold rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
                 >
-                  {showApplicationForm ? '📋 Hide Application Form' : '🚀 Proceed with Service Apply'}
+                  {showApplicationForm ? '📋 Hide Application Form' : '🚀 Proceed'}
                 </Button>
                 <p className="text-gray-600 mt-3 text-sm">{showApplicationForm ? 'Click to hide the application form' : 'Start your service application process'}</p>
               </div>
@@ -845,7 +846,7 @@ startxref
                         >
                           <div className="flex items-center gap-2 w-full">
                             <Sparkles className="h-5 w-5 text-purple-600" />
-                            <span className="font-semibold">Create Template</span>
+                            <span className="font-semibold">Download Tamplate</span>
                           </div>
                           <p className="text-sm text-gray-600 text-left">Design a new certificate format</p>
                         </Button>
@@ -857,7 +858,7 @@ startxref
                         >
                           <div className="flex items-center gap-2 w-full">
                             <Download className="h-5 w-5 text-green-600" />
-                            <span className="font-semibold">Get Template</span>
+                            <span className="font-semibold">Customize Tamplate</span>
                           </div>
                           <p className="text-sm text-gray-600 text-left">Prefilled with your data</p>
                         </Button>
@@ -874,7 +875,12 @@ startxref
                       </CardHeader>
                       <CardContent className="p-6">
                         <Button 
-                          onClick={() => navigate('/experts')}
+                          onClick={() => {
+                            toast.success("Your inquiry has been submitted successfully. An expert will connect with you shortly.", {
+                              duration: 4000,
+                              position: 'top-right'
+                            });
+                          }}
                           className="w-full h-auto p-6 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-xl"
                         >
                           <div className="flex flex-col items-center text-center">

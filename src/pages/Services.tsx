@@ -175,7 +175,6 @@ const Services = () => {
   ];
 
   const filteredServices = services.filter(service => {
-    if (selectedCategory !== "all" && service.category !== selectedCategory) return false;
     if (searchQuery && !service.title.toLowerCase().includes(searchQuery.toLowerCase()) && 
         !service.description.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     return true;
@@ -245,33 +244,17 @@ const Services = () => {
 
           {/* Service Catalog */}
           <TabsContent value="catalog" className="space-y-6">
-            {/* Search and Filters */}
+            {/* Search */}
             <Card className="bg-gradient-card border-0">
               <CardContent className="p-6">
-                <div className="flex flex-col md:flex-row gap-4">
-                  <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      placeholder="Search services..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10"
-                    />
-                  </div>
-                  
-                  <div className="flex flex-wrap gap-2">
-                    {serviceCategories.map((category) => (
-                      <Button
-                        key={category.id}
-                        variant={selectedCategory === category.id ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setSelectedCategory(category.id)}
-                        className="whitespace-nowrap"
-                      >
-                        {category.label} ({category.count})
-                      </Button>
-                    ))}
-                  </div>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search services..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10"
+                  />
                 </div>
               </CardContent>
             </Card>
@@ -285,7 +268,7 @@ const Services = () => {
                       <tr>
                         <th className="text-left p-4 font-semibold text-gray-900">Service</th>
                         <th className="text-left p-4 font-semibold text-gray-900">Category</th>
-                        <th className="text-left p-4 font-semibold text-gray-900">Actions</th>
+                        {/* <th className="text-left p-4 font-semibold text-gray-900">Actions</th> */}
                       </tr>
                     </thead>
                     <tbody>
@@ -320,10 +303,10 @@ const Services = () => {
                                   View Details
                                 </Button>
                               </Link> */}
-                              <Button size="sm" variant="outline">
+                              {/* <Button size="sm" variant="outline">
                                 <Users className="h-4 w-4 mr-1" />
                                 Expert
-                              </Button>
+                              </Button> */}
                             </div>
                           </td>
                         </tr>

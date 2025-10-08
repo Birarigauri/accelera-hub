@@ -513,7 +513,7 @@ const DashboardV5 = memo(() => {
                     <Link to="/services">
                       <Button className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 border-2 border-blue-400 text-white backdrop-blur-sm px-6 py-3 text-base font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
                         <Building2 className="h-5 w-5 mr-2" />
-                        Apply New Service
+                       New Service request
                       </Button>
                     </Link>
                     
@@ -568,7 +568,7 @@ const DashboardV5 = memo(() => {
                       <Shield className="h-4 w-4 text-white" />
                     </div>
                     <div>
-                      <div className="text-base font-semibold text-gray-900">📋 Compliance Dashboard</div>
+                      <div className="text-base font-semibold text-gray-900">📋  Compliance Tracker</div>
                       <div className="text-xs text-gray-600">Regulatory obligations and deadlines</div>
                     </div>
                   </div>
@@ -662,12 +662,7 @@ const DashboardV5 = memo(() => {
                           <div className="text-xs text-gray-600">{cert.category}</div>
                         </div>
                       </div>
-                      <Badge className={`${getStatusColor(cert.status)} px-2 py-1 text-xs font-medium`}>
-                        {cert.status === 'active' ? '✅ Active' : 
-                         cert.status === 'pending' ? '⏳ Pending' : 
-                         cert.status === 'expiring' ? '⚠️ Expiring' : 
-                         cert.status === 'missing' ? '❌ Missing' : cert.status.toUpperCase()}
-                      </Badge>
+                   
                     </div>
                   ))}
                 </div>
@@ -688,7 +683,7 @@ const DashboardV5 = memo(() => {
                       <Award className="h-4 w-4 text-white" />
                     </div>
                     <div>
-                      <div className="text-base font-semibold text-gray-900">💡 Suggested Eligible Schemes</div>
+                      <div className="text-base font-semibold text-gray-900">💡 Eligible Scheme Deck</div>
                       <div className="text-xs text-gray-600">Government schemes matching your business profile</div>
                     </div>
                   </div>

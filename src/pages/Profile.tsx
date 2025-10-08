@@ -356,11 +356,27 @@ const Profile = () => {
                       </div>
                       <div className="space-y-2">
                         <Label>Email Address</Label>
-                        <Input value={userProfile.email} readOnly={!isEditingProfile} />
+                        <div className="flex gap-2">
+                          <Input value={userProfile.email} readOnly={!isEditingProfile} className="flex-1" />
+                          <Button variant="outline" size="sm" onClick={() => alert('Update email functionality')}>
+                            <Mail className="h-4 w-4 mr-1" />
+                            Update
+                          </Button>
+                        </div>
                       </div>
                       <div className="space-y-2">
                         <Label>Phone Number</Label>
                         <Input value={userProfile.phone} readOnly={!isEditingProfile} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Password</Label>
+                        <div className="flex gap-2">
+                          <Input type="password" value="••••••••" readOnly className="flex-1" />
+                          <Button variant="outline" size="sm" onClick={() => alert('Reset password functionality')}>
+                            <Key className="h-4 w-4 mr-1" />
+                            Reset
+                          </Button>
+                        </div>
                       </div>
                       <div className="space-y-2">
                         <Label>Location</Label>
@@ -872,32 +888,88 @@ const Profile = () => {
                 </CardContent>
               </Card>
 
-              <Card className="bg-gradient-card border-0">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Shield className="h-5 w-5" />
-                    Security Settings
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <Button variant="outline" className="w-full justify-start" onClick={() => alert('Password change functionality would be implemented here')}>
-                    <Key className="h-4 w-4 mr-2" />
-                    Change Password
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start" onClick={() => alert('Two-factor authentication setup would be implemented here')}>
-                    <Shield className="h-4 w-4 mr-2" />
-                    Enable Two-Factor Authentication
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start" onClick={() => alert('Login activity log would be displayed here')}>
-                    <Eye className="h-4 w-4 mr-2" />
-                    Login Activity
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start" onClick={() => alert('Data export functionality would be implemented here')}>
-                    <Download className="h-4 w-4 mr-2" />
-                    Download My Data
-                  </Button>
-                </CardContent>
-              </Card>
+              <div className="space-y-6">
+                <Card className="bg-gradient-card border-0">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Shield className="h-5 w-5" />
+                      Security Settings
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <Button variant="outline" className="w-full justify-start" onClick={() => alert('Password change functionality would be implemented here')}>
+                      <Key className="h-4 w-4 mr-2" />
+                      Change Password
+                    </Button>
+                    <Button variant="outline" className="w-full justify-start" onClick={() => alert('Two-factor authentication setup would be implemented here')}>
+                      <Shield className="h-4 w-4 mr-2" />
+                      Enable Two-Factor Authentication
+                    </Button>
+                    <Button variant="outline" className="w-full justify-start" onClick={() => alert('Login activity log would be displayed here')}>
+                      <Eye className="h-4 w-4 mr-2" />
+                      Login Activity
+                    </Button>
+                    <Button variant="outline" className="w-full justify-start" onClick={() => alert('Data export functionality would be implemented here')}>
+                      <Download className="h-4 w-4 mr-2" />
+                      Download My Data
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gradient-card border-0">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Key className="h-5 w-5" />
+                      Reset Password
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-2">
+                      <Label>Current Password</Label>
+                      <Input type="password" placeholder="Enter current password" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>New Password</Label>
+                      <Input type="password" placeholder="Enter new password" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Confirm New Password</Label>
+                      <Input type="password" placeholder="Confirm new password" />
+                    </div>
+                    <Button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white">
+                      <Key className="h-4 w-4 mr-2" />
+                      Reset Password
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gradient-card border-0">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Mail className="h-5 w-5" />
+                      Update Email Address
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="space-y-2">
+                      <Label>Current Email</Label>
+                      <Input value={userProfile.email} readOnly className="bg-gray-50" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>New Email Address</Label>
+                      <Input type="email" placeholder="Enter new email address" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Password Confirmation</Label>
+                      <Input type="password" placeholder="Enter password to confirm" />
+                    </div>
+                    <Button className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white">
+                      <Mail className="h-4 w-4 mr-2" />
+                      Update Email Address
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </TabsContent>
         </Tabs>

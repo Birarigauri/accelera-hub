@@ -11,6 +11,7 @@ import DashboardV2 from "./pages/DashboardV2";
 import DashboardV3 from "./pages/DashboardV3";
 import DashboardV5 from "./pages/DashboardV5";
 import Notifications from "./pages/Notifications";
+import NotificationsV2 from "./pages/NotificationsV2";
 import Services from "./pages/Services";
 import ServiceDetails from "./pages/ServiceDetails";
 import Schemes from "./pages/Schemes";
@@ -58,6 +59,7 @@ const App = () => (
           <Route path="/dashboard-v3" element={<DashboardV3 />} />
           <Route path="/dashboard-v5" element={<DashboardV5 />} />
           <Route path="/notifications" element={<Notifications />} />
+          <Route path="/notifications-v2" element={<NotificationsV2 />} />
           <Route path="/services" element={<Services />} />
           <Route path="/services/:id" element={<ServiceDetails />} />
           <Route path="/schemes" element={<Schemes />} />

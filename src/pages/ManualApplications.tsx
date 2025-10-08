@@ -48,6 +48,8 @@ const ManualApplications = () => {
   const [selectedInquiry, setSelectedInquiry] = useState<any>(null);
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
+  const [showConnectionDialog, setShowConnectionDialog] = useState(false);
+  const [connectionInquiry, setConnectionInquiry] = useState<any>(null);
 
   // Sample data for manual applications
   const manualApplications = [
@@ -178,6 +180,10 @@ const ManualApplications = () => {
     }
   ];
 
+  // State for dynamic data
+  const [completedServicesList, setCompletedServicesList] = useState(completedServices);
+  const [inquiriesList, setInquiriesList] = useState(inquiries);
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Connected": return "bg-green-100 text-green-700";
@@ -218,6 +224,46 @@ const ManualApplications = () => {
     setSelectedExpert(null);
     setRating(0);
     setReview("");
+  };
+
+  const handleConnectionCheck = (inquiry: any) => {
+    setConnectionInquiry(inquiry);
+    setShowConnectionDialog(true);
+  };
+
+  const handleConnectionConfirm = (connected: boolean) => {
+    if (connected && connectionInquiry) {
+      // Move to completed services
+      const newCompletedService = {
+        id: completedServicesList.length + 1,
+        name: connectionInquiry.serviceName,
+        completionDate: new Date().toISOString().split('T')[0],
+        certificateNumber: `CERT-${Date.now()}`,
+        type: "Service",
+        hasReview: false
+      };
+      
+      setCompletedServicesList(prev => [...prev, newCompletedService]);
+      
+      // Update inquiry status to completed
+      setInquiriesList(prev => 
+        prev.map(inq => 
+          inq.id === connectionInquiry.id 
+            ? { ...inq, status: "Completed" }
+            : inq
+        )
+      );
+      
+      toast({
+        title: "Service Moved to Completed",
+        description: `${connectionInquiry.serviceName} has been moved to completed services.`,
+        duration: 5000,
+        className: "fixed top-4 right-4 bg-green-600 text-white border-green-500 shadow-2xl z-50 max-w-sm p-3 rounded-lg transition-all duration-300 ease-in-out animate-in fade-in slide-in-from-right-2",
+      });
+    }
+    
+    setShowConnectionDialog(false);
+    setConnectionInquiry(null);
   };
 
   const StarRating = ({ rating, onRatingChange, readonly = false }: { rating: number, onRatingChange?: (rating: number) => void, readonly?: boolean }) => {
@@ -264,15 +310,6 @@ const ManualApplications = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-gradient-to-br from-green-50 to-green-100 border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer">
-              <CardContent className="p-6 text-center">
-                <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mx-auto mb-3">
-                  <Clock className="h-6 w-6 text-white" />
-                </div>
-                <div className="text-2xl font-bold text-green-700 mb-1">5</div>
-                <p className="text-sm text-green-600">Active/Ongoing</p>
-              </CardContent>
-            </Card>
 
             <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer">
               <CardContent className="p-6 text-center">
@@ -355,7 +392,7 @@ const ManualApplications = () => {
             {/* Tab 2: My Inquiries */}
             <TabsContent value="my-inquiries" className="space-y-6">
               <div className="space-y-4">
-                {inquiries.map((inquiry) => (
+                {inquiriesList.map((inquiry) => (
                   <Card key={inquiry.id} className="bg-white shadow-lg border-0 rounded-2xl">
                     <CardContent className="p-6">
                       <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4">
@@ -391,10 +428,6 @@ const ManualApplications = () => {
                             <p className="text-sm text-gray-600">{inquiry.serviceType}</p>
                           </div>
                           
-                          <Badge className={getStatusColor(inquiry.status)}>
-                            {inquiry.status}
-                          </Badge>
-                          
                           <div className="flex items-center gap-2">
                             <Button 
                               size="sm" 
@@ -404,10 +437,18 @@ const ManualApplications = () => {
                               <Eye className="h-4 w-4 mr-1" />
                               View Details
                             </Button>
-                            <Button size="sm" variant="outline">
-                              <MessageCircle className="h-4 w-4 mr-1" />
-                              Chat
-                            </Button>
+                          
+                            {inquiry.status === "Connected" && (
+                              <Button 
+                                size="sm" 
+                                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white"
+                                onClick={() => handleConnectionCheck(inquiry)}
+                              >
+                                <CheckCircle className="h-4 w-4 mr-1" />
+                                Have you connected?
+                              </Button>
+                            )}
+                            
                             {inquiry.status === "Completed" && (
                               <Button 
                                 size="sm" 
@@ -430,7 +471,7 @@ const ManualApplications = () => {
             {/* Tab 3: Completed Services */}
             <TabsContent value="completed-services" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {completedServices.map((service) => (
+                {completedServicesList.map((service) => (
                   <Card key={service.id} className="bg-white shadow-lg border-0 rounded-2xl">
                     <CardContent className="p-6">
                       <div className="flex items-start gap-4 mb-4">
@@ -551,6 +592,39 @@ const ManualApplications = () => {
                     disabled={rating === 0}
                   >
                     Submit Rating
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          {/* Connection Confirmation Dialog */}
+          <Dialog open={showConnectionDialog} onOpenChange={setShowConnectionDialog}>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle className="text-lg font-bold text-gray-900">
+                  Connection Status
+                </DialogTitle>
+              </DialogHeader>
+              
+              <div className="space-y-4 py-4">
+                <p className="text-center text-gray-600">
+                  Have you connected with the expert for <strong>{connectionInquiry?.serviceName}</strong>?
+                </p>
+                
+                <div className="flex gap-3 pt-4">
+                  <Button 
+                    variant="outline" 
+                    className="flex-1"
+                    onClick={() => handleConnectionConfirm(false)}
+                  >
+                    No
+                  </Button>
+                  <Button 
+                    className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white"
+                    onClick={() => handleConnectionConfirm(true)}
+                  >
+                    Yes
                   </Button>
                 </div>
               </div>

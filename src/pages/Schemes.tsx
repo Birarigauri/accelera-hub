@@ -39,12 +39,10 @@ const Schemes = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
-  const schemeCategories = [
+  const schemeFilters = [
     { id: "all", label: "All Schemes", count: 18 },
-    { id: "startup", label: "Startup", count: 6 },
-    { id: "msme", label: "MSME", count: 5 },
-    { id: "manufacturing", label: "Manufacturing", count: 4 },
-    { id: "technology", label: "Technology", count: 3 },
+    { id: "applied", label: "Applied Schemes", count: 3 },
+    { id: "applicable", label: "Applicable Schemes", count: 12 },
   ];
 
   const schemes = [
@@ -169,7 +167,16 @@ const Schemes = () => {
   ];
 
   const filteredSchemes = schemes.filter(scheme => {
-    if (selectedCategory !== "all" && scheme.category !== selectedCategory) return false;
+    if (selectedCategory === "applied") {
+      // Show only schemes that user has applied for
+      const appliedSchemeNames = myApplications.map(app => app.schemeName.toLowerCase());
+      const isApplied = appliedSchemeNames.some(name => scheme.title.toLowerCase().includes(name.split(' ')[0]));
+      if (!isApplied) return false;
+    }
+    if (selectedCategory === "applicable") {
+      // Show schemes with eligibility > 70%
+      if (scheme.eligibility <= 70) return false;
+    }
     if (searchQuery && !scheme.title.toLowerCase().includes(searchQuery.toLowerCase()) && 
         !scheme.description.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     return true;
@@ -246,26 +253,9 @@ const Schemes = () => {
         {/* Quick Stats */}
         <div className="flex justify-center mb-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl">
-            <Card className="bg-gradient-to-br from-blue-50 via-blue-100 to-indigo-100 border-0 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 rounded-2xl">
-              <CardContent className="p-8 text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                  <Target className="h-8 w-8 text-white" />
-                </div>
-                <div className="text-3xl font-bold text-blue-700 mb-2">18</div>
-                <p className="text-sm font-medium text-blue-600">Available Schemes</p>
-              </CardContent>
-            </Card>
+           
             
-            <Card className="bg-gradient-to-br from-green-50 via-green-100 to-emerald-100 border-0 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 rounded-2xl">
-              <CardContent className="p-8 text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                  <CheckCircle className="h-8 w-8 text-white" />
-                </div>
-                <div className="text-3xl font-bold text-green-700 mb-2">3</div>
-                <p className="text-sm font-medium text-green-600">Applications Submitted</p>
-              </CardContent>
-            </Card>
-            
+           
             <Card className="bg-gradient-to-br from-orange-50 via-orange-100 to-amber-100 border-0 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 rounded-2xl">
               <CardContent className="p-8 text-center">
                 <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
@@ -278,31 +268,8 @@ const Schemes = () => {
           </div>
         </div>
 
-        {/* Schemes Tabs */}
-        <Tabs defaultValue="discover" className="space-y-6">
-          <TabsList className="w-full bg-gray-50 p-1 rounded-xl border grid grid-cols-3 gap-1 h-auto">
-            <TabsTrigger 
-              value="discover" 
-              className="flex-1 text-center py-3 px-2 text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-md text-gray-600"
-            >
-              All Schemes
-            </TabsTrigger>
-            <TabsTrigger 
-              value="my-applications" 
-              className="flex-1 text-center py-3 px-2 text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-md text-gray-600"
-            >
-              My Applied Schemes
-            </TabsTrigger>
-            <TabsTrigger 
-              value="recommended" 
-              className="flex-1 text-center py-3 px-2 text-sm font-medium rounded-lg transition-all duration-200 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-md text-gray-600"
-            >
-              Suggested
-            </TabsTrigger>
-          </TabsList>
-
-          {/* Discover Schemes */}
-          <TabsContent value="discover" className="space-y-6">
+        {/* Schemes Content */}
+        <div className="space-y-6">
             {/* Search and Filters */}
             <Card className="bg-gradient-card border-0">
               <CardContent className="p-6">
@@ -318,15 +285,15 @@ const Schemes = () => {
                   </div>
                   
                   <div className="flex flex-wrap gap-2">
-                    {schemeCategories.map((category) => (
+                    {schemeFilters.map((filter) => (
                       <Button
-                        key={category.id}
-                        variant={selectedCategory === category.id ? "default" : "outline"}
+                        key={filter.id}
+                        variant={selectedCategory === filter.id ? "default" : "outline"}
                         size="sm"
-                        onClick={() => setSelectedCategory(category.id)}
+                        onClick={() => setSelectedCategory(filter.id)}
                         className="whitespace-nowrap"
                       >
-                        {category.label} ({category.count})
+                        {filter.label} ({filter.id === 'applied' ? myApplications.length : filter.id === 'applicable' ? schemes.filter(s => s.eligibility > 70).length : schemes.length})
                       </Button>
                     ))}
                   </div>
@@ -352,7 +319,7 @@ const Schemes = () => {
                         <TableHead className="font-semibold text-gray-700 py-4">Scheme Details</TableHead>
                         <TableHead className="font-semibold text-gray-700 text-center">Category</TableHead>
                         {/* <TableHead className="font-semibold text-gray-700 text-center">Funding</TableHead> */}
-                        <TableHead className="font-semibold text-gray-700 text-center">Eligibility</TableHead>
+                        {/* <TableHead className="font-semibold text-gray-700 text-center">Eligibility</TableHead> */}
                         <TableHead className="font-semibold text-gray-700 text-center">Deadline</TableHead>
                         <TableHead className="font-semibold text-gray-700 text-center">Actions</TableHead>
                       </TableRow>
@@ -392,11 +359,11 @@ const Schemes = () => {
                               </Badge>
                             </TableCell>
 
-                            <TableCell className="text-center">
+                            {/* <TableCell className="text-center">
                               <div className={`text-lg font-bold ${getEligibilityColor(scheme.eligibility)}`}>
                                 {scheme.eligibility}%
                               </div>
-                            </TableCell>
+                            </TableCell> */}
                             <TableCell className="text-center">
                               <div className="text-sm font-medium text-gray-700">
                                 {new Date(scheme.deadline).toLocaleDateString('en-IN', { 
@@ -408,11 +375,11 @@ const Schemes = () => {
                             </TableCell>
                             <TableCell className="text-center">
                               <div className="flex items-center justify-center gap-2">
-                                <Link to={`/schemes/${scheme.id}`}>
+                                {/* <Link to={`/schemes/${scheme.id}`}>
                                   <Button size="sm" className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-3 py-1.5 text-xs">
                                     Apply
                                   </Button>
-                                </Link>
+                                </Link> */}
                                 <Button variant="outline" size="sm" className="px-2 py-1.5">
                                   <Eye className="h-3 w-3" />
                                 </Button>
@@ -468,198 +435,7 @@ const Schemes = () => {
                 )}
               </CardContent>
             </Card>
-          </TabsContent>
-
-          {/* My Applications */}
-          <TabsContent value="my-applications" className="space-y-6">
-            <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
-              <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 border-b border-green-200 pb-4">
-                <CardTitle className="flex items-center gap-3 text-xl">
-                  <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
-                    <FileText className="h-5 w-5 text-green-600" />
-                  </div>
-                  My Applications ({myApplications.length})
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="bg-gray-50/50">
-                        <TableHead className="font-semibold text-gray-700 py-4">Scheme Details</TableHead>
-                        <TableHead className="font-semibold text-gray-700 text-center">Status</TableHead>
-                        <TableHead className="font-semibold text-gray-700 text-center">Amount</TableHead>
-                        <TableHead className="font-semibold text-gray-700 text-center">Progress</TableHead>
-                        <TableHead className="font-semibold text-gray-700 text-center">Applied Date</TableHead>
-                        <TableHead className="font-semibold text-gray-700 text-center">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {myApplications.map((application) => (
-                        <TableRow key={application.id} className="hover:bg-green-50/30 transition-colors border-b border-gray-100">
-                          <TableCell className="py-4">
-                            <div className="flex items-start gap-3">
-                              <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                                <Target className="h-5 w-5 text-white" />
-                              </div>
-                              <div className="min-w-0 flex-1">
-                                <h3 className="font-semibold text-gray-900 text-sm leading-tight mb-1">{application.schemeName}</h3>
-                                {application.nextStep && (
-                                  <p className="text-xs text-gray-600 leading-relaxed">{application.nextStep}</p>
-                                )}
-                                {application.approvedDate && (
-                                  <p className="text-xs text-green-600 font-medium">Approved: {new Date(application.approvedDate).toLocaleDateString()}</p>
-                                )}
-                              </div>
-                            </div>
-                          </TableCell>
-                          <TableCell className="text-center">
-                            <Badge className={getStatusColor(application.status)}>
-                              {application.status.replace('-', ' ').toUpperCase()}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-center">
-                            <div className="font-semibold text-green-600 text-sm">{application.amount}</div>
-                          </TableCell>
-                          <TableCell className="text-center">
-                            <div className="space-y-2">
-                              <div className="text-sm font-medium">{application.progress}%</div>
-                              <Progress value={application.progress} className="h-2 w-16 mx-auto" />
-                            </div>
-                          </TableCell>
-                          <TableCell className="text-center">
-                            <div className="text-sm font-medium text-gray-700">
-                              {new Date(application.appliedDate).toLocaleDateString('en-IN', { 
-                                day: '2-digit', 
-                                month: 'short',
-                                year: 'numeric'
-                              })}
-                            </div>
-                          </TableCell>
-                          <TableCell className="text-center">
-                            <div className="flex items-center justify-center gap-2">
-                              <Button variant="outline" size="sm" className="px-2 py-1.5">
-                                <Eye className="h-3 w-3" />
-                              </Button>
-                              <Button variant="outline" size="sm" className="px-2 py-1.5">
-                                <Clock className="h-3 w-3" />
-                              </Button>
-                              {application.status === "approved" && (
-                                <Button size="sm" className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-3 py-1.5 text-xs">
-                                  <CheckCircle className="h-3 w-3 mr-1" />
-                                  Download
-                                </Button>
-                              )}
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Recommended */}
-          <TabsContent value="recommended" className="space-y-6">
-            <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
-              <CardHeader className="bg-gradient-to-r from-yellow-50 to-orange-50 border-b border-yellow-200 pb-4">
-                <CardTitle className="flex items-center gap-3 text-xl">
-                  <div className="w-10 h-10 bg-yellow-100 rounded-xl flex items-center justify-center">
-                    <Star className="h-5 w-5 text-yellow-600" />
-                  </div>
-                  Suggested Schemes (2)
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-6">
-                <div className="grid gap-6">
-                  {/* Scheme 1 */}
-                  <Card className="border border-green-200 bg-gradient-to-r from-green-50 to-emerald-50 hover:shadow-lg transition-all">
-                    <CardContent className="p-6">
-                      <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                          <Award className="h-6 w-6 text-white" />
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <h3 className="text-lg font-bold text-gray-900">MSME Technology Upgradation Scheme</h3>
-                            <Badge className="bg-green-100 text-green-700 text-xs px-2 py-1">95% Match</Badge>
-                          </div>
-                          <p className="text-sm text-gray-600 mb-4">Credit linked capital subsidy for technology upgradation in MSME sector. Perfect for your manufacturing business profile.</p>
-                          <div className="flex items-center gap-6 text-sm text-gray-500 mb-4">
-                            <span className="flex items-center gap-1">
-                              <IndianRupee className="h-4 w-4" />
-                              Up to ₹1 crore
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Calendar className="h-4 w-4" />
-                              Deadline: May 15, 2024
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <MapPin className="h-4 w-4" />
-                              All States
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Button className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white">
-                              Apply Now
-                            </Button>
-                            <Button variant="outline" size="sm">
-                              <Eye className="h-4 w-4 mr-1" />
-                              View Details
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Scheme 2 */}
-                  <Card className="border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 hover:shadow-lg transition-all">
-                    <CardContent className="p-6">
-                      <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                          <Zap className="h-6 w-6 text-white" />
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <h3 className="text-lg font-bold text-gray-900">Digital India Innovation Fund</h3>
-                            <Badge className="bg-blue-100 text-blue-700 text-xs px-2 py-1">88% Match</Badge>
-                          </div>
-                          <p className="text-sm text-gray-600 mb-4">Funding for digital innovation and technology startups. Ideal for businesses looking to adopt digital technologies.</p>
-                          <div className="flex items-center gap-6 text-sm text-gray-500 mb-4">
-                            <span className="flex items-center gap-1">
-                              <IndianRupee className="h-4 w-4" />
-                              Up to ₹50 lakhs
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Calendar className="h-4 w-4" />
-                              Deadline: Apr 30, 2024
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <MapPin className="h-4 w-4" />
-                              Tier 1 & 2 cities
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Button className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white">
-                              Apply Now
-                            </Button>
-                            <Button variant="outline" size="sm">
-                              <Eye className="h-4 w-4 mr-1" />
-                              View Details
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+        </div>
         </div>
       </div>
     </AppLayout>

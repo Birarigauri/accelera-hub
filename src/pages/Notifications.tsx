@@ -506,6 +506,61 @@ const Notifications = () => {
           </CardContent>
         </Card>
 
+        {/* Priority Highlights */}
+        <div className="grid md:grid-cols-2 gap-6 mb-6">
+          {/* Urgent Section */}
+          <Card className="bg-gradient-to-r from-red-50 to-orange-50 border-red-200 shadow-lg">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-red-700">
+                <AlertTriangle className="h-5 w-5" />
+                🚨 Urgent Notifications
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {notifications.filter(n => n.priority === 'high').slice(0, 3).map((notification) => (
+                  <div key={notification.id} className="flex items-start gap-3 p-3 bg-white/70 rounded-lg border border-red-100">
+                    <div className={`w-8 h-8 rounded-lg ${notification.bgColor} flex items-center justify-center flex-shrink-0`}>
+                      <notification.icon className={`h-4 w-4 ${notification.color}`} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-medium text-sm text-red-900 line-clamp-1">{notification.title}</h4>
+                      <p className="text-xs text-red-700 line-clamp-2 mt-1">{notification.description}</p>
+                      <span className="text-xs text-red-600 mt-1 block">{getTimeAgo(notification.time)}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Moderate Section */}
+          <Card className="bg-gradient-to-r from-yellow-50 to-amber-50 border-yellow-200 shadow-lg">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-yellow-700">
+                <Clock className="h-5 w-5" />
+                ⚠️ Moderate Priority
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {notifications.filter(n => n.priority === 'medium').slice(0, 3).map((notification) => (
+                  <div key={notification.id} className="flex items-start gap-3 p-3 bg-white/70 rounded-lg border border-yellow-100">
+                    <div className={`w-8 h-8 rounded-lg ${notification.bgColor} flex items-center justify-center flex-shrink-0`}>
+                      <notification.icon className={`h-4 w-4 ${notification.color}`} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-medium text-sm text-yellow-900 line-clamp-1">{notification.title}</h4>
+                      <p className="text-xs text-yellow-700 line-clamp-2 mt-1">{notification.description}</p>
+                      <span className="text-xs text-yellow-600 mt-1 block">{getTimeAgo(notification.time)}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Notifications Tabs */}
         <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="space-y-6">
           <TabsList className="grid w-full md:w-auto md:grid-cols-3 bg-white">
