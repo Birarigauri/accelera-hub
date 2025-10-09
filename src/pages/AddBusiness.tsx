@@ -234,7 +234,7 @@ const AddBusiness = memo(() => {
         {selectedValue === value && <div className="w-2 h-2 bg-white rounded-full" />}
       </div>
       <span className="text-sm font-medium flex-1">{label}</span>
-      {critical && <Badge variant="destructive" className="ml-2 text-xs">CRITICAL</Badge>}
+      {/* {critical && <Badge variant="destructive" className="ml-2 text-xs">CRITICAL</Badge>} */}
     </label>
   );
 
@@ -535,9 +535,7 @@ const AddBusiness = memo(() => {
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">🏢 Add New Business</h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Help us understand your business better to provide personalized recommendations and schemes
-            </p>
+           
           </div>
 
           {/* Enhanced Progress Steps */}

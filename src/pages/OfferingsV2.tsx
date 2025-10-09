@@ -373,17 +373,17 @@ const OfferingsV2 = () => {
             </p>
           </div>
 
-          {/* Offerings Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Offerings List */}
+          <div className="space-y-4">
             {filteredOfferings.map((offering) => (
               <Card 
                 key={offering.id} 
-                className={`group hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 bg-white border-0 rounded-2xl overflow-hidden ${
+                className={`group hover:shadow-lg transition-all duration-300 bg-white border-0 rounded-2xl ${
                   offering.featured ? 'ring-2 ring-blue-200' : ''
                 }`}
               >
                 <CardContent className="p-6">
-                  <div className="flex items-start gap-4 mb-4">
+                  <div className="flex items-start gap-4">
                     <div className={`w-12 h-12 bg-gradient-to-r ${
                       offering.category === 'funding' ? 'from-green-500 to-green-600' :
                       offering.category === 'mentorship' ? 'from-blue-500 to-blue-600' :
@@ -391,16 +391,16 @@ const OfferingsV2 = () => {
                       offering.category === 'market' ? 'from-purple-500 to-purple-600' :
                       offering.category === 'ipr' ? 'from-teal-500 to-teal-600' :
                       'from-red-500 to-red-600'
-                    } rounded-xl flex items-center justify-center shadow-lg`}>
+                    } rounded-xl flex items-center justify-center shadow-lg flex-shrink-0`}>
                       <offering.icon className="h-6 w-6 text-white" />
                     </div>
                     
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between mb-2">
-                        <h3 className="font-semibold text-lg group-hover:text-blue-600 transition-colors">
-                          {offering.title}
-                        </h3>
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <h3 className="font-semibold text-lg group-hover:text-blue-600 transition-colors">
+                            {offering.title}
+                          </h3>
                           {offering.featured && (
                             <Badge className="bg-yellow-100 text-yellow-700 text-xs">
                               <Star className="h-3 w-3 mr-1" />
@@ -411,31 +411,31 @@ const OfferingsV2 = () => {
                             <Badge className="bg-green-100 text-green-700 text-xs">New</Badge>
                           )}
                         </div>
-                      </div>
-                      
-                      <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
-                        {offering.description}
-                      </p>
-                      
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Badge className={offering.tagColor}>
-                            {offering.category}
-                          </Badge>
-                          {getStatusIcon(offering.status)}
-                          {getStatusBadge(offering.status)}
-                        </div>
                         
                         <Link to={`/offerings/${offering.id}`}>
                           <Button 
                             size="sm" 
-                            className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+                            className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 flex-shrink-0"
                           >
                             Know More
                             {offering.mode === "external" && <ExternalLink className="h-3 w-3 ml-1" />}
                             {offering.mode === "expert" && <UserCheck className="h-3 w-3 ml-1" />}
                           </Button>
                         </Link>
+                      </div>
+                      
+                      <p className="text-muted-foreground text-sm mb-3 leading-relaxed">
+                        {offering.description}
+                      </p>
+                      
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <Badge className={offering.tagColor}>
+                          {offering.category}
+                        </Badge>
+                        <div className="flex items-center gap-1">
+                          {getStatusIcon(offering.status)}
+                          {getStatusBadge(offering.status)}
+                        </div>
                       </div>
                     </div>
                   </div>

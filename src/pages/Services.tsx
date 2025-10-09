@@ -23,7 +23,8 @@ import {
   Eye,
   Download,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -31,6 +32,13 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import Header from "@/components/layout/Header";
 import AppLayout from "@/components/layout/AppLayout";
 
@@ -41,6 +49,8 @@ const Services = () => {
   const [itemsPerPage] = useState(10);
   const [myServicesPage, setMyServicesPage] = useState(1);
   const [myServicesPerPage] = useState(5);
+  const [selectedService, setSelectedService] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const serviceCategories = [
     { id: "all", label: "All Services", count: 24 },
@@ -204,6 +214,16 @@ const Services = () => {
       case "pending": return FileText;
       default: return FileText;
     }
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = { 
+      day: 'numeric', 
+      month: 'long', 
+      year: 'numeric' 
+    };
+    return date.toLocaleDateString('en-GB', options);
   };
 
   return (
@@ -386,7 +406,7 @@ const Services = () => {
                       <tr>
                         <th className="text-left p-4 font-semibold text-gray-900">Service</th>
                         <th className="text-left p-4 font-semibold text-gray-900">Status</th>
-                        <th className="text-left p-4 font-semibold text-gray-900">Progress</th>
+                        {/* <th className="text-left p-4 font-semibold text-gray-900">Progress</th> */}
                         <th className="text-left p-4 font-semibold text-gray-900">Expert</th>
                         <th className="text-left p-4 font-semibold text-gray-900">Actions</th>
                       </tr>
@@ -398,27 +418,31 @@ const Services = () => {
                           <tr key={service.id} className="border-b hover:bg-gray-50 transition-colors">
                             <td className="p-4">
                               <div className="flex items-center gap-3">
-                                <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                                  service.status === 'completed' ? 'bg-gradient-to-r from-green-500 to-emerald-500' :
-                                  service.status === 'in-progress' ? 'bg-gradient-to-r from-blue-500 to-cyan-500' :
-                                  'bg-gradient-to-r from-yellow-500 to-orange-500'
+                                <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:scale-110 hover:shadow-lg cursor-pointer ${
+                                  service.status === 'completed' ? 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600' :
+                                  service.status === 'in-progress' ? 'bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600' :
+                                  'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600'
                                 }`}>
-                                  <StatusIcon className="h-5 w-5 text-white" />
+                                  <StatusIcon className="h-5 w-5 text-white transition-transform duration-300 hover:scale-110" />
                                 </div>
                                 <div className="min-w-0 flex-1">
                                   <h3 className="font-semibold text-gray-900 mb-1">{service.title}</h3>
                                   <p className="text-sm text-gray-600">
-                                    Submitted {new Date(service.submittedDate).toLocaleDateString()}
+                                    Submitted {formatDate(service.submittedDate)}
                                   </p>
                                 </div>
                               </div>
                             </td>
                             <td className="p-4">
-                              <Badge className={`${getStatusColor(service.status)} font-medium px-3 py-1`}>
+                              <Badge className={`${getStatusColor(service.status)} font-medium px-3 py-1 transition-all duration-300 hover:scale-105 hover:shadow-md cursor-pointer ${
+                                service.status === 'completed' ? 'hover:bg-green-200 hover:text-green-700' :
+                                service.status === 'in-progress' ? 'hover:bg-blue-200 hover:text-blue-700' :
+                                'hover:bg-yellow-200 hover:text-yellow-700'
+                              }`}>
                                 {service.status.replace('-', ' ').toUpperCase()}
                               </Badge>
                             </td>
-                            <td className="p-4">
+                            {/* <td className="p-4">
                               <div className="w-24">
                                 <div className="flex items-center justify-between mb-1">
                                   <span className="text-xs text-gray-600">Progress</span>
@@ -426,7 +450,7 @@ const Services = () => {
                                 </div>
                                 <Progress value={service.progress} className="h-2" />
                               </div>
-                            </td>
+                            </td> */}
                             <td className="p-4">
                               <div className="text-sm">
                                 <p className="font-medium text-gray-900">{service.expert}</p>
@@ -437,7 +461,14 @@ const Services = () => {
                             </td>
                             <td className="p-4">
                               <div className="flex items-center gap-2">
-                                <Button size="sm" className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white">
+                                <Button 
+                                  size="sm" 
+                                  className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
+                                  onClick={() => {
+                                    setSelectedService(service);
+                                    setIsModalOpen(true);
+                                  }}
+                                >
                                   <Eye className="h-4 w-4 mr-2" />
                                   View Details
                                 </Button>
@@ -501,6 +532,134 @@ const Services = () => {
         </Tabs>
         </div>
       </div>
+
+      {/* Service Details Modal */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          {selectedService && (
+            <>
+              <DialogHeader>
+                <div className="flex items-center gap-3 mb-2">
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                    selectedService.status === 'completed' ? 'bg-gradient-to-r from-green-500 to-emerald-500' :
+                    selectedService.status === 'in-progress' ? 'bg-gradient-to-r from-blue-500 to-cyan-500' :
+                    'bg-gradient-to-r from-yellow-500 to-orange-500'
+                  }`}>
+                    {(() => {
+                      const StatusIcon = getStatusIcon(selectedService.status);
+                      return <StatusIcon className="h-6 w-6 text-white" />;
+                    })()}
+                  </div>
+                  <div>
+                    <DialogTitle className="text-xl font-bold text-gray-900">
+                      {selectedService.title}
+                    </DialogTitle>
+                    <Badge className={`${getStatusColor(selectedService.status)} font-medium px-3 py-1 mt-1`}>
+                      {selectedService.status.replace('-', ' ').toUpperCase()}
+                    </Badge>
+                  </div>
+                </div>
+              </DialogHeader>
+
+              <div className="space-y-6">
+                {/* Service Timeline */}
+                <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4">
+                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                    <Calendar className="h-4 w-4" />
+                    Service Timeline
+                  </h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Submitted Date:</span>
+                      <span className="font-medium">{formatDate(selectedService.submittedDate)}</span>
+                    </div>
+                    {selectedService.completedDate && (
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-600">Completed Date:</span>
+                        <span className="font-medium text-green-600">{formatDate(selectedService.completedDate)}</span>
+                      </div>
+                    )}
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Progress:</span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-24 bg-gray-200 rounded-full h-2">
+                          <div 
+                            className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-300" 
+                            style={{ width: `${selectedService.progress}%` }}
+                          ></div>
+                        </div>
+                        <span className="text-sm font-semibold text-blue-600">{selectedService.progress}%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Expert Information */}
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4">
+                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                    <Users className="h-4 w-4" />
+                    Assigned Expert
+                  </h3>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center">
+                      <Users className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">{selectedService.expert}</p>
+                      {selectedService.nextStep && (
+                        <p className="text-sm text-gray-600 mt-1">
+                          <span className="font-medium">Next Step:</span> {selectedService.nextStep}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Documents */}
+                {selectedService.documents && selectedService.documents.length > 0 && (
+                  <div className="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-xl p-4">
+                    <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                      <FileText className="h-4 w-4" />
+                      Documents
+                    </h3>
+                    <div className="space-y-2">
+                      {selectedService.documents.map((doc, index) => (
+                        <div key={index} className="flex items-center justify-between p-2 bg-white rounded-lg border">
+                          <div className="flex items-center gap-2">
+                            <FileText className="h-4 w-4 text-gray-500" />
+                            <span className="text-sm font-medium">{doc}</span>
+                          </div>
+                          <Button size="sm" variant="outline" className="text-xs">
+                            <Download className="h-3 w-3 mr-1" />
+                            Download
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="flex items-center gap-3 pt-4 border-t">
+                  {selectedService.status === 'completed' && (
+                    <Button className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white flex-1">
+                      <Download className="h-4 w-4 mr-2" />
+                      Download All Documents
+                    </Button>
+                  )}
+                  <Button 
+                    variant="outline" 
+                    className="bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0 hover:from-blue-600 hover:to-purple-700 flex-1"
+                  >
+                    <Phone className="h-4 w-4 mr-2" />
+                    Contact Expert
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </AppLayout>
   );
 };

@@ -239,7 +239,7 @@ const MyDownloads = () => {
                     <TableHeader>
                       <TableRow className="bg-gray-50/50">
                         <TableHead className="font-semibold text-gray-700 py-4">Template Details</TableHead>
-                        <TableHead className="font-semibold text-gray-700 text-center">Type</TableHead>
+                        {/* <TableHead className="font-semibold text-gray-700 text-center">Type</TableHead> */}
                         <TableHead className="font-semibold text-gray-700 text-center">Category</TableHead>
                         <TableHead className="font-semibold text-gray-700 text-center">Downloaded</TableHead>
                         <TableHead className="font-semibold text-gray-700 text-center">Actions</TableHead>
@@ -261,11 +261,11 @@ const MyDownloads = () => {
                                 </div>
                               </div>
                             </TableCell>
-                            <TableCell className="text-center">
+                            {/* <TableCell className="text-center">
                               <Badge className={`${getFileTypeColor(template.fileType)} text-xs font-medium px-2 py-1`}>
                                 {template.fileType}
                               </Badge>
-                            </TableCell>
+                            </TableCell> */}
                             <TableCell className="text-center">
                               <Badge variant="outline" className="text-xs font-medium px-2 py-1 capitalize">
                                 {template.category}

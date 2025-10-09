@@ -21,7 +21,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Eye,
-  ExternalLink
+  ExternalLink,
+  Info
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -30,6 +31,13 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import Header from "@/components/layout/Header";
 import AppLayout from "@/components/layout/AppLayout";
 
@@ -38,11 +46,13 @@ const Schemes = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
+  const [selectedScheme, setSelectedScheme] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const schemeFilters = [
     { id: "all", label: "All Schemes", count: 18 },
     { id: "applied", label: "Applied Schemes", count: 3 },
-    { id: "applicable", label: "Applicable Schemes", count: 12 },
+    { id: "applicable", label: "Eligible Schemes", count: 12 },
   ];
 
   const schemes = [
@@ -244,16 +254,25 @@ const Schemes = () => {
             </p>
           </div>
           
-          <Button variant="hero" className="hidden md:flex">
-            <Calculator className="h-4 w-4 mr-2" />
-            Eligibility Calculator
-          </Button>
+      
         </div>
 
 
 
-        {/* Schemes Content */}
-        <div className="space-y-6">
+        {/* Schemes Tabs */}
+        <Tabs defaultValue="eligible" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-2 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100 p-1">
+            <TabsTrigger value="eligible" className="data-[state=active]:bg-white data-[state=active]:shadow-md transition-all duration-200">
+              <Target className="h-4 w-4 mr-2" />
+              Eligible Schemes
+            </TabsTrigger>
+            <TabsTrigger value="more-info" className="data-[state=active]:bg-white data-[state=active]:shadow-md transition-all duration-200">
+              <Info className="h-4 w-4 mr-2" />
+              More Info
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="eligible" className="space-y-6">
             {/* Search and Filters */}
             <Card className="bg-gradient-card border-0">
               <CardContent className="p-6">
@@ -268,19 +287,7 @@ const Schemes = () => {
                     />
                   </div>
                   
-                  <div className="flex flex-wrap gap-2">
-                    {schemeFilters.map((filter) => (
-                      <Button
-                        key={filter.id}
-                        variant={selectedCategory === filter.id ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setSelectedCategory(filter.id)}
-                        className="whitespace-nowrap"
-                      >
-                        {filter.label} ({filter.id === 'applied' ? myApplications.length : filter.id === 'applicable' ? schemes.filter(s => s.eligibility > 70).length : schemes.length})
-                      </Button>
-                    ))}
-                  </div>
+                  
                 </div>
               </CardContent>
             </Card>
@@ -301,7 +308,7 @@ const Schemes = () => {
                     <TableHeader>
                       <TableRow className="bg-gray-50/50">
                         <TableHead className="font-semibold text-gray-700 py-4">Scheme Details</TableHead>
-                        <TableHead className="font-semibold text-gray-700 text-center">Category</TableHead>
+                        {/* <TableHead className="font-semibold text-gray-700 text-center">Category</TableHead> */}
                         {/* <TableHead className="font-semibold text-gray-700 text-center">Funding</TableHead> */}
                         {/* <TableHead className="font-semibold text-gray-700 text-center">Eligibility</TableHead> */}
                         <TableHead className="font-semibold text-gray-700 text-center">Deadline</TableHead>
@@ -347,23 +354,15 @@ const Schemes = () => {
                                 </div>
                               </div>
                             </TableCell>
+                            
                             <TableCell className="text-center py-6 px-4">
                               <div className="bg-white rounded-lg p-3 border border-gray-100 shadow-sm">
-                                <Badge className={`${getCategoryColor(scheme.category)} text-xs font-medium px-3 py-2`}>
-                                  {scheme.category.toUpperCase()}
-                                </Badge>
-                              </div>
-                            </TableCell>
-                            <TableCell className="text-center py-6 px-4">
-                              <div className="bg-white rounded-lg p-3 border border-gray-100 shadow-sm">
-                                <div className="text-sm font-bold text-gray-800 mb-1">
+                                <div className="text-sm font-bold text-gray-800 whitespace-nowrap">
                                   {new Date(scheme.deadline).toLocaleDateString('en-IN', { 
                                     day: '2-digit', 
-                                    month: 'short'
+                                    month: 'short',
+                                    year: 'numeric'
                                   })}
-                                </div>
-                                <div className="text-xs text-gray-500">
-                                  {new Date(scheme.deadline).getFullYear()}
                                 </div>
                               </div>
                             </TableCell>
@@ -371,11 +370,9 @@ const Schemes = () => {
                               <div className="bg-white rounded-lg p-3 border border-gray-100 shadow-sm">
                                 <div className="flex items-center justify-center gap-2">
                                   <Button size="sm" className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-4 py-2 text-xs font-medium">
-                                    Apply Now
+                                   Visit Website
                                   </Button>
-                                  <Button variant="outline" size="sm" className="px-3 py-2 border-gray-300 hover:border-blue-400">
-                                    <Eye className="h-4 w-4" />
-                                  </Button>
+                                 
                                 </div>
                               </div>
                             </TableCell>
@@ -429,7 +426,275 @@ const Schemes = () => {
                 )}
               </CardContent>
             </Card>
-        </div>
+          </TabsContent>
+
+          <TabsContent value="more-info" className="space-y-6">
+            {/* Search and Filters */}
+            <Card className="bg-gradient-card border-0">
+              <CardContent className="p-6">
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Search schemes..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+          
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Schemes Table */}
+            <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-200 pb-4">
+                <CardTitle className="flex items-center gap-3 text-xl">
+                  <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                    <Info className="h-5 w-5 text-blue-600" />
+                  </div>
+                  All Schemes ({filteredSchemes.length})
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-gray-50/50">
+                        <TableHead className="font-semibold text-gray-700 py-4">Scheme Details</TableHead>
+                        <TableHead className="font-semibold text-gray-700 text-center">Deadline</TableHead>
+                        <TableHead className="font-semibold text-gray-700 text-center">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {paginatedSchemes.map((scheme) => {
+                        const IconComponent = getCategoryIcon(scheme.category);
+                        return (
+                          <TableRow key={scheme.id} className="hover:bg-blue-50/50 transition-all duration-200 border-b-2 border-gray-200 group">
+                            <TableCell className="py-6 px-6">
+                              <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 group-hover:shadow-md group-hover:border-blue-200 transition-all duration-200">
+                                <div className="flex items-start gap-4">
+                                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-md">
+                                    <IconComponent className="h-6 w-6 text-white" />
+                                  </div>
+                                  <div className="min-w-0 flex-1">
+                                    <div className="flex items-center gap-2 mb-2">
+                                      <h3 className="font-bold text-gray-900 text-base leading-tight">{scheme.title}</h3>
+                                      {scheme.trending && (
+                                        <Badge className="bg-orange-100 text-orange-700 text-xs px-2 py-1">
+                                          🔥 Trending
+                                        </Badge>
+                                      )}
+                                    </div>
+                                    <p className="text-sm text-gray-600 leading-relaxed mb-3">{scheme.description}</p>
+                                    <div className="flex items-center gap-6 text-xs text-gray-500">
+                                      <span className="flex items-center gap-1">
+                                        <Users className="h-3 w-3" />
+                                        {scheme.applications} applications
+                                      </span>
+                                      <span className="flex items-center gap-1">
+                                        <CheckCircle className="h-3 w-3 text-green-500" />
+                                        {scheme.approved} approved
+                                      </span>
+                                      <span className="flex items-center gap-1">
+                                        <IndianRupee className="h-3 w-3" />
+                                        {scheme.fundingAmount}
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </TableCell>
+                            
+                            <TableCell className="text-center py-6 px-4">
+                              <div className="bg-white rounded-lg p-3 border border-gray-100 shadow-sm">
+                                <div className="text-sm font-bold text-gray-800 whitespace-nowrap">
+                                  {new Date(scheme.deadline).toLocaleDateString('en-IN', { 
+                                    day: '2-digit', 
+                                    month: 'short',
+                                    year: 'numeric'
+                                  })}
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-center py-6 px-4">
+                              <div className="bg-white rounded-lg p-3 border border-gray-100 shadow-sm">
+                                <Button 
+                                  size="sm" 
+                                  className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-4 py-2 text-xs font-medium"
+                                  onClick={() => {
+                                    setSelectedScheme(scheme);
+                                    setIsModalOpen(true);
+                                  }}
+                                >
+                                  <Eye className="h-4 w-4 mr-2" />
+                                  View Details
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
+                
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50/30">
+                    <div className="text-sm text-gray-600">
+                      Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredSchemes.length)} of {filteredSchemes.length} schemes
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className="px-3 py-1.5"
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                      </Button>
+                      
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                        <Button
+                          key={page}
+                          variant={currentPage === page ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => handlePageChange(page)}
+                          className="px-3 py-1.5 min-w-[32px]"
+                        >
+                          {page}
+                        </Button>
+                      ))}
+                      
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className="px-3 py-1.5"
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+
+        {/* Scheme Details Modal */}
+        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+            {selectedScheme && (
+              <>
+                <DialogHeader>
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                      {(() => {
+                        const IconComponent = getCategoryIcon(selectedScheme.category);
+                        return <IconComponent className="h-6 w-6 text-white" />;
+                      })()}
+                    </div>
+                    <div>
+                      <DialogTitle className="text-xl font-bold text-gray-900">
+                        {selectedScheme.title}
+                      </DialogTitle>
+                      <Badge className={`${getCategoryColor(selectedScheme.category)} text-xs px-2 py-1 mt-1`}>
+                        {selectedScheme.category.toUpperCase()}
+                      </Badge>
+                    </div>
+                  </div>
+                </DialogHeader>
+
+                <div className="space-y-6">
+                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4">
+                    <p className="text-gray-700 leading-relaxed">{selectedScheme.description}</p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-white rounded-lg p-4 border border-gray-200">
+                      <div className="flex items-center gap-2 mb-2">
+                        <IndianRupee className="h-4 w-4 text-green-600" />
+                        <span className="text-sm text-gray-600">Funding Amount</span>
+                      </div>
+                      <p className="text-lg font-bold text-gray-900">{selectedScheme.fundingAmount}</p>
+                    </div>
+                    <div className="bg-white rounded-lg p-4 border border-gray-200">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Calendar className="h-4 w-4 text-blue-600" />
+                        <span className="text-sm text-gray-600">Deadline</span>
+                      </div>
+                      <p className="text-lg font-bold text-gray-900">
+                        {new Date(selectedScheme.deadline).toLocaleDateString('en-IN', { 
+                          day: '2-digit', 
+                          month: 'short',
+                          year: 'numeric'
+                        })}
+                      </p>
+                    </div>
+                    <div className="bg-white rounded-lg p-4 border border-gray-200">
+                      <div className="flex items-center gap-2 mb-2">
+                        <MapPin className="h-4 w-4 text-purple-600" />
+                        <span className="text-sm text-gray-600">Location</span>
+                      </div>
+                      <p className="text-lg font-bold text-gray-900">{selectedScheme.location}</p>
+                    </div>
+                    <div className="bg-white rounded-lg p-4 border border-gray-200">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Award className="h-4 w-4 text-orange-600" />
+                        <span className="text-sm text-gray-600">Subsidy</span>
+                      </div>
+                      <p className="text-lg font-bold text-gray-900">{selectedScheme.subsidy}</p>
+                    </div>
+                  </div>
+
+                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4">
+                    <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                      <Star className="h-4 w-4 text-green-600" />
+                      Key Features
+                    </h3>
+                    <ul className="space-y-2">
+                      {selectedScheme.features.map((feature, index) => (
+                        <li key={index} className="flex items-center gap-2 text-sm text-gray-700">
+                          <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-blue-50 rounded-lg p-4">
+                      <div className="flex items-center gap-2 mb-1">
+                        <Users className="h-4 w-4 text-blue-600" />
+                        <span className="text-sm text-gray-600">Applications</span>
+                      </div>
+                      <p className="text-2xl font-bold text-blue-600">{selectedScheme.applications}</p>
+                    </div>
+                    <div className="bg-green-50 rounded-lg p-4">
+                      <div className="flex items-center gap-2 mb-1">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <span className="text-sm text-gray-600">Approved</span>
+                      </div>
+                      <p className="text-2xl font-bold text-green-600">{selectedScheme.approved}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 pt-4 border-t">
+                    <Button className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white flex-1">
+                      Visit Website
+                    </Button>
+                   
+                  </div>
+                </div>
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
         </div>
       </div>
     </AppLayout>

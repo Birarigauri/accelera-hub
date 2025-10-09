@@ -21,7 +21,7 @@ import AppLayout from "@/components/layout/AppLayout";
 
 const NotificationsV2 = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [filter, setFilter] = useState<"all" | "unread" | "important">("all");
+  const [filter, setFilter] = useState<"all" | "moderate" | "urgent">("all");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [notifications, setNotifications] = useState([
     {
@@ -150,8 +150,8 @@ const NotificationsV2 = () => {
   };
 
   const filteredNotifications = notifications.filter(notification => {
-    if (filter === "unread" && notification.read) return false;
-    if (filter === "important" && !notification.important) return false;
+    if (filter === "moderate" && notification.priority !== "medium") return false;
+    if (filter === "urgent" && notification.priority !== "high") return false;
     
     if (selectedCategory === "state" && !(notification.category === 'compliance' || notification.category === 'services')) return false;
     if (selectedCategory === "central" && !(notification.category === 'schemes' || notification.category === 'security')) return false;
@@ -171,7 +171,8 @@ const NotificationsV2 = () => {
     }
   };
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const moderateCount = notifications.filter(n => n.priority === "medium").length;
+  const urgentCount = notifications.filter(n => n.priority === "high").length;
 
   return (
     <AppLayout>
@@ -208,90 +209,41 @@ const NotificationsV2 = () => {
                   variant={filter === "all" ? "default" : "outline"}
                   size="sm"
                   onClick={() => setFilter("all")}
+                  className={filter === "all" ? "hover:bg-primary hover:text-primary-foreground" : ""}
                 >
                   All
                 </Button>
                 <Button
-                  variant={filter === "unread" ? "default" : "outline"}
+                  variant={filter === "moderate" ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setFilter("unread")}
+                  onClick={() => setFilter("moderate")}
+                  className={filter === "moderate" ? "hover:bg-primary hover:text-primary-foreground" : ""}
                 >
-                  Unread ({unreadCount})
+                  <Clock className="h-3 w-3 mr-1" />
+                  Moderate ({moderateCount})
                 </Button>
                 <Button
-                  variant={filter === "important" ? "default" : "outline"}
+                  variant={filter === "urgent" ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setFilter("important")}
+                  onClick={() => setFilter("urgent")}
+                  className={filter === "urgent" ? "hover:bg-primary hover:text-primary-foreground" : ""}
                 >
-                  <Star className="h-3 w-3 mr-1" />
-                  Important
+                  <AlertTriangle className="h-3 w-3 mr-1" />
+                  Urgent ({urgentCount})
                 </Button>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Priority Highlights */}
-        <div className="grid md:grid-cols-2 gap-6 mb-6">
-          {/* Urgent Section */}
-          <Card className="bg-gradient-to-r from-red-50 to-orange-50 border-red-200 shadow-lg">
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-red-700">
-                <AlertTriangle className="h-5 w-5" />
-                🚨 Urgent Notifications
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {notifications.filter(n => n.priority === 'high').slice(0, 3).map((notification) => (
-                  <div key={notification.id} className="flex items-start gap-3 p-3 bg-white/70 rounded-lg border border-red-100">
-                    <div className={`w-8 h-8 rounded-lg ${notification.bgColor} flex items-center justify-center flex-shrink-0`}>
-                      <notification.icon className={`h-4 w-4 ${notification.color}`} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-sm text-red-900 line-clamp-1">{notification.title}</h4>
-                      <p className="text-xs text-red-700 line-clamp-2 mt-1">{notification.description}</p>
-                      <span className="text-xs text-red-600 mt-1 block">{getTimeAgo(notification.time)}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Moderate Section */}
-          <Card className="bg-gradient-to-r from-yellow-50 to-amber-50 border-yellow-200 shadow-lg">
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-yellow-700">
-                <Clock className="h-5 w-5" />
-                ⚠️ Moderate Priority
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {notifications.filter(n => n.priority === 'medium').slice(0, 3).map((notification) => (
-                  <div key={notification.id} className="flex items-start gap-3 p-3 bg-white/70 rounded-lg border border-yellow-100">
-                    <div className={`w-8 h-8 rounded-lg ${notification.bgColor} flex items-center justify-center flex-shrink-0`}>
-                      <notification.icon className={`h-4 w-4 ${notification.color}`} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-sm text-yellow-900 line-clamp-1">{notification.title}</h4>
-                      <p className="text-xs text-yellow-700 line-clamp-2 mt-1">{notification.description}</p>
-                      <span className="text-xs text-yellow-600 mt-1 block">{getTimeAgo(notification.time)}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        
 
         {/* Notifications Tabs */}
         <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="space-y-6">
           <TabsList className="grid w-full md:w-auto md:grid-cols-3 bg-white">
-            <TabsTrigger value="all">All ({notifications.length})</TabsTrigger>
-            <TabsTrigger value="state">State ({notifications.filter(n => n.category === 'compliance' || n.category === 'services').length})</TabsTrigger>
-            <TabsTrigger value="central">Central ({notifications.filter(n => n.category === 'schemes' || n.category === 'security').length})</TabsTrigger>
+            <TabsTrigger value="all" className="data-[state=active]:hover:bg-primary data-[state=active]:hover:text-primary-foreground">All ({notifications.length})</TabsTrigger>
+            <TabsTrigger value="state" className="data-[state=active]:hover:bg-primary data-[state=active]:hover:text-primary-foreground">State ({notifications.filter(n => n.category === 'compliance' || n.category === 'services').length})</TabsTrigger>
+            <TabsTrigger value="central" className="data-[state=active]:hover:bg-primary data-[state=active]:hover:text-primary-foreground">Central ({notifications.filter(n => n.category === 'schemes' || n.category === 'security').length})</TabsTrigger>
           </TabsList>
 
           <TabsContent value="all" className="space-y-4">
@@ -326,12 +278,7 @@ const NotificationsV2 = () => {
                                 <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
                               )}
                             </div>
-                            
-                            <div className="flex items-center gap-2">
-                              <span className="text-sm text-muted-foreground whitespace-nowrap">
-                                {getTimeAgo(notification.time)}
-                              </span>
-                            </div>
+                          
                           </div>
                           
                           <p className="text-muted-foreground mb-4 leading-relaxed">

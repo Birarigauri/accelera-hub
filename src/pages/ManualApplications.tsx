@@ -179,6 +179,78 @@ const ManualApplications = () => {
       certificateNumber: "DSC-2024-001234",
       type: "Certificate",
       hasReview: false
+    },
+    {
+      id: 4,
+      name: "FSSAI License",
+      completionDate: "2024-01-20",
+      certificateNumber: "FSSAI-10023456789012",
+      type: "License",
+      hasReview: true
+    },
+    {
+      id: 5,
+      name: "Trade License",
+      completionDate: "2024-01-05",
+      certificateNumber: "TL-2024-MUM-5678",
+      type: "License",
+      hasReview: false
+    },
+    {
+      id: 6,
+      name: "Import Export Code",
+      completionDate: "2023-12-18",
+      certificateNumber: "IEC-0123456789",
+      type: "Certificate",
+      hasReview: true
+    },
+    {
+      id: 7,
+      name: "Startup India Registration",
+      completionDate: "2023-11-25",
+      certificateNumber: "DPIIT-12345",
+      type: "Certificate",
+      hasReview: false
+    },
+    {
+      id: 8,
+      name: "ISO 9001 Certification",
+      completionDate: "2023-10-12",
+      certificateNumber: "ISO-9001-2023-7890",
+      type: "Certificate",
+      hasReview: true
+    },
+    {
+      id: 9,
+      name: "MSME Registration",
+      completionDate: "2023-09-08",
+      certificateNumber: "UDYAM-DL-12-3456789",
+      type: "Certificate",
+      hasReview: false
+    },
+    {
+      id: 10,
+      name: "Professional Tax Registration",
+      completionDate: "2023-08-22",
+      certificateNumber: "PT-MH-2023-98765",
+      type: "License",
+      hasReview: true
+    },
+    {
+      id: 11,
+      name: "Shop and Establishment License",
+      completionDate: "2023-07-15",
+      certificateNumber: "SE-DL-2023-4567",
+      type: "License",
+      hasReview: false
+    },
+    {
+      id: 12,
+      name: "Trademark Registration",
+      completionDate: "2023-06-30",
+      certificateNumber: "TM-2023-123456",
+      type: "Certificate",
+      hasReview: true
     }
   ];
 
@@ -188,22 +260,42 @@ const ManualApplications = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "Connected": return "bg-green-100 text-green-700";
-      case "Awaiting Response": return "bg-yellow-100 text-yellow-700";
-      case "Completed": return "bg-blue-100 text-blue-700";
-      case "In Progress": return "bg-blue-100 text-blue-700";
-      case "Submitted": return "bg-purple-100 text-purple-700";
-      case "Not Applied": return "bg-gray-100 text-gray-700";
-      default: return "bg-gray-100 text-gray-700";
+      case "Connected": return "bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 border border-green-200 shadow-sm";
+      case "Awaiting Response": return "bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-800 border border-amber-200 shadow-sm";
+      case "Completed": return "bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 border border-blue-200 shadow-sm";
+      case "In Progress": return "bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-800 border border-blue-200 shadow-sm";
+      case "Submitted": return "bg-gradient-to-r from-purple-100 to-violet-100 text-purple-800 border border-purple-200 shadow-sm";
+      default: return "bg-gradient-to-r from-gray-100 to-slate-100 text-gray-700 border border-gray-200 shadow-sm";
     }
   };
 
   const getApplicationStatusColor = (status: string) => {
     switch (status) {
-      case "In Progress": return "bg-blue-100 text-blue-700";
-      case "Submitted": return "bg-purple-100 text-purple-700";
-      case "Not Applied": return "bg-gray-100 text-gray-700";
-      default: return "bg-gray-100 text-gray-700";
+      case "In Progress": return "bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-800 border border-blue-200 shadow-sm";
+      case "Submitted": return "bg-gradient-to-r from-purple-100 to-violet-100 text-purple-800 border border-purple-200 shadow-sm";
+      default: return "bg-gradient-to-r from-gray-100 to-slate-100 text-gray-700 border border-gray-200 shadow-sm";
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "Connected": return <CheckCircle className="h-3 w-3 mr-1" />;
+      case "Awaiting Response": return <Clock className="h-3 w-3 mr-1" />;
+      case "Completed": return <CheckCircle className="h-3 w-3 mr-1" />;
+      case "In Progress": return <Clock className="h-3 w-3 mr-1" />;
+      case "Submitted": return <FileText className="h-3 w-3 mr-1" />;
+      default: return <AlertCircle className="h-3 w-3 mr-1" />;
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "Connected": return "Connected";
+      case "Awaiting Response": return "Awaiting";
+      case "Completed": return "Completed";
+      case "In Progress": return "In Progress";
+      case "Submitted": return "Submitted";
+      default: return status;
     }
   };
 
@@ -379,10 +471,13 @@ const ManualApplications = () => {
                       </div>
                       
                       <div className="flex items-center justify-between">
-                        <Badge className={getApplicationStatusColor(app.status)}>
-                          {app.status}
-                        </Badge>
-                        <Button size="sm" className="bg-gradient-to-r from-green-500 to-emerald-600 text-white">
+                        {app.status !== "Not Applied" && (
+                          <Badge className={`${getApplicationStatusColor(app.status)} font-medium px-3 py-1 rounded-full inline-flex items-center whitespace-nowrap`}>
+                            {getStatusIcon(app.status)}
+                            {getStatusText(app.status)}
+                          </Badge>
+                        )}
+                        <Button size="sm" className="bg-gradient-to-r from-green-500 to-emerald-600 text-white ml-auto">
                           {app.status === "Not Applied" ? "Apply Now" : "Resume Application"}
                         </Button>
                       </div>
@@ -411,8 +506,9 @@ const ManualApplications = () => {
                             </div>
                           </div>
                           <div className="flex items-center gap-3">
-                            <Badge className={getStatusColor(inquiry.status)}>
-                              {inquiry.status}
+                            <Badge className={`${getStatusColor(inquiry.status)} font-medium px-3 py-1 rounded-full inline-flex items-center whitespace-nowrap`}>
+                              {getStatusIcon(inquiry.status)}
+                              {getStatusText(inquiry.status)}
                             </Badge>
                             <span className="text-xs text-gray-500">ID: {inquiry.id}</span>
                           </div>
@@ -485,27 +581,20 @@ const ManualApplications = () => {
                     setShowServiceModal(true);
                   }}>
                     <CardContent className="p-6">
-                      <div className="flex items-start gap-4 mb-4">
+                      <div className="flex items-start gap-4 ">
                         <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
                           <CheckCircle className="h-6 w-6 text-white" />
                         </div>
                         <div className="flex-1">
                           <h3 className="font-semibold text-gray-900 mb-1">{service.name}</h3>
                           <p className="text-sm text-gray-600 mb-2">
-                            Completed: {new Date(service.completionDate).toLocaleDateString()}
+                            Completed: {new Date(service.completionDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
                           </p>
-                          <p className="text-xs text-gray-500 mb-3">
-                            Certificate No: {service.certificateNumber}
-                          </p>
+                      
                         </div>
                       </div>
                       
-                      <div className="space-y-2">
-                        <Button size="sm" className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white" onClick={(e) => e.stopPropagation()}>
-                          <Download className="h-4 w-4 mr-2" />
-                          Download Certificate
-                        </Button>
-                      </div>
+                    
                     </CardContent>
                   </Card>
                 ))}
@@ -513,32 +602,6 @@ const ManualApplications = () => {
             </TabsContent>
           </Tabs>
 
-          {/* Footer Section */}
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-200">
-              <CardContent className="p-6 text-center">
-                <Bot className="h-12 w-12 text-blue-600 mx-auto mb-3" />
-                <h3 className="font-semibold text-gray-900 mb-2">Need help?</h3>
-                <p className="text-sm text-gray-600 mb-4">Chat with our AI Expert Assistant 🤖</p>
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                  <MessageCircle className="h-4 w-4 mr-2" />
-                  Start Chat
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
-              <CardContent className="p-6 text-center">
-                <BarChart3 className="h-12 w-12 text-purple-600 mx-auto mb-3" />
-                <h3 className="font-semibold text-gray-900 mb-2">Compliance Dashboard</h3>
-                <p className="text-sm text-gray-600 mb-4">View all your completed applications</p>
-                <Button className="bg-purple-600 hover:bg-purple-700 text-white">
-                  <Eye className="h-4 w-4 mr-2" />
-                  View Dashboard
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
 
           {/* Rating Modal */}
           <Dialog open={showRatingModal} onOpenChange={setShowRatingModal}>
@@ -751,8 +814,9 @@ const ManualApplications = () => {
                     <div className="grid grid-cols-2 gap-3 text-sm">
                       <div>
                         <p className="text-gray-600">ID: {selectedInquiry.id}</p>
-                        <Badge className={getStatusColor(selectedInquiry.status)}>
-                          {selectedInquiry.status}
+                        <Badge className={`${getStatusColor(selectedInquiry.status)} font-medium px-3 py-1 rounded-full inline-flex items-center whitespace-nowrap`}>
+                          {getStatusIcon(selectedInquiry.status)}
+                          {getStatusText(selectedInquiry.status)}
                         </Badge>
                       </div>
                       <div>

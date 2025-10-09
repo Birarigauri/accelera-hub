@@ -46,7 +46,7 @@ const Header = ({ onMenuToggle, showMenu = false }: HeaderProps) => {
   ];
 
   return (
-    <header className="bg-white border-b border-border sticky top-0 z-50 shadow-sm">
+    <header className="bg-white border-b border-border sticky top-0 z-50 shadow-sm p-3">
       <div className="flex items-center justify-between px-4 lg:px-6 h-16">
         {/* Left Section */}
         <div className="flex items-center gap-4">

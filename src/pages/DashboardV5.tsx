@@ -328,7 +328,7 @@ const businessData = {
     totalConnect: 12,
     totalDownloads: 45,
     activeBusinesses: 1,
-    complianceScore: "95%",
+    // complianceScore: "95%",
     criticalItems: 2,
     bgColor: "bg-gradient-to-br from-blue-100 via-blue-200 to-indigo-300"
   },
@@ -338,7 +338,7 @@ const businessData = {
     totalConnect: 6,
     totalDownloads: 23,
     activeBusinesses: 2,
-    complianceScore: "87%",
+    // complianceScore: "87%",
     criticalItems: 4,
     bgColor: "bg-gradient-to-br from-green-100 via-green-200 to-emerald-300"
   },
@@ -348,7 +348,7 @@ const businessData = {
     totalConnect: 9,
     totalDownloads: 31,
     activeBusinesses: 1,
-    complianceScore: "92%",
+    // complianceScore: "92%",
     criticalItems: 1,
     bgColor: "bg-gradient-to-br from-blue-100 via-blue-200 to-indigo-300"
   }
@@ -579,15 +579,15 @@ const DashboardV5 = memo(() => {
               <CardContent className="p-4 flex-1 flex flex-col">
                 {/* Enhanced Summary */}
                 <div className="grid grid-cols-3 gap-3 mb-4">
-                  <div className="text-center p-3 bg-white/80 rounded-lg border border-red-100 hover:bg-white transition-all">
+                  <div className="text-center p-3 bg-white/80 rounded-lg border border-red-100">
                     <div className="text-xl font-bold text-red-600">1</div>
                     <div className="text-xs text-red-700 font-medium">⚠️ Overdue</div>
                   </div>
-                  <div className="text-center p-3 bg-white/80 rounded-lg border border-yellow-100 hover:bg-white transition-all">
+                  <div className="text-center p-3 bg-white/80 rounded-lg border border-yellow-100">
                     <div className="text-xl font-bold text-yellow-600">2</div>
                     <div className="text-xs text-yellow-700 font-medium">⏰ Due Soon</div>
                   </div>
-                  <div className="text-center p-3 bg-white/80 rounded-lg border border-green-100 hover:bg-white transition-all">
+                  <div className="text-center p-3 bg-white/80 rounded-lg border border-green-100">
                     <div className="text-xl font-bold text-green-600">2</div>
                     <div className="text-xs text-green-700 font-medium">✅ Completed</div>
                   </div>
@@ -597,7 +597,7 @@ const DashboardV5 = memo(() => {
                 <div className="space-y-3 flex-1">
                   {filteredComplianceData.slice(0, 2).map((item) => (
                     <Link key={item.id} to={item.name.includes('GSTR') ? "/services/1" : '#'}>
-                      <div className="flex items-center justify-between p-3 bg-white/80 rounded-lg hover:bg-white hover:shadow-md transition-all border border-gray-100 cursor-pointer">
+                      <div className="flex items-center justify-between p-3 bg-white/80 rounded-lg border border-gray-100 cursor-pointer">
                         <div className="flex items-center gap-3">
                           <div className={`w-3 h-3 rounded-full shadow-sm ${item.status === 'overdue' ? 'bg-red-500 animate-pulse' :
                               item.status === 'pending' ? 'bg-yellow-500' : 'bg-green-500'
@@ -608,7 +608,12 @@ const DashboardV5 = memo(() => {
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Badge className={`${getStatusColor(item.status)} px-2 py-1 text-xs font-medium`}>
+                          <Badge className={`${getStatusColor(item.status)} px-2 py-1 text-xs font-medium transition-all duration-300 hover:scale-105 hover:shadow-md cursor-pointer ${
+                            item.status === 'overdue' ? 'hover:bg-red-200 hover:text-red-800' :
+                            item.status === 'pending' ? 'hover:bg-yellow-200 hover:text-yellow-800' :
+                            item.status === 'completed' ? 'hover:bg-green-200 hover:text-green-800' :
+                            item.status === 'upcoming' ? 'hover:bg-blue-200 hover:text-blue-800' : 'hover:bg-gray-200'
+                          }`}>
                             {item.status === 'overdue' ? '⚠️ Overdue' :
                               item.status === 'pending' ? '⏳ Pending' :
                                 item.status === 'completed' ? '✅ Done' : item.status.toUpperCase()}
@@ -699,10 +704,10 @@ const DashboardV5 = memo(() => {
                       </div>
                       <div className="flex-1">
                         <div className="text-sm font-semibold text-gray-900">MSME Technology Upgradation</div>
-                        <div className="text-xs text-gray-600 mt-1">💰 Up to ₹10 Lakh • 🎯 95% Match</div>
+                        <div className="text-xs text-gray-600 mt-1">💰 Up to ₹10 Lakh </div>
                       </div>
                     </div>
-                    <Badge className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm">95%</Badge>
+                    {/* <Badge className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm">95%</Badge> */}
                   </div>
 
                   <div className="flex items-center justify-between p-3 bg-white/90 rounded-lg hover:bg-white hover:shadow-md transition-all border border-gray-100 hover:border-blue-200">
@@ -712,10 +717,10 @@ const DashboardV5 = memo(() => {
                       </div>
                       <div className="flex-1">
                         <div className="text-sm font-semibold text-gray-900">Startup India Seed Fund</div>
-                        <div className="text-xs text-gray-600 mt-1">💰 Up to ₹50 Lakh • 🎯 87% Match</div>
+                        <div className="text-xs text-gray-600 mt-1">💰 Up to ₹50 Lakh</div>
                       </div>
                     </div>
-                    <Badge className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm">87%</Badge>
+                    {/* <Badge className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm">87%</Badge> */}
                   </div>
 
                   <div className="flex items-center justify-between p-3 bg-white/90 rounded-lg hover:bg-white hover:shadow-md transition-all border border-gray-100 hover:border-purple-200">
@@ -725,10 +730,10 @@ const DashboardV5 = memo(() => {
                       </div>
                       <div className="flex-1">
                         <div className="text-sm font-semibold text-gray-900">Women Entrepreneur Scheme</div>
-                        <div className="text-xs text-gray-600 mt-1">💰 Up to ₹25 Lakh • 🎯 92% Match</div>
+                        <div className="text-xs text-gray-600 mt-1">💰 Up to ₹25 Lakh </div>
                       </div>
                     </div>
-                    <Badge className="bg-gradient-to-r from-purple-100 to-pink-100 text-purple-800 px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm">92%</Badge>
+                    {/* <Badge className="bg-gradient-to-r from-purple-100 to-pink-100 text-purple-800 px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm">92%</Badge> */}
                   </div>
 
                   <div className="flex items-center justify-between p-3 bg-white/90 rounded-lg hover:bg-white hover:shadow-md transition-all border border-gray-100 hover:border-orange-200">
@@ -738,10 +743,10 @@ const DashboardV5 = memo(() => {
                       </div>
                       <div className="flex-1">
                         <div className="text-sm font-semibold text-gray-900">Export Promotion Scheme</div>
-                        <div className="text-xs text-gray-600 mt-1">💰 Up to ₹15 Lakh • 🎯 78% Match</div>
+                        <div className="text-xs text-gray-600 mt-1">💰 Up to ₹15 Lakh </div>
                       </div>
                     </div>
-                    <Badge className="bg-gradient-to-r from-orange-100 to-yellow-100 text-orange-800 px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm">78%</Badge>
+                    {/* <Badge className="bg-gradient-to-r from-orange-100 to-yellow-100 text-orange-800 px-3 py-1.5 text-xs font-semibold rounded-full shadow-sm">78%</Badge> */}
                   </div>
                 </div>
 
@@ -858,7 +863,7 @@ const DashboardV5 = memo(() => {
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-2xl font-bold text-purple-600">67%</div>
+                    {/* <div className="text-2xl font-bold text-purple-600">67%</div> */}
                     <div className="text-xs text-purple-500 font-medium">Complete</div>
                   </div>
                 </CardTitle>
@@ -884,7 +889,7 @@ const DashboardV5 = memo(() => {
                       <div className="text-sm font-semibold text-gray-900">✅ Business Registration</div>
                       <div className="text-xs text-gray-600 mt-1">Completed on Jan 15, 2023</div>
                     </div>
-                    <Badge className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 text-xs px-3 py-1.5 font-semibold rounded-full shadow-sm">✓ Done</Badge>
+                    <Badge className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 text-xs px-3 py-1.5 font-semibold rounded-full shadow-sm transition-all duration-300 hover:scale-105 hover:shadow-md cursor-pointer hover:from-green-200 hover:to-emerald-200">✓ Done</Badge>
                   </div>
 
                   <div className="flex items-center gap-3 p-3 bg-white/90 rounded-lg hover:bg-white transition-all hover:shadow-md border border-gray-100">
@@ -895,7 +900,7 @@ const DashboardV5 = memo(() => {
                       <div className="text-sm font-semibold text-gray-900">🏆 First Certification</div>
                       <div className="text-xs text-gray-600 mt-1">Completed on Mar 10, 2023</div>
                     </div>
-                    <Badge className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-xs px-3 py-1.5 font-semibold rounded-full shadow-sm">✓ Done</Badge>
+                    <Badge className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-xs px-3 py-1.5 font-semibold rounded-full shadow-sm transition-all duration-300 hover:scale-105 hover:shadow-md cursor-pointer hover:from-blue-200 hover:to-indigo-200">✓ Done</Badge>
                   </div>
 
                   <div className="flex items-center gap-3 p-3 bg-white/90 rounded-lg hover:bg-white transition-all hover:shadow-md border border-gray-100 border-l-4 border-l-yellow-400">
@@ -906,7 +911,7 @@ const DashboardV5 = memo(() => {
                       <div className="text-sm font-semibold text-gray-900">🔄 Business Expansion</div>
                       <div className="text-xs text-gray-600 mt-1">Currently in progress</div>
                     </div>
-                    <Badge className="bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800 text-xs px-3 py-1.5 font-semibold rounded-full shadow-sm animate-pulse">⏳ 60%</Badge>
+                    {/* <Badge className="bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800 text-xs px-3 py-1.5 font-semibold rounded-full shadow-sm animate-pulse">⏳ 60%</Badge> */}
                   </div>
                 </div>
               </CardContent>
