@@ -69,36 +69,38 @@ const SchemeApplication = () => {
         
         <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-8">
           {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-4">
-              <Link to="/schemes">
-                <Button variant="outline" size="sm">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back to Schemes
-                </Button>
-              </Link>
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-bold">Scheme Application</h1>
-                <p className="text-muted-foreground">Apply for government schemes and funding</p>
+          <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 rounded-2xl p-6 mb-6 shadow-xl">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="text-white">
+                <div className="flex items-center gap-3 mb-2">
+                  <Link to="/schemes">
+                    <Button variant="outline" size="sm" className="bg-white/20 hover:bg-white/30 text-white border-white/30">
+                      <ArrowLeft className="h-4 w-4 mr-2" />
+                      Back
+                    </Button>
+                  </Link>
+                  <h1 className="text-2xl sm:text-3xl font-bold">📝 Scheme Application</h1>
+                </div>
+                <p className="text-blue-100 text-sm sm:text-base">Apply for government schemes and funding</p>
               </div>
-            </div>
-            
-            <div className="flex items-center gap-2">
-              {!isEditing ? (
-                <Button onClick={() => setIsEditing(true)} variant="outline">
-                  <Edit className="h-4 w-4 mr-2" />
-                  Edit
+              
+              <div className="flex items-center gap-2">
+                {!isEditing ? (
+                  <Button onClick={() => setIsEditing(true)} className="bg-white/20 hover:bg-white/30 text-white border-white/30">
+                    <Edit className="h-4 w-4 mr-2" />
+                    Edit
+                  </Button>
+                ) : (
+                  <Button onClick={handleSave} className="bg-white/20 hover:bg-white/30 text-white border-white/30">
+                    <Save className="h-4 w-4 mr-2" />
+                    Save Draft
+                  </Button>
+                )}
+                <Button onClick={handleSubmit} disabled={isEditing} className="bg-white text-blue-600 hover:bg-white/90">
+                  <Send className="h-4 w-4 mr-2" />
+                  Submit
                 </Button>
-              ) : (
-                <Button onClick={handleSave} variant="outline">
-                  <Save className="h-4 w-4 mr-2" />
-                  Save Draft
-                </Button>
-              )}
-              <Button onClick={handleSubmit} disabled={isEditing}>
-                <Send className="h-4 w-4 mr-2" />
-                Submit Application
-              </Button>
+              </div>
             </div>
           </div>
 

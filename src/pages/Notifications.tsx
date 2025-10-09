@@ -438,30 +438,12 @@ const Notifications = () => {
         
         <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-8">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4 sm:gap-0">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Alerts & Notifications</h1>
-            <p className="text-muted-foreground">
-              Stay updated with your business activities and deadlines
-            </p>
-          </div>
-          
-          {/* <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <Badge variant="secondary" className="px-3">
-                {unreadCount} unread
-              </Badge>
-              <Badge variant="outline" className="px-3">
-                {filteredNotifications.length} total
-              </Badge>
+        <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 rounded-2xl p-6 mb-6 shadow-xl">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="text-white">
+              <h1 className="text-2xl sm:text-3xl font-bold mb-1">🔔 Alerts & Notifications</h1>
             </div>
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" onClick={markAllAsRead}>
-                <CheckCircle className="h-4 w-4 mr-2" />
-                Mark All Read
-              </Button>
-            </div> */}
-          {/* </div> */}
+          </div>
         </div>
 
         {/* Search and Filters */}
@@ -581,7 +563,7 @@ const Notifications = () => {
             ) : (
               <div className="space-y-4">
                 {filteredNotifications.map((notification) => (
-                  <Card key={notification.id} className={`transition-all duration-300 hover:shadow-lg bg-gradient-card border-0 border-l-4 ${getPriorityColor(notification.priority)} ${!notification.read ? 'ring-2 ring-primary/20 bg-blue-50/30' : ''}`}>
+                  <Card key={notification.id} className={`transition-all duration-300 hover:shadow-lg border-l-4 ${getPriorityColor(notification.priority)} ${!notification.read ? 'bg-blue-50 border-2 border-blue-200' : 'bg-white border border-gray-200'}`}>
                     <CardContent className="p-6">
                       <div className="flex items-start gap-4">
                         <div className={`w-10 h-10 rounded-lg ${notification.bgColor} flex items-center justify-center flex-shrink-0`}>
@@ -708,7 +690,7 @@ const Notifications = () => {
             ) : (
               <div className="space-y-4">
                 {filteredNotifications.map((notification) => (
-                  <Card key={notification.id} className={`transition-all duration-300 hover:shadow-lg bg-gradient-card border-0 border-l-4 ${getPriorityColor(notification.priority)} ${!notification.read ? 'ring-2 ring-primary/20 bg-blue-50/30' : ''}`}>
+                  <Card key={notification.id} className={`transition-all duration-300 hover:shadow-lg border-l-4 ${getPriorityColor(notification.priority)} ${!notification.read ? 'bg-blue-50 border-2 border-blue-200' : 'bg-white border border-gray-200'}`}>
                     <CardContent className="p-6">
                       <div className="flex items-start gap-4">
                         <div className={`w-10 h-10 rounded-lg ${notification.bgColor} flex items-center justify-center flex-shrink-0`}>
@@ -825,7 +807,7 @@ const Notifications = () => {
             ) : (
               <div className="space-y-4">
                 {filteredNotifications.map((notification) => (
-                  <Card key={notification.id} className={`transition-all duration-300 hover:shadow-lg bg-gradient-card border-0 border-l-4 ${getPriorityColor(notification.priority)} ${!notification.read ? 'ring-2 ring-primary/20 bg-blue-50/30' : ''}`}>
+                  <Card key={notification.id} className={`transition-all duration-300 hover:shadow-lg border-l-4 ${getPriorityColor(notification.priority)} ${!notification.read ? 'bg-blue-50 border-2 border-blue-200' : 'bg-white border border-gray-200'}`}>
                     <CardContent className="p-6">
                       <div className="flex items-start gap-4">
                         <div className={`w-10 h-10 rounded-lg ${notification.bgColor} flex items-center justify-center flex-shrink-0`}>

@@ -174,7 +174,7 @@ const News = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-3 mb-4">
-           
+        
             <div>
               <h1 className="text-4xl font-bold text-gray-900">News Hub</h1>
               <p className="text-gray-600">Latest updates, policies & business insights</p>

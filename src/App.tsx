@@ -23,6 +23,9 @@ import OfferingsV2 from "./pages/OfferingsV2";
 import OfferingDetail from "./pages/OfferingDetail";
 import Profile from "./pages/Profile";
 import ProfileV2 from "./pages/ProfileV2";
+import EditProfile from "./pages/EditProfile";
+import ResetPassword from "./pages/ResetPassword";
+import ChangeEmail from "./pages/ChangeEmail";
 import DetailApplication from "./pages/DetailApplication";
 import DetailApplication2 from "./pages/DetailApplication2";
 import Applications from "./pages/Applications";
@@ -71,6 +74,9 @@ const App = () => (
           <Route path="/offerings/:id" element={<OfferingDetail />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile-v2" element={<ProfileV2 />} />
+          <Route path="/edit-profile" element={<EditProfile />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/change-email" element={<ChangeEmail />} />
           <Route path="/eligibility-calculator" element={<EligibilityCalculator />} />
           <Route path="/scheme-application" element={<SchemeApplication />} />
           <Route path="/scheme-applications" element={<SchemeApplications />} />

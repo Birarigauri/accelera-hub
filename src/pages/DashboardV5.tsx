@@ -35,6 +35,14 @@ import { ComplianceTab } from "@/components/dashboard/ComplianceTab";
 import { ComplianceItem } from "@/components/dashboard/ComplianceItem";
 import KPICard from "@/components/common/KPICard";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
+
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const day = date.getDate();
+  const month = date.toLocaleString('en-US', { month: 'long' });
+  const year = date.getFullYear();
+  return `${day} ${month} ${year}`;
+};
 import {
   Select,
   SelectContent,
@@ -47,8 +55,9 @@ const complianceData = [
   { id: 1, name: "GSTR-1", dueDate: "2024-01-11", status: "overdue", type: "GST Return" },
   { id: 2, name: "GSTR-3B", dueDate: "2024-01-20", status: "pending", type: "GST Return" },
   { id: 3, name: "TDS Payment", dueDate: "2024-01-07", status: "completed", type: "Tax Payment" },
-  { id: 4, name: "PF Return", dueDate: "2024-01-15", status: "pending", type: "Compliance" },
-  { id: 5, name: "ESI Return", dueDate: "2024-01-21", status: "upcoming", type: "Compliance" }
+  { id: 4, name: "TDS Return", dueDate: "2024-01-31", status: "upcoming", type: "Tax Return" },
+  { id: 5, name: "PF Return", dueDate: "2024-01-15", status: "pending", type: "Compliance" },
+  { id: 6, name: "ESI Return", dueDate: "2024-01-21", status: "upcoming", type: "Compliance" }
 ];
 
 const certificatesData = [
@@ -190,8 +199,8 @@ const FundingSlider = ({ schemesData }: { schemesData: any[] }) => {
               key={index}
               onClick={() => goToSlide(index)}
               className={`w-2 h-2 rounded-full transition-all duration-200 ${index === currentIndex
-                  ? 'bg-green-600 w-4'
-                  : 'bg-gray-300 hover:bg-gray-400'
+                ? 'bg-green-600 w-4'
+                : 'bg-gray-300 hover:bg-gray-400'
                 }`}
             />
           ))}
@@ -260,7 +269,7 @@ const NewsSlider = ({ newsData }: { newsData: any[] }) => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Calendar className="h-3 w-3 text-gray-400" />
-                    <div className="text-xs text-gray-600">{news.date}</div>
+                    <div className="text-xs text-gray-600">{formatDate(news.date)}</div>
                   </div>
                   <Button size="sm" variant="ghost" className="p-2 hover:bg-indigo-50">
                     <ExternalLink className="h-3 w-3 text-indigo-600" />
@@ -300,8 +309,8 @@ const NewsSlider = ({ newsData }: { newsData: any[] }) => {
               key={index}
               onClick={() => goToSlide(index)}
               className={`w-2 h-2 rounded-full transition-all duration-200 ${index === currentIndex
-                  ? 'bg-indigo-600 w-4'
-                  : 'bg-gray-300 hover:bg-gray-400'
+                ? 'bg-indigo-600 w-4'
+                : 'bg-gray-300 hover:bg-gray-400'
                 }`}
             />
           ))}
@@ -536,8 +545,9 @@ const DashboardV5 = memo(() => {
               label="Total Certification"
               status="Active"
               statusColor="bg-red-500"
-              gradientColor="bg-gradient-to-r from-red-400 to-red-600"
+              gradientColor="bg-gradient-to-r from-red-400 to-red-600 text-white"
             />
+
             <KPICard
               icon={<Shield className="h-6 w-6 text-blue-500 mx-auto" />}
               value={currentBusiness.totalConnect}
@@ -566,14 +576,11 @@ const DashboardV5 = memo(() => {
                       <Shield className="h-4 w-4 text-white" />
                     </div>
                     <div>
-                      <div className="text-base font-semibold text-gray-900">📋  Compliance Tracker</div>
+                      <div className="text-base font-semibold text-gray-900">  Compliance Tracker</div>
                       <div className="text-xs text-gray-600">Regulatory obligations and deadlines</div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-red-600">{currentBusiness.criticalItems}</div>
-                    <div className="text-xs text-red-500 font-medium">Critical Items</div>
-                  </div>
+
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-4 flex-1 flex flex-col">
@@ -595,12 +602,12 @@ const DashboardV5 = memo(() => {
 
                 {/* Enhanced Items */}
                 <div className="space-y-3 flex-1">
-                  {filteredComplianceData.slice(0, 2).map((item) => (
+                  {filteredComplianceData.slice(0, 3).map((item) => (
                     <Link key={item.id} to={item.name.includes('GSTR') ? "/services/1" : '#'}>
                       <div className="flex items-center justify-between p-3 bg-white/80 rounded-lg border border-gray-100 cursor-pointer">
                         <div className="flex items-center gap-3">
                           <div className={`w-3 h-3 rounded-full shadow-sm ${item.status === 'overdue' ? 'bg-red-500 animate-pulse' :
-                              item.status === 'pending' ? 'bg-yellow-500' : 'bg-green-500'
+                            item.status === 'pending' ? 'bg-yellow-500' : 'bg-green-500'
                             }`}></div>
                           <div>
                             <div className="text-sm font-medium text-gray-900">{item.name}</div>
@@ -608,15 +615,14 @@ const DashboardV5 = memo(() => {
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Badge className={`${getStatusColor(item.status)} px-2 py-1 text-xs font-medium transition-all duration-300 hover:scale-105 hover:shadow-md cursor-pointer ${
-                            item.status === 'overdue' ? 'hover:bg-red-200 hover:text-red-800' :
-                            item.status === 'pending' ? 'hover:bg-yellow-200 hover:text-yellow-800' :
-                            item.status === 'completed' ? 'hover:bg-green-200 hover:text-green-800' :
-                            item.status === 'upcoming' ? 'hover:bg-blue-200 hover:text-blue-800' : 'hover:bg-gray-200'
-                          }`}>
+                          <Badge className={`${getStatusColor(item.status)} px-2 py-1 text-xs font-medium transition-all duration-300 hover:scale-105 hover:shadow-md cursor-pointer ${item.status === 'overdue' ? 'hover:bg-red-200 hover:text-red-800' :
+                              item.status === 'pending' ? 'hover:bg-yellow-200 hover:text-yellow-800' :
+                                item.status === 'completed' ? 'hover:bg-green-200 hover:text-green-800' :
+                                  item.status === 'upcoming' ? 'hover:bg-blue-200 hover:text-blue-800' : 'hover:bg-gray-200'
+                            }`}>
                             {item.status === 'overdue' ? '⚠️ Overdue' :
-                              item.status === 'pending' ? '⏳ Pending' :
-                                item.status === 'completed' ? '✅ Done' : item.status.toUpperCase()}
+                              item.status === 'pending' ? '⏳ Due Soon' :
+                                item.status === 'completed' ? '✅ Completed' : item.status.toUpperCase()}
                           </Badge>
                         </div>
                       </div>
@@ -626,7 +632,7 @@ const DashboardV5 = memo(() => {
 
                 <Link to="/scheme-applications">
                   <Button className="w-full mt-4 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-medium">
-                    📊 View All Compliance Items
+                    View All Compliance Items
                   </Button>
                 </Link>
               </CardContent>
@@ -641,14 +647,11 @@ const DashboardV5 = memo(() => {
                       <FileText className="h-4 w-4 text-white" />
                     </div>
                     <div>
-                      <div className="text-base font-semibold text-gray-900">📁 My Documents</div>
+                      <div className="text-base font-semibold text-gray-900"> Documents You Might Need</div>
                       <div className="text-xs text-gray-600">Business licenses and certificates</div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-blue-600">5</div>
-                    <div className="text-xs text-blue-500 font-medium">Active Files</div>
-                  </div>
+
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-4 flex-1 flex flex-col">
@@ -668,9 +671,11 @@ const DashboardV5 = memo(() => {
                     </div>
                   ))}
                 </div>
-                <Button className="w-full mt-4 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-medium">
-                  📂 View All My Documents
-                </Button>
+                <NavLink to="/manual-applications">
+                  <Button className="w-full mt-4 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-medium">
+                     Explore All
+                  </Button></NavLink>
+
               </CardContent>
             </Card>
           </div>
@@ -685,14 +690,11 @@ const DashboardV5 = memo(() => {
                       <Award className="h-4 w-4 text-white" />
                     </div>
                     <div>
-                      <div className="text-base font-semibold text-gray-900">💡 Eligible Scheme Deck</div>
+                      <div className="text-base font-semibold text-gray-900"> Eligible Scheme Deck</div>
                       <div className="text-xs text-gray-600">Government schemes matching your business profile</div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-green-600">4</div>
-                    <div className="text-xs text-green-500 font-medium">Available</div>
-                  </div>
+
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-4 flex-1 flex flex-col">
@@ -751,7 +753,7 @@ const DashboardV5 = memo(() => {
                 </div>
 
                 <Button className="w-full mt-4 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-medium">
-                  🚀 Explore All Schemes
+                   Explore All Schemes
                 </Button>
               </CardContent>
             </Card>
@@ -765,14 +767,11 @@ const DashboardV5 = memo(() => {
                       <Bell className="h-4 w-4 text-white" />
                     </div>
                     <div>
-                      <div className="text-base font-semibold text-gray-900">🔔 Alerts & Notifications</div>
+                      <div className="text-base font-semibold text-gray-900"> Alerts & Notifications</div>
                       <div className="text-xs text-gray-600">Important updates and reminders</div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-orange-600">3</div>
-                    <div className="text-xs text-orange-500 font-medium">New Alerts</div>
-                  </div>
+
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-4 flex-1 flex flex-col">
@@ -782,8 +781,8 @@ const DashboardV5 = memo(() => {
                     size="sm"
                     onClick={() => setActiveAlertsTab('all')}
                     className={`text-xs px-3 py-1.5 transition-all duration-200 ${activeAlertsTab === 'all'
-                        ? 'bg-white shadow-sm text-gray-900'
-                        : 'bg-transparent text-gray-600 hover:text-gray-900'
+                      ? 'bg-white shadow-sm text-gray-900'
+                      : 'bg-transparent text-gray-600 hover:text-gray-900'
                       }`}
                   >
                     All ({alerts.length})
@@ -792,8 +791,8 @@ const DashboardV5 = memo(() => {
                     size="sm"
                     onClick={() => setActiveAlertsTab('central')}
                     className={`text-xs px-3 py-1.5 transition-all duration-200 ${activeAlertsTab === 'central'
-                        ? 'bg-white shadow-sm text-gray-900'
-                        : 'bg-transparent text-gray-600 hover:text-gray-900'
+                      ? 'bg-white shadow-sm text-gray-900'
+                      : 'bg-transparent text-gray-600 hover:text-gray-900'
                       }`}
                   >
                     Central ({alerts.filter(a => a.type === 'central').length})
@@ -802,8 +801,8 @@ const DashboardV5 = memo(() => {
                     size="sm"
                     onClick={() => setActiveAlertsTab('state')}
                     className={`text-xs px-3 py-1.5 transition-all duration-200 ${activeAlertsTab === 'state'
-                        ? 'bg-white shadow-sm text-gray-900'
-                        : 'bg-transparent text-gray-600 hover:text-gray-900'
+                      ? 'bg-white shadow-sm text-gray-900'
+                      : 'bg-transparent text-gray-600 hover:text-gray-900'
                       }`}
                   >
                     State ({alerts.filter(a => a.type === 'state').length})
@@ -840,9 +839,11 @@ const DashboardV5 = memo(() => {
                 </div>
 
                 {filteredAlerts.length > 0 && (
-                  <Button variant="ghost" className="w-full mt-4 text-sm text-gray-600 hover:bg-gray-50">
-                    View All Notifications
-                  </Button>
+                  <NavLink to="/notifications-v2">
+                    <Button variant="ghost" className="w-full mt-4 text-sm text-gray-600 hover:bg-gray-50">
+                      View All Notifications
+                    </Button>
+                  </NavLink>
                 )}
               </CardContent>
             </Card>
@@ -858,7 +859,7 @@ const DashboardV5 = memo(() => {
                       <Target className="h-4 w-4 text-white" />
                     </div>
                     <div>
-                      <div className="text-base font-semibold text-gray-900">🚀 Entrepreneur's Journey</div>
+                      <div className="text-base font-semibold text-gray-900"> Entrepreneur's Journey</div>
                       <div className="text-xs text-gray-600">Your business growth milestones</div>
                     </div>
                   </div>
@@ -869,16 +870,6 @@ const DashboardV5 = memo(() => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-4 flex-1 flex flex-col">
-                {/* Progress Bar */}
-                <div className="mb-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-gray-700">Overall Progress</span>
-                    <span className="text-sm font-bold text-purple-600">2 of 3 completed</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-gradient-to-r from-purple-500 to-indigo-500 h-2 rounded-full" style={{ width: '67%' }}></div>
-                  </div>
-                </div>
 
                 <div className="space-y-3 flex-1">
                   <div className="flex items-center gap-3 p-3 bg-white/90 rounded-lg hover:bg-white transition-all hover:shadow-md border border-gray-100">
@@ -886,7 +877,7 @@ const DashboardV5 = memo(() => {
                       <CheckCircle className="h-5 w-5 text-green-600" />
                     </div>
                     <div className="flex-1">
-                      <div className="text-sm font-semibold text-gray-900">✅ Business Registration</div>
+                      <div className="text-sm font-semibold text-gray-900"> Business Registration</div>
                       <div className="text-xs text-gray-600 mt-1">Completed on Jan 15, 2023</div>
                     </div>
                     <Badge className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 text-xs px-3 py-1.5 font-semibold rounded-full shadow-sm transition-all duration-300 hover:scale-105 hover:shadow-md cursor-pointer hover:from-green-200 hover:to-emerald-200">✓ Done</Badge>
@@ -897,7 +888,7 @@ const DashboardV5 = memo(() => {
                       <Award className="h-5 w-5 text-blue-600" />
                     </div>
                     <div className="flex-1">
-                      <div className="text-sm font-semibold text-gray-900">🏆 First Certification</div>
+                      <div className="text-sm font-semibold text-gray-900"> First Certification</div>
                       <div className="text-xs text-gray-600 mt-1">Completed on Mar 10, 2023</div>
                     </div>
                     <Badge className="bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 text-xs px-3 py-1.5 font-semibold rounded-full shadow-sm transition-all duration-300 hover:scale-105 hover:shadow-md cursor-pointer hover:from-blue-200 hover:to-indigo-200">✓ Done</Badge>
@@ -908,7 +899,7 @@ const DashboardV5 = memo(() => {
                       <Clock className="h-5 w-5 text-yellow-600" />
                     </div>
                     <div className="flex-1">
-                      <div className="text-sm font-semibold text-gray-900">🔄 Business Expansion</div>
+                      <div className="text-sm font-semibold text-gray-900"> Business Expansion</div>
                       <div className="text-xs text-gray-600 mt-1">Currently in progress</div>
                     </div>
                     {/* <Badge className="bg-gradient-to-r from-yellow-100 to-orange-100 text-yellow-800 text-xs px-3 py-1.5 font-semibold rounded-full shadow-sm animate-pulse">⏳ 60%</Badge> */}
@@ -926,14 +917,11 @@ const DashboardV5 = memo(() => {
                       <Newspaper className="h-4 w-4 text-white" />
                     </div>
                     <div>
-                      <div className="text-base font-semibold text-gray-900">📰 Business & Entrepreneur News</div>
+                      <div className="text-base font-semibold text-gray-900">Business & Entrepreneur News</div>
                       <div className="text-xs text-gray-600">Latest updates and market insights</div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-indigo-600">{newsData.length}</div>
-                    <div className="text-xs text-indigo-500 font-medium">Updates</div>
-                  </div>
+
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-4 flex-1 flex flex-col">

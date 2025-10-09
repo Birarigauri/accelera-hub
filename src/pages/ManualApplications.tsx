@@ -1,21 +1,22 @@
 import { useState } from "react";
-import { 
-  Search, 
-  Filter, 
-  Plus, 
-  FileText, 
-  Users, 
-  CheckCircle, 
-  Clock, 
-  Star, 
-  Download, 
-  MessageCircle, 
-  Eye, 
-  Building, 
-  Shield, 
-  Award, 
-  Calculator, 
-  Globe, 
+import { Link } from "react-router-dom";
+import {
+  Search,
+  Filter,
+  Plus,
+  FileText,
+  Users,
+  CheckCircle,
+  Clock,
+  Star,
+  Download,
+  MessageCircle,
+  Eye,
+  Building,
+  Shield,
+  Award,
+  Calculator,
+  Globe,
   Briefcase,
   AlertCircle,
   Bot,
@@ -131,7 +132,7 @@ const ManualApplications = () => {
       avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
     },
     {
-      id: "INQ002", 
+      id: "INQ002",
       date: "2024-03-18",
       expertName: "CA Priya Patel",
       expertProfile: "GST & Tax Expert",
@@ -147,7 +148,7 @@ const ManualApplications = () => {
       expertName: "Adv. Suresh Kumar",
       expertProfile: "Licensing Specialist",
       serviceName: "Trade License",
-      serviceType: "Certification", 
+      serviceType: "Certification",
       status: "Completed",
       rating: 4.7,
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
@@ -166,7 +167,7 @@ const ManualApplications = () => {
     },
     {
       id: 2,
-      name: "GST Registration", 
+      name: "GST Registration",
       completionDate: "2024-02-28",
       certificateNumber: "27AABCU9603R1ZM",
       type: "License",
@@ -336,18 +337,18 @@ const ManualApplications = () => {
         type: "Service",
         hasReview: false
       };
-      
+
       setCompletedServicesList(prev => [...prev, newCompletedService]);
-      
+
       // Update inquiry status to completed
-      setInquiriesList(prev => 
-        prev.map(inq => 
-          inq.id === connectionInquiry.id 
+      setInquiriesList(prev =>
+        prev.map(inq =>
+          inq.id === connectionInquiry.id
             ? { ...inq, status: "Completed" }
             : inq
         )
       );
-      
+
       toast({
         title: "Service Moved to Completed",
         description: `${connectionInquiry.serviceName} has been moved to completed services.`,
@@ -355,7 +356,7 @@ const ManualApplications = () => {
         className: "fixed top-4 right-4 bg-green-600 text-white border-green-500 shadow-2xl z-50 max-w-sm p-3 rounded-lg transition-all duration-300 ease-in-out animate-in fade-in slide-in-from-right-2",
       });
     }
-    
+
     setShowConnectionDialog(false);
     setConnectionInquiry(null);
   };
@@ -366,9 +367,8 @@ const ManualApplications = () => {
         {[1, 2, 3, 4, 5].map((star) => (
           <Star
             key={star}
-            className={`h-6 w-6 cursor-pointer transition-colors ${
-              star <= rating ? 'text-yellow-500 fill-current' : 'text-gray-300'
-            } ${readonly ? 'cursor-default' : 'hover:text-yellow-400'}`}
+            className={`h-6 w-6 cursor-pointer transition-colors ${star <= rating ? 'text-yellow-500 fill-current' : 'text-gray-300'
+              } ${readonly ? 'cursor-default' : 'hover:text-yellow-400'}`}
             onClick={() => !readonly && onRatingChange && onRatingChange(star)}
           />
         ))}
@@ -380,7 +380,7 @@ const ManualApplications = () => {
     <AppLayout>
       <div className="min-h-screen bg-muted/30">
         <Header />
-        
+
         <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-8">
           {/* Header Section */}
           <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 rounded-2xl p-6 mb-6 shadow-xl">
@@ -432,7 +432,7 @@ const ManualApplications = () => {
             <TabsList className="grid w-full grid-cols-3 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100 p-1">
               <TabsTrigger value="manual-applications" className="data-[state=active]:bg-white data-[state=active]:shadow-md transition-all duration-200">
                 <FileText className="h-4 w-4 mr-2" />
-               All Certificates / Licenses
+                All Certificates / Licenses
               </TabsTrigger>
               <TabsTrigger value="my-inquiries" className="data-[state=active]:bg-white data-[state=active]:shadow-md transition-all duration-200">
                 <Users className="h-4 w-4 mr-2" />
@@ -454,7 +454,7 @@ const ManualApplications = () => {
                         <Badge className="bg-gradient-to-r from-orange-400 to-red-500 text-white">⭐ Recommended</Badge>
                       </div>
                     )}
-                    
+
                     <CardContent className="p-6">
                       <div className="flex items-start gap-4 mb-4">
                         <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
@@ -469,17 +469,13 @@ const ManualApplications = () => {
                           </div>
                         </div>
                       </div>
-                      
-                      <div className="flex items-center justify-between">
-                        {app.status !== "Not Applied" && (
-                          <Badge className={`${getApplicationStatusColor(app.status)} font-medium px-3 py-1 rounded-full inline-flex items-center whitespace-nowrap`}>
-                            {getStatusIcon(app.status)}
-                            {getStatusText(app.status)}
-                          </Badge>
-                        )}
-                        <Button size="sm" className="bg-gradient-to-r from-green-500 to-emerald-600 text-white ml-auto">
-                          {app.status === "Not Applied" ? "Apply Now" : "Resume Application"}
-                        </Button>
+
+                      <div className="text-center w-full">
+                        <Link to="/services/1">
+                          <Button size="sm" className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white">
+                            Apply Now
+                          </Button>
+                        </Link>
                       </div>
                     </CardContent>
                   </Card>
@@ -514,12 +510,12 @@ const ManualApplications = () => {
                           </div>
                         </div>
                       </div>
-                      
+
                       {/* Expert Info & Actions */}
                       <div className="flex flex-col lg:flex-row items-start gap-4">
                         <div className="flex items-center gap-4 flex-1">
-                          <img 
-                            src={inquiry.avatar} 
+                          <img
+                            src={inquiry.avatar}
                             alt={inquiry.expertName}
                             className="w-14 h-14 rounded-full object-cover border-3 border-white shadow-lg"
                             onError={(e) => {
@@ -541,11 +537,11 @@ const ManualApplications = () => {
                             </div>
                           </div>
                         </div>
-                        
+
                         {/* Action Buttons */}
                         <div className="flex flex-col gap-2 lg:w-auto w-full">
-                          <Button 
-                            size="sm" 
+                          <Button
+                            size="sm"
                             variant="outline"
                             onClick={() => handleViewDetails(inquiry)}
                             className="w-full lg:w-auto"
@@ -553,17 +549,17 @@ const ManualApplications = () => {
                             <Eye className="h-4 w-4 mr-1" />
                             View Details
                           </Button>
-                        
-                          <Button 
-                            size="sm" 
+
+                          <Button
+                            size="sm"
                             className="bg-gradient-to-r from-blue-500 to-purple-600 text-white w-full lg:w-auto"
                             onClick={() => handleConnectionCheck(inquiry)}
                           >
                             <CheckCircle className="h-4 w-4 mr-1" />
                             Have you connected?
                           </Button>
-                          
-                       
+
+
                         </div>
                       </div>
                     </CardContent>
@@ -590,11 +586,11 @@ const ManualApplications = () => {
                           <p className="text-sm text-gray-600 mb-2">
                             Completed: {new Date(service.completionDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
                           </p>
-                      
+
                         </div>
                       </div>
-                      
-                    
+
+
                     </CardContent>
                   </Card>
                 ))}
@@ -610,8 +606,8 @@ const ManualApplications = () => {
                 <DialogTitle className="flex items-center gap-3">
                   {selectedExpert && (
                     <>
-                      <img 
-                        src={selectedExpert.avatar} 
+                      <img
+                        src={selectedExpert.avatar}
                         alt={selectedExpert.expertName}
                         className="w-12 h-12 rounded-full object-cover"
                       />
@@ -623,13 +619,13 @@ const ManualApplications = () => {
                   )}
                 </DialogTitle>
               </DialogHeader>
-              
+
               <div className="space-y-6 py-4">
                 <div className="text-center">
                   <p className="text-sm text-gray-600 mb-4">How would you rate your experience?</p>
                   <StarRating rating={rating} onRatingChange={setRating} />
                 </div>
-                
+
                 <div>
                   <label className="text-sm font-medium text-gray-700 mb-2 block">
                     Share your experience (optional)
@@ -641,16 +637,16 @@ const ManualApplications = () => {
                     className="min-h-[100px]"
                   />
                 </div>
-                
+
                 <div className="flex gap-3 pt-4">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="flex-1"
                     onClick={() => setShowRatingModal(false)}
                   >
                     Cancel
                   </Button>
-                  <Button 
+                  <Button
                     className="flex-1 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white"
                     onClick={handleSubmitRating}
                     disabled={rating === 0}
@@ -670,21 +666,21 @@ const ManualApplications = () => {
                   Connection Status
                 </DialogTitle>
               </DialogHeader>
-              
+
               <div className="space-y-4 py-4">
                 <p className="text-center text-gray-600">
                   Have you connected with the expert for <strong>{connectionInquiry?.serviceName}</strong>?
                 </p>
-                
+
                 <div className="flex gap-3 pt-4">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="flex-1"
                     onClick={() => handleConnectionConfirm(false)}
                   >
                     No
                   </Button>
-                  <Button 
+                  <Button
                     className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white"
                     onClick={() => handleConnectionConfirm(true)}
                   >
@@ -703,7 +699,7 @@ const ManualApplications = () => {
                   Service Completion Details
                 </DialogTitle>
               </DialogHeader>
-              
+
               {selectedService && (
                 <div className="space-y-4 py-2">
                   {/* Service Info */}
@@ -717,7 +713,7 @@ const ManualApplications = () => {
                         <p className="text-green-600 text-sm">Successfully Completed</p>
                       </div>
                     </div>
-                    
+
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
                         <p className="text-gray-600">Completion Date</p>
@@ -742,7 +738,7 @@ const ManualApplications = () => {
                   <div className="bg-blue-50 rounded-lg p-4">
                     <h4 className="font-semibold text-gray-900 mb-3">Rate Your Experience</h4>
                     <div className="flex items-center gap-3 mb-3">
-                      <img 
+                      <img
                         src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
                         alt="Expert"
                         className="w-10 h-10 rounded-full object-cover"
@@ -752,12 +748,12 @@ const ManualApplications = () => {
                         <p className="text-sm text-gray-600">Service Expert</p>
                       </div>
                     </div>
-                    
+
                     <div className="text-center mb-4">
                       <StarRating rating={rating} onRatingChange={setRating} />
                     </div>
-                    
-                    <Button 
+
+                    <Button
                       className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white"
                       onClick={() => {
                         setShowServiceModal(false);
@@ -774,19 +770,19 @@ const ManualApplications = () => {
                       Submit Rating
                     </Button>
                   </div>
-                  
+
                   {/* Action Buttons */}
                   <div className="flex gap-3">
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       className="flex-1"
                       onClick={() => alert('Download certificate')}
                     >
                       <Download className="h-4 w-4 mr-2" />
                       Download Certificate
                     </Button>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       className="flex-1"
                       onClick={() => setShowServiceModal(false)}
                     >
@@ -806,7 +802,7 @@ const ManualApplications = () => {
                   Inquiry Details
                 </DialogTitle>
               </DialogHeader>
-              
+
               {selectedInquiry && (
                 <div className="space-y-4 py-2">
                   {/* Connection Info */}
@@ -829,8 +825,8 @@ const ManualApplications = () => {
                   {/* Service & Expert Combined */}
                   <div className="bg-purple-50 rounded-lg p-3">
                     <div className="flex items-center gap-3 mb-3">
-                      <img 
-                        src={selectedInquiry.avatar} 
+                      <img
+                        src={selectedInquiry.avatar}
                         alt={selectedInquiry.expertName}
                         className="w-12 h-12 rounded-full object-cover"
                       />
@@ -843,7 +839,7 @@ const ManualApplications = () => {
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="text-sm space-y-1">
                       <p><span className="font-medium">Service:</span> {selectedInquiry.serviceName}</p>
                       <p><span className="font-medium">Experience:</span> {selectedInquiry.experience}</p>
@@ -852,7 +848,7 @@ const ManualApplications = () => {
                   </div>
 
                   {/* Action Button */}
-                  <Button 
+                  <Button
                     className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white"
                     onClick={() => {
                       setShowDetailsModal(false);

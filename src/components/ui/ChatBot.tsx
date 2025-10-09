@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MessageCircle, X, Send, Bot, User } from "lucide-react";
+import { Headphones, X, Send, Bot, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -74,7 +74,7 @@ const ChatBot = () => {
             onClick={() => setIsOpen(true)}
             className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-110 group"
           >
-            <MessageCircle className="h-8 w-8 text-white group-hover:animate-bounce" />
+            <Headphones className="h-8 w-8 text-white group-hover:animate-bounce" />
           </Button>
         )}
       </div>
@@ -86,8 +86,8 @@ const ChatBot = () => {
             <CardHeader className="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                    <Bot className="h-6 w-6" />
+                  <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                    <Bot className="h-7 w-7" />
                   </div>
                   <div>
                     <CardTitle className="text-lg font-semibold">Business Assistant</CardTitle>
@@ -115,8 +115,8 @@ const ChatBot = () => {
                       className={`flex gap-3 ${message.sender === "user" ? "justify-end" : "justify-start"}`}
                     >
                       {message.sender === "bot" && (
-                        <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
-                          <Bot className="h-4 w-4 text-white" />
+                        <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                          <Bot className="h-5 w-5 text-white" />
                         </div>
                       )}
                       

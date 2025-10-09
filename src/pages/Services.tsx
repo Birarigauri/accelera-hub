@@ -237,9 +237,7 @@ const Services = () => {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="text-white">
               <h1 className="text-2xl sm:text-3xl font-bold mb-1">🏢 Business Services</h1>
-              <p className="text-blue-100 text-sm sm:text-base">
-                Complete business services with expert guidance and support
-              </p>
+             
             </div>
             
             {/* <Button className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm w-full sm:w-auto">
@@ -297,7 +295,7 @@ const Services = () => {
                           <td className="p-4">
                             <div className="flex items-center gap-3">
                               <div className="w-10 h-10 rounded-lg bg-gradient-primary flex items-center justify-center flex-shrink-0">
-                                <service.icon className="h-5 w-5 text-white" />
+                                <service.icon className="h-5 w-5 " />
                               </div>
                               <div className="min-w-0 flex-1">
                                 <div className="flex items-center gap-2 mb-1">
@@ -579,18 +577,7 @@ const Services = () => {
                         <span className="font-medium text-green-600">{formatDate(selectedService.completedDate)}</span>
                       </div>
                     )}
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Progress:</span>
-                      <div className="flex items-center gap-2">
-                        <div className="w-24 bg-gray-200 rounded-full h-2">
-                          <div 
-                            className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-300" 
-                            style={{ width: `${selectedService.progress}%` }}
-                          ></div>
-                        </div>
-                        <span className="text-sm font-semibold text-blue-600">{selectedService.progress}%</span>
-                      </div>
-                    </div>
+                    
                   </div>
                 </div>
 
@@ -651,7 +638,6 @@ const Services = () => {
                     variant="outline" 
                     className="bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0 hover:from-blue-600 hover:to-purple-700 flex-1"
                   >
-                    <Phone className="h-4 w-4 mr-2" />
                     Contact Expert
                   </Button>
                 </div>

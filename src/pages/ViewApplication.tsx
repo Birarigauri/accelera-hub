@@ -6,6 +6,14 @@ import { Link } from "react-router-dom";
 import Header from "@/components/layout/Header";
 import AppLayout from "@/components/layout/AppLayout";
 
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const day = date.getDate();
+  const month = date.toLocaleString('en-US', { month: 'long' });
+  const year = date.getFullYear();
+  return `${day} ${month} ${year}`;
+};
+
 const ViewApplication = () => {
   const application = {
     id: "APP001",
@@ -83,28 +91,22 @@ const ViewApplication = () => {
         
         <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-8">
           {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-4">
-              <Link to="/scheme-applications">
-                <Button variant="outline" size="sm">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back to Applications
-                </Button>
-              </Link>
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-bold">Application Details</h1>
-                <p className="text-muted-foreground">View your scheme application</p>
+          <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 rounded-2xl p-6 mb-6 shadow-xl">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="text-white">
+                <div className="flex items-center gap-3 mb-2">
+                  <Link to="/scheme-applications">
+                    <Button variant="outline" size="sm" className="bg-white/20 hover:bg-white/30 text-white border-white/30">
+                      <ArrowLeft className="h-4 w-4 mr-2" />
+                      Back
+                    </Button>
+                  </Link>
+                  <h1 className="text-2xl sm:text-3xl font-bold">📋 Application Details</h1>
+                </div>
               </div>
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <Button variant="outline">
-                <Download className="h-4 w-4 mr-2" />
-                Download PDF
-              </Button>
               {(application.status === 'draft' || application.status === 'submitted') && (
                 <Link to="/scheme-application">
-                  <Button>
+                  <Button className="bg-white/20 hover:bg-white/30 text-white border-white/30">
                     <Edit className="h-4 w-4 mr-2" />
                     Edit Application
                   </Button>
@@ -132,41 +134,22 @@ const ViewApplication = () => {
                     </Badge>
                   </div>
                   
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                    <div className="text-center p-4 bg-blue-50 rounded-lg">
-                      <DollarSign className="h-6 w-6 text-blue-600 mx-auto mb-2" />
-                      <div className="text-lg font-bold text-blue-600">{application.amount}</div>
-                      <div className="text-xs text-gray-600">Requested Amount</div>
-                    </div>
+                  <div className="grid grid-cols-2 md:grid-cols-2 gap-4 mb-6">
+                 
                     <div className="text-center p-4 bg-green-50 rounded-lg">
                       <Calendar className="h-6 w-6 text-green-600 mx-auto mb-2" />
-                      <div className="text-lg font-bold text-green-600">{new Date(application.appliedDate).toLocaleDateString()}</div>
+                      <div className="text-lg font-bold text-green-600">{formatDate(application.appliedDate)}</div>
                       <div className="text-xs text-gray-600">Applied Date</div>
                     </div>
-                    <div className="text-center p-4 bg-purple-50 rounded-lg">
-                      <FileText className="h-6 w-6 text-purple-600 mx-auto mb-2" />
-                      <div className="text-lg font-bold text-purple-600">{application.progress}%</div>
-                      <div className="text-xs text-gray-600">Progress</div>
-                    </div>
+                    
                     <div className="text-center p-4 bg-orange-50 rounded-lg">
                       <Clock className="h-6 w-6 text-orange-600 mx-auto mb-2" />
-                      <div className="text-lg font-bold text-orange-600">{new Date(application.lastUpdated).toLocaleDateString()}</div>
+                      <div className="text-lg font-bold text-orange-600">{formatDate(application.lastUpdated)}</div>
                       <div className="text-xs text-gray-600">Last Updated</div>
                     </div>
                   </div>
 
-                  <div className="mb-4">
-                    <div className="flex justify-between text-sm mb-2">
-                      <span>Application Progress</span>
-                      <span>{application.progress}%</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-3">
-                      <div 
-                        className="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full"
-                        style={{ width: `${application.progress}%` }}
-                      ></div>
-                    </div>
-                  </div>
+                 
                 </CardContent>
               </Card>
 
@@ -248,14 +231,13 @@ const ViewApplication = () => {
                   <div className="space-y-4">
                     {application.timeline.map((item, index) => (
                       <div key={index} className="flex items-start gap-3">
-                        <div className={`w-3 h-3 rounded-full mt-2 ${
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white ${
                           item.status === 'completed' ? 'bg-green-500' :
                           item.status === 'in_progress' ? 'bg-blue-500' :
                           'bg-gray-300'
-                        }`}></div>
+                        }`}>{index + 1}</div>
                         <div className="flex-1">
                           <div className="font-medium text-sm">{item.event}</div>
-                          <div className="text-xs text-gray-500">{new Date(item.date).toLocaleDateString()}</div>
                         </div>
                       </div>
                     ))}
@@ -275,7 +257,7 @@ const ViewApplication = () => {
                         <div className="flex-1">
                           <div className="text-sm font-medium">{doc.name}</div>
                           <div className="text-xs text-gray-500">
-                            Uploaded: {new Date(doc.uploadDate).toLocaleDateString()}
+                            Uploaded: {formatDate(doc.uploadDate)}
                           </div>
                         </div>
                         {getDocumentStatusIcon(doc.status)}

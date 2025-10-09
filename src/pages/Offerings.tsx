@@ -185,18 +185,19 @@ const Offerings = () => {
         
         <div className="container mx-auto px-4 lg:px-6 py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Other Offerings</h1>
-            <p className="text-muted-foreground">
-              Explore funding opportunities, mentorship programs, and professional services
-            </p>
+        <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 rounded-2xl p-6 mb-6 shadow-xl">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="text-white">
+              <h1 className="text-2xl sm:text-3xl font-bold mb-1">🎁 Other Offerings</h1>
+              <p className="text-blue-100 text-sm sm:text-base">
+                Explore funding opportunities, mentorship programs, and professional services
+              </p>
+            </div>
+            <Button className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm">
+              <MessageCircle className="h-4 w-4 mr-2" />
+              Submit Inquiry
+            </Button>
           </div>
-          
-          <Button variant="hero" className="hidden md:flex">
-            <MessageCircle className="h-4 w-4 mr-2" />
-            Submit Inquiry
-          </Button>
         </div>
 
         {/* Search and Filters */}
@@ -220,7 +221,11 @@ const Offerings = () => {
                     variant={selectedCategory === category.id ? "default" : "outline"}
                     size="sm"
                     onClick={() => setSelectedCategory(category.id)}
-                    className="whitespace-nowrap"
+                    className={`whitespace-nowrap ${
+                      selectedCategory === category.id 
+                        ? "bg-primary text-primary-foreground hover:bg-primary/90" 
+                        : "hover:bg-blue-50 hover:text-blue-600"
+                    }`}
                   >
                     {category.label} ({category.count})
                   </Button>

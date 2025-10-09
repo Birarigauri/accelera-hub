@@ -325,9 +325,9 @@ startxref
                 <div className="bg-gradient-to-r from-blue-500 to-purple-600 ">
                   <div className="bg-white rounded-xl">
                     <CardContent className="p-6">
-                  <div className="flex flex-col sm:flex-row items-start gap-4 mb-6">
+                  <div className="flex flex-col sm:flex-row items-start gap-4">
                     <div className="w-16 h-16 bg-gradient-primary rounded-lg flex items-center justify-center">
-                      <service.icon className="h-8 w-8 text-white" />
+                      <service.icon className="h-8 w-8" />
                     </div>
                     <div className="flex-1">
                       <h1 className="text-2xl font-bold mb-2">{service.title}</h1>
@@ -351,7 +351,7 @@ startxref
                     <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
                       <Building className="h-5 w-5 text-blue-600" />
                     </div>
-                    📊 Service Classification Matrix
+                     Service Classification Matrix
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
@@ -454,7 +454,7 @@ startxref
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                           <FileText className="h-4 w-4 text-blue-600" />
                         </div>
-                        📋 Service Description
+                         Service Description
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
@@ -830,13 +830,13 @@ startxref
                   </div>
 
                   {/* Three Cards */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Template Options Card */}
                     <Card className="bg-white shadow-lg border-0 rounded-2xl hover:shadow-xl transition-all duration-300">
                       <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 border-b border-blue-200">
                         <CardTitle className="flex items-center gap-2 text-lg">
                           <FileText className="h-5 w-5 text-blue-600" />
-                          📝 Template Options
+                           Template Options
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="p-6 space-y-4">
@@ -870,7 +870,7 @@ startxref
                       <CardHeader className="bg-gradient-to-r from-orange-50 to-red-50 border-b border-orange-200">
                         <CardTitle className="flex items-center gap-2 text-lg">
                           <UserCheck className="h-5 w-5 text-orange-600" />
-                          👥 Expert Assistance
+                           Expert Assistance
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="p-6">
@@ -892,26 +892,7 @@ startxref
                       </CardContent>
                     </Card>
 
-                    {/* AI Assistant Card */}
-                    <Card className="bg-white shadow-lg border-0 rounded-2xl hover:shadow-xl transition-all duration-300">
-                      <CardHeader className="bg-gradient-to-r from-indigo-50 to-purple-50 border-b border-indigo-200">
-                        <CardTitle className="flex items-center gap-2 text-lg">
-                          <Bot className="h-5 w-5 text-indigo-600" />
-                          🤖 AI Assistant
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="p-6">
-                        <Button 
-                          className="w-full h-auto p-6 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl"
-                        >
-                          <div className="flex flex-col items-center text-center">
-                            <Bot className="h-8 w-8 mb-2" />
-                            <span className="font-semibold text-lg">AI Chatbot</span>
-                            <p className="text-sm text-indigo-100 mt-1">Get instant help & guidance</p>
-                          </div>
-                        </Button>
-                      </CardContent>
-                    </Card>
+                    
                   </div>
                 </div>
               )}

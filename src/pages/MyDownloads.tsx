@@ -13,7 +13,10 @@ import {
   Folder,
   Clock,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,17 +24,17 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import Header from "@/components/layout/Header";
 import AppLayout from "@/components/layout/AppLayout";
 
 const MyDownloads = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState("all");
-  const [sortBy, setSortBy] = useState("recent");
   const [showPreview, setShowPreview] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortField, setSortField] = useState<'name' | 'downloadDate'>('downloadDate');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const itemsPerPage = 5;
 
   // Sample downloaded templates data
@@ -93,31 +96,26 @@ const MyDownloads = () => {
     }
   ];
 
-  const filteredTemplates = downloadedTemplates.filter(template => {
-    if (filterType !== "all" && template.category !== filterType) return false;
-    if (searchQuery && !template.name.toLowerCase().includes(searchQuery.toLowerCase()) && 
-        !template.type.toLowerCase().includes(searchQuery.toLowerCase())) return false;
-    return true;
-  });
-
-  const sortedTemplates = [...filteredTemplates].sort((a, b) => {
-    if (sortBy === "recent") {
-      return new Date(b.downloadDate).getTime() - new Date(a.downloadDate).getTime();
-    } else if (sortBy === "alphabetical") {
-      return a.name.localeCompare(b.name);
+  const handleSort = (field: 'name' | 'downloadDate') => {
+    if (sortField === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortOrder('asc');
     }
-    return 0;
-  });
-
-  const totalPages = Math.ceil(sortedTemplates.length / itemsPerPage);
-  const paginatedTemplates = sortedTemplates.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
   };
+
+  const filteredTemplates = downloadedTemplates
+    .filter(t => (filterType === "all" || t.category === filterType) && 
+      (!searchQuery || t.name.toLowerCase().includes(searchQuery.toLowerCase()) || t.type.toLowerCase().includes(searchQuery.toLowerCase())))
+    .sort((a, b) => {
+      const order = sortOrder === 'asc' ? 1 : -1;
+      if (sortField === 'name') return order * a.name.localeCompare(b.name);
+      return order * (new Date(a.downloadDate).getTime() - new Date(b.downloadDate).getTime());
+    });
+
+  const totalPages = Math.ceil(filteredTemplates.length / itemsPerPage);
+  const paginatedTemplates = filteredTemplates.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const getFileIcon = (fileType: string) => {
     switch (fileType.toLowerCase()) {
@@ -201,7 +199,7 @@ const MyDownloads = () => {
           </div>
 
           {/* Empty State */}
-          {sortedTemplates.length === 0 && (
+          {filteredTemplates.length === 0 && (
             <Card className="text-center p-12 bg-gradient-card border-0 shadow-lg">
               <Folder className="h-16 w-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
@@ -220,37 +218,42 @@ const MyDownloads = () => {
             </Card>
           )}
 
-          {/* Downloaded Templates Table */}
-          {sortedTemplates.length > 0 && (
+          {/* Downloaded Templates DataTable */}
+          {filteredTemplates.length > 0 && (
             <Card className="bg-white shadow-lg border-0 rounded-2xl overflow-hidden">
               <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-200 pb-4">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="flex items-center gap-3 text-xl">
-                    <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
-                      <Download className="h-5 w-5 text-blue-600" />
-                    </div>
-                    Downloaded Templates ({sortedTemplates.length})
-                  </CardTitle>
-                </div>
+                <CardTitle className="flex items-center gap-3 text-xl">
+                  <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                    <Download className="h-5 w-5 text-blue-600" />
+                  </div>
+                  Downloaded Templates ({filteredTemplates.length})
+                </CardTitle>
               </CardHeader>
               <CardContent className="p-0">
                 <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="bg-gray-50/50">
-                        <TableHead className="font-semibold text-gray-700 py-4">Template Details</TableHead>
-                        {/* <TableHead className="font-semibold text-gray-700 text-center">Type</TableHead> */}
-                        <TableHead className="font-semibold text-gray-700 text-center">Category</TableHead>
-                        <TableHead className="font-semibold text-gray-700 text-center">Downloaded</TableHead>
-                        <TableHead className="font-semibold text-gray-700 text-center">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {paginatedTemplates.map((template) => {
+                  <table className="w-full">
+                    <thead>
+                      <tr className="bg-gray-50/50 border-b">
+                        <th className="font-semibold text-gray-700 py-4 px-4 text-left">
+                          <Button variant="ghost" onClick={() => handleSort('name')} className="hover:bg-transparent font-semibold">
+                            Template Details {sortField === 'name' && (sortOrder === 'asc' ? <ArrowUp className="ml-2 h-4 w-4" /> : <ArrowDown className="ml-2 h-4 w-4" />)}
+                          </Button>
+                        </th>
+                        <th className="font-semibold text-gray-700 py-4 px-4 text-center">Category</th>
+                        <th className="font-semibold text-gray-700 py-4 px-4 text-center">
+                          <Button variant="ghost" onClick={() => handleSort('downloadDate')} className="hover:bg-transparent font-semibold">
+                            Downloaded {sortField === 'downloadDate' && (sortOrder === 'asc' ? <ArrowUp className="ml-2 h-4 w-4" /> : <ArrowDown className="ml-2 h-4 w-4" />)}
+                          </Button>
+                        </th>
+                        <th className="font-semibold text-gray-700 py-4 px-4 text-center">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {paginatedTemplates.map(template => {
                         const FileIcon = getFileIcon(template.fileType);
                         return (
-                          <TableRow key={template.id} className="hover:bg-blue-50/30 transition-colors border-b border-gray-100">
-                            <TableCell className="py-4">
+                          <tr key={template.id} className="hover:bg-blue-50/30 transition-colors border-b border-gray-100">
+                            <td className="py-4 px-4">
                               <div className="flex items-start gap-3">
                                 <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
                                   <FileIcon className="h-5 w-5 text-white" />
@@ -260,85 +263,46 @@ const MyDownloads = () => {
                                   <p className="text-xs text-gray-600 leading-relaxed line-clamp-2">{template.description}</p>
                                 </div>
                               </div>
-                            </TableCell>
-                            {/* <TableCell className="text-center">
-                              <Badge className={`${getFileTypeColor(template.fileType)} text-xs font-medium px-2 py-1`}>
-                                {template.fileType}
-                              </Badge>
-                            </TableCell> */}
-                            <TableCell className="text-center">
-                              <Badge variant="outline" className="text-xs font-medium px-2 py-1 capitalize">
-                                {template.category}
-                              </Badge>
-                            </TableCell>
-                            <TableCell className="text-center">
-                              <div className="text-sm font-medium text-gray-700">
-                                {formatDate(template.downloadDate)}
-                              </div>
-                            </TableCell>
-                            <TableCell className="text-center">
+                            </td>
+                            <td className="py-4 px-4 text-center">
+                              <Badge variant="outline" className="text-xs font-medium px-2 py-1 capitalize">{template.category}</Badge>
+                            </td>
+                            <td className="py-4 px-4 text-center">
+                              <div className="text-sm font-medium text-gray-700">{formatDate(template.downloadDate)}</div>
+                            </td>
+                            <td className="py-4 px-4 text-center">
                               <div className="flex items-center justify-center gap-2">
-                                <Button 
-                                  size="sm" 
-                                  variant="outline" 
-                                  className="px-2 py-1.5"
-                                  onClick={() => handlePreview(template)}
-                                >
+                                <Button size="sm" variant="outline" className="px-2 py-1.5" onClick={() => handlePreview(template)}>
                                   <Eye className="h-3 w-3" />
                                 </Button>
-                                <Button 
-                                  size="sm" 
-                                  className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-3 py-1.5 text-xs"
-                                  onClick={() => handleDownload(template)}
-                                >
-                                  <Download className="h-3 w-3 mr-1" />
-                                  Download
+                                <Button size="sm" className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-3 py-1.5 text-xs transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95" onClick={() => handleDownload(template)}>
+                                  <Download className="h-3 w-3 mr-1 animate-bounce" />Download
                                 </Button>
                               </div>
-                            </TableCell>
-                          </TableRow>
+                            </td>
+                          </tr>
                         );
                       })}
-                    </TableBody>
-                  </Table>
+                    </tbody>
+                  </table>
                 </div>
                 
                 {/* Pagination */}
                 {totalPages > 1 && (
                   <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50/30">
                     <div className="text-sm text-gray-600">
-                      Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, sortedTemplates.length)} of {sortedTemplates.length} templates
+                      Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredTemplates.length)} of {filteredTemplates.length} templates
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        disabled={currentPage === 1}
-                        className="px-3 py-1.5"
-                      >
+                      <Button variant="outline" size="sm" onClick={() => setCurrentPage(p => p - 1)} disabled={currentPage === 1} className="px-3 py-1.5">
                         <ChevronLeft className="h-4 w-4" />
                       </Button>
-                      
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                        <Button
-                          key={page}
-                          variant={currentPage === page ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => handlePageChange(page)}
-                          className="px-3 py-1.5 min-w-[32px]"
-                        >
-                          {page}
+                      {Array.from({ length: totalPages }, (_, i) => (
+                        <Button key={i} variant={currentPage === i + 1 ? "default" : "outline"} size="sm" onClick={() => setCurrentPage(i + 1)} className="px-3 py-1.5 min-w-[32px]">
+                          {i + 1}
                         </Button>
                       ))}
-                      
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                        className="px-3 py-1.5"
-                      >
+                      <Button variant="outline" size="sm" onClick={() => setCurrentPage(p => p + 1)} disabled={currentPage === totalPages} className="px-3 py-1.5">
                         <ChevronRight className="h-4 w-4" />
                       </Button>
                     </div>
@@ -352,7 +316,7 @@ const MyDownloads = () => {
 
           {/* Preview Modal */}
           <Dialog open={showPreview} onOpenChange={setShowPreview}>
-            <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
+            <DialogContent className="sm:max-w-5xl max-h-[80vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle className="text-xl font-bold text-gray-900">
                   Template Preview
@@ -362,31 +326,15 @@ const MyDownloads = () => {
               {selectedTemplate && (
                 <div className="space-y-4 py-4">
                   {/* Template Header */}
-                  <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
-                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                      {(() => {
-                        const FileIcon = getFileIcon(selectedTemplate.fileType);
-                        return <FileIcon className="h-6 w-6 text-blue-600" />;
-                      })()}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900 mb-1">{selectedTemplate.name}</h3>
-                      <p className="text-sm text-gray-600 mb-2">{selectedTemplate.description}</p>
-                      <div className="flex items-center gap-4 text-xs text-gray-500">
-                        <span>Type: {selectedTemplate.type}</span>
-
-                        <span>Downloaded: {formatDate(selectedTemplate.downloadDate)}</span>
-                      </div>
-                    </div>
-                  </div>
+                 
 
                   {/* Template Preview Area */}
-                  <div className="bg-gray-100 rounded-lg p-8 text-center min-h-[300px] flex items-center justify-center">
-                    <div className="text-gray-500">
-                      <FileText className="h-16 w-16 mx-auto mb-4" />
-                      <p className="text-lg font-medium mb-2">Template Preview</p>
-                      <p className="text-sm">Full preview available after download</p>
-                    </div>
+                  <div className="bg-gray-100 rounded-lg overflow-hidden">
+                    <iframe 
+                      src={selectedTemplate.fileType === 'PDF' ? '/ane-portal/Sample file.pdf' : undefined}
+                      className="w-full h-[500px] border-0"
+                      title="Template Preview"
+                    />
                   </div>
 
                   {/* Action Buttons */}

@@ -111,11 +111,11 @@ const Header = ({ onMenuToggle, showMenu = false }: HeaderProps) => {
                   <CardContent className="p-0">
                     <Tabs defaultValue="urgent" className="w-full">
                       <TabsList className="grid w-full grid-cols-2 bg-gray-100 rounded-t-xl p-1 h-10">
-                        <TabsTrigger value="urgent" className="text-xs px-2 py-1 text-orange-600 data-[state=active]:bg-orange-100 data-[state=active]:text-orange-800 data-[state=active]:shadow-sm">
+                        <TabsTrigger value="urgent" className="text-xs px-2 py-1 text-orange-600 data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm">
                           <AlertTriangle className="h-3 w-3 mr-1" />
                           Urgent ({urgentNotifications.length})
                         </TabsTrigger>
-                        <TabsTrigger value="moderate" className="text-xs px-2 py-1 text-blue-600 data-[state=active]:bg-blue-100 data-[state=active]:text-blue-800 data-[state=active]:shadow-sm">
+                        <TabsTrigger value="moderate" className="text-xs px-2 py-1 text-blue-600 data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-sm">
                           <Clock className="h-3 w-3 mr-1" />
                           Moderate ({moderateNotifications.length})
                         </TabsTrigger>
@@ -142,7 +142,7 @@ const Header = ({ onMenuToggle, showMenu = false }: HeaderProps) => {
                       </TabsContent>
                       
                       <div className="p-3 border-t border-gray-200">
-                        <Link to="/notifications" onClick={() => setShowNotifications(false)}>
+                        <Link to="/notifications-v2" onClick={() => setShowNotifications(false)}>
                           <Button variant="outline" size="sm" className="w-full">
                             View All Notifications
                           </Button>

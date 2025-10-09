@@ -22,6 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import Header from "@/components/layout/Header";
 import AppLayout from "@/components/layout/AppLayout";
+import { formatDate } from "@/lib/dateUtils";
 
 const Dashboard = () => {
   const [userType] = useState<"new" | "existing">("existing"); // This would come from auth context
@@ -95,19 +96,19 @@ const Dashboard = () => {
   const upcomingDeadlines = [
     {
       title: "PF Return Filing",
-      date: "March 25, 2024",
+      date: "2024-03-25",
       daysLeft: 5,
       priority: "high",
     },
     {
       title: "Annual ROC Filing",
-      date: "March 30, 2024",  
+      date: "2024-03-30",  
       daysLeft: 10,
       priority: "medium",
     },
     {
       title: "Professional Tax",
-      date: "April 5, 2024",
+      date: "2024-04-05",
       daysLeft: 16,
       priority: "low",
     },
@@ -126,32 +127,14 @@ const Dashboard = () => {
         <Header />
         
         <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-8">
-        {/* Welcome Section */}
-        <Card className="mb-6 sm:mb-8 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 border border-blue-100 shadow-lg">
-          <CardContent className="p-4 sm:p-6">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <Users className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-xl sm:text-3xl font-bold mb-1 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    Welcome back, Rajesh! 👋
-                  </h1>
-                  <p className="text-sm sm:text-base text-muted-foreground">
-                    Here's what's happening with your business today
-                  </p>
-                </div>
-              </div>
-              <div className="w-full sm:w-auto">
-                <Button variant="hero" className="w-full sm:w-auto shadow-lg hover:shadow-xl transition-all duration-300">
-                  <Plus className="h-4 w-4 mr-2" />
-                  New Application
-                </Button>
-              </div>
+        {/* Header */}
+        <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 rounded-2xl p-6 mb-6 shadow-xl">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="text-white">
+              <h1 className="text-2xl sm:text-3xl font-bold mb-1">📊 Dashboard</h1>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
@@ -271,7 +254,7 @@ const Dashboard = () => {
                           {deadline.daysLeft} days
                         </Badge>
                       </div>
-                      <p className="text-xs text-muted-foreground mb-2">{deadline.date}</p>
+                      <p className="text-xs text-muted-foreground mb-2">{formatDate(deadline.date)}</p>
                       <Progress 
                         value={Math.max(0, 100 - (deadline.daysLeft * 3))} 
                         className="h-2"

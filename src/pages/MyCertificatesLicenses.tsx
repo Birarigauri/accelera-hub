@@ -26,6 +26,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import AppLayout from "@/components/layout/AppLayout";
 import Header from "@/components/layout/Header";
+import { formatDate } from "@/lib/dateUtils";
 
 // Sample business data
 const businesses = [
@@ -457,14 +458,14 @@ const MyCertificatesLicenses = () => {
                         <Calendar className="h-3 w-3 text-indigo-500" />
                         <div>
                           <div className="text-gray-500">Issue Date</div>
-                          <div className="font-medium text-gray-900">{cert.issueDate}</div>
+                          <div className="font-medium text-gray-900">{formatDate(cert.issueDate)}</div>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
                         <Calendar className="h-3 w-3 text-indigo-500" />
                         <div>
                           <div className="text-gray-500">Expiry Date</div>
-                          <div className="font-medium text-gray-900">{cert.expiryDate}</div>
+                          <div className="font-medium text-gray-900">{formatDate(cert.expiryDate)}</div>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
@@ -618,7 +619,7 @@ const MyCertificatesLicenses = () => {
                         <FileText className="h-5 w-5 text-gray-500" />
                         <div>
                           <div className="font-medium text-sm text-gray-900">{doc.name}</div>
-                          <div className="text-xs text-gray-600">{doc.size} • {doc.uploadDate}</div>
+                          <div className="text-xs text-gray-600">{doc.size} • {formatDate(doc.uploadDate)}</div>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">

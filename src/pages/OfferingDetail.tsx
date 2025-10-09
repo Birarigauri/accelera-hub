@@ -211,9 +211,9 @@ Through this program, entrepreneurs get access to one-on-one mentoring sessions,
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case "active": return <Badge className="bg-green-100 text-green-700">Active</Badge>;
-      case "closed": return <Badge className="bg-red-100 text-red-700">Closed</Badge>;
-      case "coming_soon": return <Badge className="bg-orange-100 text-orange-700">Coming Soon</Badge>;
+      case "active": return <Badge className="bg-green-100 text-green-700 hover:bg-green-200">Active</Badge>;
+      case "closed": return <Badge className="bg-red-100 text-red-700 hover:bg-red-200">Closed</Badge>;
+      case "coming_soon": return <Badge className="bg-orange-100 text-orange-700 hover:bg-orange-200">Coming Soon</Badge>;
       default: return null;
     }
   };
@@ -253,13 +253,13 @@ Through this program, entrepreneurs get access to one-on-one mentoring sessions,
                           <h1 className="text-2xl font-bold">{offering.title}</h1>
                           <div className="flex items-center gap-2">
                             {offering.featured && (
-                              <Badge className="bg-yellow-100 text-yellow-700">
+                              <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-200">
                                 <Star className="h-3 w-3 mr-1" />
                                 Featured
                               </Badge>
                             )}
                             {offering.new && (
-                              <Badge className="bg-green-100 text-green-700">New</Badge>
+                              <Badge className="bg-green-100 text-green-700 hover:bg-green-200">New</Badge>
                             )}
                             {getStatusBadge(offering.status)}
                           </div>
@@ -268,7 +268,14 @@ Through this program, entrepreneurs get access to one-on-one mentoring sessions,
                         <p className="text-muted-foreground mb-4">{offering.description}</p>
                         
                         <div className="flex items-center gap-4">
-                          <Badge className={offering.tagColor}>
+                          <Badge className={`${offering.tagColor} ${
+                            offering.category === 'funding' ? 'hover:bg-green-200' :
+                            offering.category === 'mentorship' ? 'hover:bg-blue-200' :
+                            offering.category === 'infrastructure' ? 'hover:bg-orange-200' :
+                            offering.category === 'market' ? 'hover:bg-purple-200' :
+                            offering.category === 'ipr' ? 'hover:bg-teal-200' :
+                            'hover:bg-red-200'
+                          }`}>
                             {offering.category}
                           </Badge>
                           <div className="flex items-center gap-1">
@@ -336,7 +343,7 @@ Through this program, entrepreneurs get access to one-on-one mentoring sessions,
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="prose max-w-none">
+                <div className="prose max-w-none text-justify">
                   {offering.fullDescription.split('\n\n').map((paragraph: string, index: number) => (
                     <p key={index} className="mb-4 text-muted-foreground leading-relaxed">
                       {paragraph}

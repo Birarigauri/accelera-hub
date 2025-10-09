@@ -185,9 +185,7 @@ const ProfileV2 = () => {
                     <CheckCircle className="h-5 w-5 text-green-600" />
                     <span className="font-medium text-green-800">Verified Professional</span>
                   </div>
-                  <Badge className="bg-green-100 text-green-700">
-                    Trust Score: {profile.trustScore}%
-                  </Badge>
+                
                 </div>
               </div>
             </CardContent>

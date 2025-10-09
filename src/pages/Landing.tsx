@@ -153,14 +153,7 @@ const Header = () => (
                     Features
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
                 </a>
-                <a href="#about" className="text-gray-600 hover:text-blue-600 transition-colors font-medium relative group">
-                    About
-                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
-                </a>
-                <Link to="/home-futuristic" className="text-gray-600 hover:text-blue-600 transition-colors font-medium relative group">
-                    Futuristic View
-                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
-                </Link>
+            
                 <a href="#contact" className="text-gray-600 hover:text-blue-600 transition-colors font-medium relative group">
                     Contact
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
@@ -376,62 +369,32 @@ const QuickLinksSection = () => {
     
     const quickLinks = [
         { icon: Building, title: "Dashboard", description: "Access your business dashboard", link: `/dashboard-v5`, color: "from-blue-500 to-cyan-500" },
-        { icon: Shield, title: "Services", description: "Explore all business services", link: `/services`, color: "from-green-500 to-emerald-500" },
-        { icon: Award, title: "Schemes", description: "Government schemes & benefits", link: `/schemes`, color: "from-purple-500 to-violet-500" },
-        { icon: FileText, title: "Scheme Applications", description: "Apply for government schemes", link: `/scheme-applications`, color: "from-orange-500 to-red-500" },
-        { icon: Calculator, title: "Eligibility Calculator", description: "Check scheme eligibility", link: `/eligibility-calculator`, color: "from-indigo-500 to-blue-500" },
-        { icon: Briefcase, title: "Offerings", description: "Our service offerings", link: `/offerings`, color: "from-pink-500 to-rose-500" },
-        { icon: BookOpen, title: "News", description: "Latest business news & updates", link: `/news`, color: "from-teal-500 to-cyan-500" },
-        { icon: UserCheck, title: "Profile", description: "Manage your profile", link: `/profile`, color: "from-yellow-500 to-orange-500" }
+        // { icon: Shield, title: "Services", description: "Explore all business services", link: `/services`, color: "from-green-500 to-emerald-500" },
+        // { icon: Award, title: "Schemes", description: "Government schemes & benefits", link: `/schemes`, color: "from-purple-500 to-violet-500" },
+        // { icon: FileText, title: "Scheme Applications", description: "Apply for government schemes", link: `/scheme-applications`, color: "from-orange-500 to-red-500" },
+        // { icon: Calculator, title: "Eligibility Calculator", description: "Check scheme eligibility", link: `/eligibility-calculator`, color: "from-indigo-500 to-blue-500" },
+        // { icon: Briefcase, title: "Offerings", description: "Our service offerings", link: `/offerings`, color: "from-pink-500 to-rose-500" },
+        // { icon: BookOpen, title: "News", description: "Latest business news & updates", link: `/news`, color: "from-teal-500 to-cyan-500" },
+        // { icon: UserCheck, title: "Profile", description: "Manage your profile", link: `/profile`, color: "from-yellow-500 to-orange-500" }
     ];
 
     return (
-        <section className="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
-            <div className="container mx-auto px-4 lg:px-6">
-                <motion.div 
-                    className="text-center mb-12"
-                    initial={{ opacity: 0, y: 30 }}
+        <section className="py-12 bg-gradient-to-br from-blue-50 to-indigo-50">
+            <div className="container mx-auto px-4 lg:px-6 text-center">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
+                    transition={{ duration: 0.5 }}
                 >
-                    <h2 className="text-3xl lg:text-4xl font-bold mb-4 bg-gradient-to-r from-gray-900 to-blue-700 bg-clip-text text-transparent">
-                        Quick Access Menu
-                    </h2>
-                    <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                        Access all essential business services in one place
-                    </p>
+                    <Link to={quickLinks[0].link}>
+                        <Button size="xl" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-12 py-6 text-xl font-bold shadow-2xl hover:shadow-3xl transition-all hover:scale-105">
+                            <Building className="h-6 w-6 mr-3" />
+                            Launch Dashboard
+                            <ArrowRight className="ml-3 h-6 w-6" />
+                        </Button>
+                    </Link>
                 </motion.div>
-
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    {quickLinks.map((item, index) => (
-                        <motion.div
-                            key={item.title}
-                            initial={{ opacity: 0, y: 40 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5, delay: index * 0.1 }}
-                            whileHover={{ y: -5, scale: 1.02 }}
-                            className="group cursor-pointer"
-                        >
-                            <Link to={item.link}>
-                                <Card className="h-full bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:bg-white">
-                                    <CardContent className="p-6 text-center">
-                                        <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-r ${item.color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                                            <item.icon className="h-8 w-8 text-white" />
-                                        </div>
-                                        <h3 className="font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
-                                            {item.title}
-                                        </h3>
-                                        <p className="text-sm text-gray-600 leading-relaxed">
-                                            {item.description}
-                                        </p>
-                                    </CardContent>
-                                </Card>
-                            </Link>
-                        </motion.div>
-                    ))}
-                </div>
             </div>
         </section>
     );

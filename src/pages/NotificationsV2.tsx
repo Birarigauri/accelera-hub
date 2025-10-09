@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { 
   Bell, 
   Search, 
@@ -138,16 +138,7 @@ const NotificationsV2 = () => {
     }
   ]);
 
-  const getTimeAgo = (dateString: string) => {
-    const now = new Date();
-    const date = new Date(dateString);
-    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-    
-    if (diffInHours < 1) return "Just now";
-    if (diffInHours < 24) return `${diffInHours}h ago`;
-    const diffInDays = Math.floor(diffInHours / 24);
-    return `${diffInDays}d ago`;
-  };
+  const [selectedNotification, setSelectedNotification] = useState<any>(null);
 
   const filteredNotifications = notifications.filter(notification => {
     if (filter === "moderate" && notification.priority !== "medium") return false;
@@ -181,10 +172,10 @@ const NotificationsV2 = () => {
         
         <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-8">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4 sm:gap-0">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Alerts & Notifications</h1>
-            <p className="text-muted-foreground">
+        <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 rounded-2xl p-6 mb-6 shadow-xl">
+          <div className="text-white">
+            <h1 className="text-2xl sm:text-3xl font-bold mb-1">🔔 Alerts & Notifications</h1>
+            <p className="text-blue-100 text-sm sm:text-base">
               Stay updated with your business activities and deadlines
             </p>
           </div>
@@ -258,7 +249,7 @@ const NotificationsV2 = () => {
             ) : (
               <div className="space-y-4">
                 {filteredNotifications.map((notification) => (
-                  <Card key={notification.id} className={`transition-all duration-300 hover:shadow-lg bg-gradient-card border-0 border-l-4 ${getPriorityColor(notification.priority)} ${!notification.read ? 'ring-2 ring-primary/20 bg-blue-50/30' : ''}`}>
+                  <Card key={notification.id} onClick={() => setSelectedNotification(notification)} className={`cursor-pointer transition-all duration-300 hover:shadow-lg border-l-4 ${getPriorityColor(notification.priority)} ${!notification.read ? 'bg-blue-50 border-2 border-blue-200' : 'bg-white border border-gray-200'}`}>
                     <CardContent className="p-6">
                       <div className="flex items-start gap-4">
                         <div className={`w-10 h-10 rounded-lg ${notification.bgColor} flex items-center justify-center flex-shrink-0`}>
@@ -292,6 +283,9 @@ const NotificationsV2 = () => {
                             <Badge variant="outline" className="text-xs capitalize">
                               {notification.type}
                             </Badge>
+                            <Badge variant={notification.read ? "outline" : "default"} className="text-xs">
+                              {notification.read ? "Read" : "Unread"}
+                            </Badge>
                           </div>
                         </div>
                       </div>
@@ -305,7 +299,7 @@ const NotificationsV2 = () => {
           <TabsContent value="state" className="space-y-4">
             <div className="space-y-4">
               {filteredNotifications.map((notification) => (
-                <Card key={notification.id} className={`transition-all duration-300 hover:shadow-lg bg-gradient-card border-0 border-l-4 ${getPriorityColor(notification.priority)} ${!notification.read ? 'ring-2 ring-primary/20 bg-blue-50/30' : ''}`}>
+                <Card key={notification.id} onClick={() => setSelectedNotification(notification)} className={`cursor-pointer transition-all duration-300 hover:shadow-lg border-l-4 ${getPriorityColor(notification.priority)} ${!notification.read ? 'bg-blue-50 border-2 border-blue-200' : 'bg-white border border-gray-200'}`}>
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
                       <div className={`w-10 h-10 rounded-lg ${notification.bgColor} flex items-center justify-center flex-shrink-0`}>
@@ -324,12 +318,6 @@ const NotificationsV2 = () => {
                             {!notification.read && (
                               <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
                             )}
-                          </div>
-                          
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm text-muted-foreground whitespace-nowrap">
-                              {getTimeAgo(notification.time)}
-                            </span>
                           </div>
                         </div>
                         
@@ -356,7 +344,7 @@ const NotificationsV2 = () => {
           <TabsContent value="central" className="space-y-4">
             <div className="space-y-4">
               {filteredNotifications.map((notification) => (
-                <Card key={notification.id} className={`transition-all duration-300 hover:shadow-lg bg-gradient-card border-0 border-l-4 ${getPriorityColor(notification.priority)} ${!notification.read ? 'ring-2 ring-primary/20 bg-blue-50/30' : ''}`}>
+                <Card key={notification.id} onClick={() => setSelectedNotification(notification)} className={`cursor-pointer transition-all duration-300 hover:shadow-lg border-l-4 ${getPriorityColor(notification.priority)} ${!notification.read ? 'bg-blue-50 border-2 border-blue-200' : 'bg-white border border-gray-200'}`}>
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
                       <div className={`w-10 h-10 rounded-lg ${notification.bgColor} flex items-center justify-center flex-shrink-0`}>
@@ -375,12 +363,6 @@ const NotificationsV2 = () => {
                             {!notification.read && (
                               <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
                             )}
-                          </div>
-                          
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm text-muted-foreground whitespace-nowrap">
-                              {getTimeAgo(notification.time)}
-                            </span>
                           </div>
                         </div>
                         
@@ -406,6 +388,35 @@ const NotificationsV2 = () => {
         </Tabs>
         </div>
       </div>
+
+      {selectedNotification && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setSelectedNotification(null)}>
+          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="p-6">
+              <div className="flex items-start gap-4 mb-6">
+                <div className={`w-12 h-12 rounded-lg ${selectedNotification.bgColor} flex items-center justify-center flex-shrink-0`}>
+                  <selectedNotification.icon className={`h-6 w-6 ${selectedNotification.color}`} />
+                </div>
+                <div className="flex-1">
+                  <h2 className="text-2xl font-bold mb-2">{selectedNotification.title}</h2>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="text-xs capitalize">{selectedNotification.category}</Badge>
+                    <Badge variant="outline" className="text-xs capitalize">{selectedNotification.type}</Badge>
+                    {selectedNotification.important && <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />}
+                  </div>
+                </div>
+                <button onClick={() => setSelectedNotification(null)} className="text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-sm p-1 transition-all">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <p className="text-gray-700 leading-relaxed mb-6">{selectedNotification.description}</p>
+             
+            </div>
+          </div>
+        </div>
+      )}
     </AppLayout>
   );
 };

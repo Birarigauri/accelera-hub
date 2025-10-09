@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import AppLayout from "@/components/layout/AppLayout";
 import Header from "@/components/layout/Header";
+import { formatDate } from "@/lib/dateUtils";
 
 const applicationsData = [
   {
@@ -146,7 +147,7 @@ const Applications = () => {
                         </div>
                         <div className="flex items-center gap-1">
                           <Calendar className="h-4 w-4" />
-                          {new Date(application.submittedDate).toLocaleDateString()}
+                          {formatDate(application.submittedDate)}
                         </div>
                       </div>
                     </div>

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { 
   Search, 
   Filter, 
-  DollarSign, 
+  Banknote, 
   Users, 
   Building2, 
   TrendingUp, 
@@ -63,7 +63,7 @@ const OfferingsV2 = () => {
       category: "funding",
       mode: "external",
       status: "active",
-      icon: DollarSign,
+      icon: Banknote,
       featured: true,
       new: true,
       tagColor: "bg-green-100 text-green-700",
@@ -76,7 +76,7 @@ const OfferingsV2 = () => {
       category: "funding",
       mode: "expert",
       status: "active",
-      icon: DollarSign,
+      icon: Banknote,
       tagColor: "bg-green-100 text-green-700"
     },
     {
@@ -86,7 +86,7 @@ const OfferingsV2 = () => {
       category: "funding",
       mode: "external",
       status: "active",
-      icon: DollarSign,
+      icon: Banknote,
       tagColor: "bg-green-100 text-green-700"
     },
     {
@@ -96,7 +96,7 @@ const OfferingsV2 = () => {
       category: "funding",
       mode: "expert",
       status: "coming_soon",
-      icon: DollarSign,
+      icon: Banknote,
       tagColor: "bg-green-100 text-green-700"
     },
 
@@ -277,9 +277,9 @@ const OfferingsV2 = () => {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case "active": return <Badge className="bg-green-100 text-green-700">Active</Badge>;
-      case "closed": return <Badge className="bg-red-100 text-red-700">Closed</Badge>;
-      case "coming_soon": return <Badge className="bg-orange-100 text-orange-700">Coming Soon</Badge>;
+      case "active": return <Badge className="bg-green-100 text-green-700 hover:bg-green-200">Active</Badge>;
+      case "closed": return <Badge className="bg-red-100 text-red-700 hover:bg-red-200">Closed</Badge>;
+      case "coming_soon": return <Badge className="bg-orange-100 text-orange-700 hover:bg-orange-200">Coming Soon</Badge>;
       default: return null;
     }
   };
@@ -291,14 +291,10 @@ const OfferingsV2 = () => {
         
         <div className="container mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-8">
           {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Other Offerings
+          <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 rounded-2xl p-6 mb-6 shadow-xl">
+            <h1 className="text-3xl font-bold text-white">
+               Other Offerings
             </h1>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Explore additional entrepreneurial support programs including funding, mentorship, 
-              infrastructure support, market linkages, IPR assistance, and incubation programs
-            </p>
           </div>
 
           {/* Search and Filters */}
@@ -309,7 +305,7 @@ const OfferingsV2 = () => {
                 <div className="relative">
                   <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                   <Input
-                    placeholder="🔍 Search offerings, programs, services..."
+                    placeholder=" Search offerings, programs, services..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 text-base"
@@ -321,43 +317,25 @@ const OfferingsV2 = () => {
                  
                   
                   <TabsContent value="filters" className="space-y-4 mt-4">
-                    {/* Category Filter */}
+                    {/* Status Filter */}
                     <div>
-                      <label className="text-sm font-medium mb-2 block">Category</label>
+                      <label className="text-sm font-medium mb-2 block">Status</label>
                       <div className="flex flex-wrap gap-2">
-                        {categories.map((category) => (
+                        {["all", "active", "closed", "coming_soon"].map((status) => (
                           <Button
-                            key={category.id}
-                            variant={selectedCategory === category.id ? "default" : "outline"}
+                            key={status}
+                            variant={selectedStatus === status ? "default" : "outline"}
                             size="sm"
-                            onClick={() => setSelectedCategory(category.id)}
-                            className="rounded-full"
+                            onClick={() => setSelectedStatus(status)}
+                            className={`rounded-full capitalize ${
+                              selectedStatus === status 
+                                ? "bg-primary text-primary-foreground hover:bg-primary/90" 
+                                : "hover:bg-blue-50 hover:text-blue-600"
+                            }`}
                           >
-                            {category.label} ({category.count})
+                            {status === "all" ? "All Status" : status.replace("_", " ")}
                           </Button>
                         ))}
-                      </div>
-                    </div>
-
-                    {/* Mode and Status Filters */}
-                    <div className="grid md:grid-cols-2 gap-4">
-                    
-
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">Status</label>
-                        <div className="flex flex-wrap gap-2">
-                          {["all", "active", "closed", "coming_soon"].map((status) => (
-                            <Button
-                              key={status}
-                              variant={selectedStatus === status ? "default" : "outline"}
-                              size="sm"
-                              onClick={() => setSelectedStatus(status)}
-                              className="rounded-full capitalize"
-                            >
-                              {status === "all" ? "All Status" : status.replace("_", " ")}
-                            </Button>
-                          ))}
-                        </div>
                       </div>
                     </div>
                   </TabsContent>
@@ -429,7 +407,14 @@ const OfferingsV2 = () => {
                       </p>
                       
                       <div className="flex items-center gap-2 flex-wrap">
-                        <Badge className={offering.tagColor}>
+                        <Badge className={`${offering.tagColor} ${
+                          offering.category === 'funding' ? 'hover:bg-green-200' :
+                          offering.category === 'mentorship' ? 'hover:bg-blue-200' :
+                          offering.category === 'infrastructure' ? 'hover:bg-orange-200' :
+                          offering.category === 'market' ? 'hover:bg-purple-200' :
+                          offering.category === 'ipr' ? 'hover:bg-teal-200' :
+                          'hover:bg-red-200'
+                        }`}>
                           {offering.category}
                         </Badge>
                         <div className="flex items-center gap-1">
