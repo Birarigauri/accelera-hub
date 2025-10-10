@@ -863,10 +863,12 @@ const Profile = () => {
                     </CardHeader>
                     <CardContent>
                       <p className="text-sm text-muted-foreground mb-4">Change your account password securely</p>
-                      <Button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white" onClick={() => window.location.href = '/ane-portal/reset-password'}>
-                        <Key className="h-4 w-4 mr-2" />
-                        Reset Password
-                      </Button>
+                      <NavLink to="/reset-password">
+                        <Button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white" onClick={() => window.location.href = '/ane-portal/reset-password'}>
+                          <Key className="h-4 w-4 mr-2" />
+                          Reset Password
+                        </Button>
+                      </NavLink>
                     </CardContent>
                   </Card>
 
@@ -879,10 +881,12 @@ const Profile = () => {
                     </CardHeader>
                     <CardContent>
                       <p className="text-sm text-muted-foreground mb-4">Change your registered email address</p>
-                      <Button className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white" onClick={() => window.location.href = '/ane-portal/change-email'}>
-                        <Mail className="h-4 w-4 mr-2" />
-                        Update Email Address
-                      </Button>
+                      <NavLink to="/change-email">
+                        <Button className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white" onClick={() => window.location.href = '/ane-portal/change-email'}>
+                          <Mail className="h-4 w-4 mr-2" />
+                          Update Email Address
+                        </Button>
+                      </NavLink>
                     </CardContent>
                   </Card>
                 </div>
