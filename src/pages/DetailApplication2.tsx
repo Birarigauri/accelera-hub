@@ -616,7 +616,7 @@ const DetailApplication2 = () => {
           <div className="bg-green-600 text-white px-6 py-4 rounded-lg shadow-lg flex items-center gap-3 min-w-[300px]">
             <CheckCircle className="h-5 w-5 flex-shrink-0" />
             <div className="flex-1">
-              <p className="font-semibold">Application Submitted Successfully!</p>
+              <p className="font-semibold">Application Proceed Successfully!</p>
               <p className="text-sm text-green-100">Your application has been received and is being processed.</p>
             </div>
             <button 

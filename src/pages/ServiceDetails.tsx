@@ -29,6 +29,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import Header from "@/components/layout/Header";
 import AppLayout from "@/components/layout/AppLayout";
 
@@ -37,6 +39,7 @@ const ServiceDetails = () => {
   const navigate = useNavigate();
   const [showApplicationForm, setShowApplicationForm] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [showExpertsModal, setShowExpertsModal] = useState(false);
 
   const downloadTemplate = () => {
     // Create a dummy PDF content
@@ -825,7 +828,7 @@ startxref
                     <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                       <CheckCircle className="h-8 w-8 text-green-600" />
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">✨ Application Submitted Successfully!</h3>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2"> Application Proceed Successfully!</h3>
                     <p className="text-gray-600">Choose your next step to proceed with your {service.title}</p>
                   </div>
 
@@ -875,12 +878,7 @@ startxref
                       </CardHeader>
                       <CardContent className="p-6">
                         <Button 
-                          onClick={() => {
-                            toast.success("Your inquiry has been submitted successfully. An expert will connect with you shortly.", {
-                              duration: 4000,
-                              position: 'top-right'
-                            });
-                          }}
+                          onClick={() => setShowExpertsModal(true)}
                           className="w-full h-auto p-6 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-xl"
                         >
                           <div className="flex flex-col items-center text-center">
@@ -899,6 +897,107 @@ startxref
             </div>
           </div>
         </div>
+
+        {/* Experts Modal */}
+        <Dialog open={showExpertsModal} onOpenChange={setShowExpertsModal}>
+          <DialogContent className="max-w-6xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold">🧑‍💼 Available Experts</DialogTitle>
+            </DialogHeader>
+            <div className="mt-4">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-gray-50">
+                    <TableHead>Expert</TableHead>
+                    <TableHead>Specialization</TableHead>
+                    <TableHead>Experience</TableHead>
+                    <TableHead>Rating</TableHead>
+                    <TableHead>Location</TableHead>
+                    <TableHead className="text-center">Action</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {[
+                    {
+                      name: "CA Rajesh Kumar",
+                      title: "GST Specialist",
+                      experience: "5+ years",
+                      rating: 4.9,
+                      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+                      expertise: ["GST Registration", "Tax Filing"],
+                      location: "Mumbai"
+                    },
+                    {
+                      name: "Adv. Priya Sharma",
+                      title: "Legal Compliance Expert",
+                      experience: "7+ years",
+                      rating: 4.8,
+                      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=face",
+                      expertise: ["Corporate Law", "Contracts"],
+                      location: "Delhi"
+                    },
+                    {
+                      name: "CS Amit Patel",
+                      title: "Company Secretary",
+                      experience: "6+ years",
+                      rating: 4.7,
+                      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+                      expertise: ["ROC Filing", "Board Meetings"],
+                      location: "Bangalore"
+                    }
+                  ].map((expert, index) => (
+                    <TableRow key={index} className="hover:bg-gray-50">
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          <img 
+                            src={expert.image} 
+                            alt={expert.name}
+                            className="w-10 h-10 rounded-full object-cover"
+                          />
+                          <div>
+                            <div className="font-semibold">{expert.name}</div>
+                            <div className="text-sm text-gray-600">{expert.title}</div>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-wrap gap-1">
+                          {expert.expertise.map((skill, skillIndex) => (
+                            <Badge key={skillIndex} variant="outline" className="text-xs">
+                              {skill}
+                            </Badge>
+                          ))}
+                        </div>
+                      </TableCell>
+                      <TableCell>{expert.experience}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-1">
+                          <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                          <span className="font-semibold">{expert.rating}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>{expert.location}</TableCell>
+                      <TableCell className="text-center">
+                        <Button 
+                          size="sm"
+                          className="bg-blue-600 hover:bg-blue-700 text-white"
+                          onClick={() => {
+                            setShowExpertsModal(false);
+                            toast.success(`Connected with ${expert.name}! They will contact you soon.`, {
+                              duration: 4000
+                            });
+                          }}
+                        >
+                          Connect
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </AppLayout>
   );

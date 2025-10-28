@@ -10,9 +10,9 @@ import {
   MapPin,
   Clock
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import AppLayout from "@/components/layout/AppLayout";
 import Header from "@/components/layout/Header";
 
@@ -132,7 +132,7 @@ const ExpertsListing = memo(() => {
         <div className="container mx-auto px-6 py-8">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">🧑‍💼 Expert Directory</h1>
+            <h1 className="text-4xl font-bold text-gray-900 mb-4"> Expert Directory</h1>
 
           </div>
 
@@ -193,98 +193,100 @@ const ExpertsListing = memo(() => {
             </p>
           </div>
 
-          {/* Experts Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredExperts.map((expert, index) => (
-              <div key={index} className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 overflow-hidden group">
-                {/* Header with gradient */}
-                <div className={`h-20 bg-gradient-to-r ${colors[expert.color].bg} relative`}>
-                  <div className="absolute inset-0 bg-black/10"></div>
-                  <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2">
-                    <div className="relative">
-                      <img 
-                        src={expert.image} 
-                        alt={expert.name}
-                        className="w-16 h-16 rounded-full object-cover border-4 border-white shadow-xl"
-                      />
-                      <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-400 rounded-full border-2 border-white animate-pulse"></div>
-                      {expert.verified && (
-                        <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-blue-500 rounded-full border-2 border-white flex items-center justify-center">
-                          <CheckCircle className="h-3 w-3 text-white" />
+          {/* Experts Table */}
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-gray-50">
+                  <TableHead className="font-semibold">Expert</TableHead>
+                  <TableHead className="font-semibold">Specialization</TableHead>
+                  <TableHead className="font-semibold">Experience</TableHead>
+                  <TableHead className="font-semibold">Rating</TableHead>
+                  <TableHead className="font-semibold">Location</TableHead>
+                  <TableHead className="font-semibold">Category</TableHead>
+                  <TableHead className="font-semibold text-center">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredExperts.map((expert, index) => (
+                  <TableRow key={index} className="hover:bg-gray-50">
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <div className="relative">
+                          <img 
+                            src={expert.image} 
+                            alt={expert.name}
+                            className="w-10 h-10 rounded-full object-cover"
+                          />
+                          {expert.verified && (
+                            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
+                              <CheckCircle className="h-2 w-2 text-white" />
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Content */}
-                <div className="pt-10 pb-6 px-6 text-center">
-                  <h3 className="font-bold text-gray-900 text-lg mb-1">{expert.name}</h3>
-                  <p className="text-sm text-gray-600 mb-3">{expert.title}</p>
-                  
-                  {/* Location & Experience */}
-                  <div className="flex items-center justify-center gap-4 mb-4">
-                    <div className="flex items-center gap-1">
-                      <MapPin className="h-3 w-3 text-gray-500" />
-                      <span className="text-xs text-gray-500">{expert.location}</span>
-                    </div>
-                    <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-3 w-3 text-gray-500" />
-                      <span className="text-xs text-gray-500">{expert.experience}</span>
-                    </div>
-                  </div>
-                  
-                  {/* Rating */}
-                  <div className="flex items-center justify-center gap-4 mb-4">
-                    <div className="flex items-center gap-1">
-                      <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                      <span className="text-sm font-semibold text-gray-700">{expert.rating}</span>
-                    </div>
-                    <Badge variant="outline" className={`text-xs ${colors[expert.color].text} ${colors[expert.color].border}`}>
-                      {expert.category}
-                    </Badge>
-                  </div>
-                  
-                  {/* Expertise */}
-                  <div className="flex flex-wrap gap-2 justify-center mb-6">
-                    {expert.expertise.slice(0, 2).map((skill, skillIndex) => (
-                      <span key={skillIndex} className={`text-xs px-3 py-1 rounded-full font-medium ${colors[expert.color].light} ${colors[expert.color].text} ${colors[expert.color].border} border`}>
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                  
-                  {/* Connect Actions */}
-                  <div className="space-y-3">
-                    <Button 
-                      className={`w-full bg-gradient-to-r ${colors[expert.color].bg} hover:shadow-lg text-white font-semibold py-3 rounded-xl transition-all duration-300 group-hover:scale-105`}
-                      onClick={() => {
-                        setSuccessMessage(`Connection request submitted successfully! ${expert.name} will contact you within 2-4 hours to discuss your compliance requirements.`);
-                        setShowSuccessAlert(true);
-                      }}
-                    >
-                      <MessageCircle className="h-4 w-4 mr-2" />
-                      Connect Now
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="w-full text-xs py-2 rounded-lg border-gray-200 hover:bg-gray-50"
-                      onClick={() => setSelectedExpert(expert)}
-                    >
-                      <Eye className="h-3 w-3 mr-1" />
-                      View Profile
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            ))}
+                        <div>
+                          <div className="font-semibold text-gray-900">{expert.name}</div>
+                          <div className="text-sm text-gray-600">{expert.title}</div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap gap-1">
+                        {expert.expertise.slice(0, 2).map((skill, skillIndex) => (
+                          <Badge key={skillIndex} variant="outline" className="text-xs">
+                            {skill}
+                          </Badge>
+                        ))}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-gray-600">{expert.experience}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                        <span className="font-semibold">{expert.rating}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <MapPin className="h-3 w-3 text-gray-500" />
+                        <span className="text-sm text-gray-600">{expert.location}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge className={`${colors[expert.color].light} ${colors[expert.color].text}`}>
+                        {expert.category}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-2 justify-center">
+                        <Button 
+                          size="sm"
+                          className="bg-blue-600 hover:bg-blue-700 text-white"
+                          onClick={() => {
+                            setSuccessMessage(`Connection request submitted successfully! ${expert.name} will contact you soon to discuss your requirements and provide personalized guidance.`);
+                            setShowSuccessAlert(true);
+                          }}
+                        >
+                          Connect
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => setSelectedExpert(expert)}
+                        >
+                          <Eye className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
 
           {/* No Results */}
           {filteredExperts.length === 0 && (
-            <div className="text-center py-12">
+            <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
               <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Search className="h-12 w-12 text-gray-400" />
               </div>
@@ -417,7 +419,7 @@ const ExpertsListing = memo(() => {
                   <Button 
                     className={`flex-1 bg-gradient-to-r ${colors[selectedExpert.color].bg} text-white font-semibold py-3 rounded-xl`}
                     onClick={() => {
-                      setSuccessMessage(`Connection request submitted successfully! ${selectedExpert.name} will contact you within 2-4 hours to discuss your compliance requirements.`);
+                      setSuccessMessage(`Connection request submitted successfully! ${selectedExpert.name} will contact you soon to discuss your requirements and provide personalized guidance.`);
                       setSelectedExpert(null);
                       setShowSuccessAlert(true);
                     }}
